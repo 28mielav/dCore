@@ -1,9 +1,9 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-20T12:18:18.123920+00:00",
+  "generated_at": "2026-07-20T12:24:05.245488+00:00",
   "status": "verified",
-  "sha256": "a89c3db0ff0ecde48deded5604d165ae3b25943784b3ab3b8067b089cbf72320",
-  "size": 16515072,
+  "sha256": "8cc6a7cc8a3d116228ca48d21f219a25c7a8c7c8cf50b3e7b78e1aefa473a9bf",
+  "size": 16580608,
   "counts": {
     "cards": 110,
     "meta_entries": 5429,
@@ -13,7 +13,7 @@
   "sources": [
     {
       "product": "Denizen",
-      "commit_sha": "d9b897cb32d8f6eea17e4093407a5f4fce1aeac8",
+      "commit_sha": "a28495271162211cf4f18b38daa38ca10d10642d",
       "source_id": "denizen_official_dev"
     },
     {
