@@ -26,6 +26,22 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (request.method === "GET" && url.pathname === "/privacy") {
+      return new Response(
+        "dCore Update Bridge Privacy Policy\n\n" +
+          "This private read-only service does not collect, store, sell, or share personal data. " +
+          "It receives an authorization header solely to validate access and returns the current verified dCore release manifest. " +
+          "Cloudflare may process standard network metadata according to its infrastructure policies.\n",
+        {
+          status: 200,
+          headers: {
+            "content-type": "text/plain; charset=utf-8",
+            "cache-control": "public, max-age=3600",
+          },
+        },
+      );
+    }
+
     if (request.method !== "GET") {
       return json({ error: "method_not_allowed" }, 405);
     }

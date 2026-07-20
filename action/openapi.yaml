@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: dCore Private Update Status
-  version: 1.0.0
+  version: 1.1.0
   description: Read-only access to the latest verified private dCore knowledge release.
 servers:
   - url: https://dcore-update-bridge.ru-tonystark.workers.dev
@@ -34,8 +34,61 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                required:
+                  - name
+                  - generated_at
+                  - status
+                  - sha256
+                  - size
+                  - counts
+                  - sources
+                  - validation
+                properties:
+                  name:
+                    type: string
+                  generated_at:
+                    type: string
+                    format: date-time
+                  status:
+                    type: string
+                  sha256:
+                    type: string
+                  size:
+                    type: integer
+                  counts:
+                    type: object
+                    required: [cards, meta_entries, ide_diagnostics, retrieval_tests]
+                    properties:
+                      cards:
+                        type: integer
+                      meta_entries:
+                        type: integer
+                      ide_diagnostics:
+                        type: integer
+                      retrieval_tests:
+                        type: integer
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      required: [product, commit_sha, source_id]
+                      properties:
+                        product:
+                          type: string
+                        commit_sha:
+                          type: string
+                        source_id:
+                          type: string
+                  validation:
+                    type: object
+                    required: [integrity_check, foreign_key_errors, failures]
+                    properties:
+                      integrity_check:
+                        type: string
+                      foreign_key_errors:
+                        type: integer
+                      failures:
+                        type: array
+                        items: {}
         "401":
           description: Missing or invalid bearer API key.
-        "502":
-          description: Private GitHub release could not be read.
