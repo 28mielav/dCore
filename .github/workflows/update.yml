@@ -77,6 +77,14 @@ jobs:
           git commit -m "chore: update dCore knowledge"
           git push
 
+      - name: Deploy updated dCore bridge
+        if: steps.changed.outputs.value == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cloudflare
+
       - name: Build private release archive
         if: steps.changed.outputs.value == 'true'
         run: |
