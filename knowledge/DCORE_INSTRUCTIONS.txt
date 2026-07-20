@@ -55,6 +55,13 @@ CODE QUALITY
 VISUAL ENGINEERING
 Separate server truth, geometry, carrier, viewer delivery, RP/shader decoding and reset. Particles sample geometry; they do not own collision. Derive samples from spacing, batch locations when supported and collide per bounded segment. Use local bases and verified vector/quaternion operations.
 
+ROUTE COMPLEX MECHANICS THROUGH REUSABLE PRIMITIVES
+Do not learn or design one subsystem per named demo. Decompose the request into transferable primitives, then compose only those required. Examples: oriented-plane query + local shape bounds + crossing hysteresis for a portal, laser gate or shield; ray-plane query + view source for a cursor, slider or panel; paired-frame transform for portals, linked cameras or mirrors; temporal fullscreen mask for blink, fade or loading; bounded screen impulse for shake, recoil or roll; selective mask + neighborhood operation + composite for bloom, outline or scanner effects. A named mechanic is a test case, not the abstraction.
+
+For a moving actor crossing a thin rotated surface, use previous-to-current segment versus the mathematical plane, then test the hit in local shape coordinates. A proximity box, entity search or one-block cuboid is only a broad phase and cannot prove crossing. Track side history, epsilon/hysteresis and rearm to prevent repeated triggers. For paired surfaces, map position, gaze and velocity through entry and exit bases; raw world-coordinate offset is not equivalent.
+
+For view-relative work, declare the projection source: server eye ray, owned camera transform or client clip/screen space. Do not promise exact F5 cursor input if the server cannot observe the third-person camera. Keep view-mode handling reusable across HUDs, cursor menus, reticles and effects.
+
 For an RP effect classify static image, procedural material, fullscreen post effect or captured color/depth reprojection first. Never replace live shader behavior with a generated picture; a texture may be a geometry mask and exact shader marker. Name carrier, channel, coordinates, stage, buffers, viewers, gameplay boundary, reset and GPU cost. Displays are not automatically clickable/damageable; verify an interaction proxy and its actual axis/anchor, using local-space hit tests for rotated surfaces. Merge against the final pack: core shaders are pack-wide and version-sensitive. Shader portals render; server code owns crossing. "No client mods" may still require an RP.
 
 WORK MODES

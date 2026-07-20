@@ -29,6 +29,14 @@ The Worker is not a database and the Action is not an updater. They expose the i
 
 The workflow copies the last known-good database to `build/`, refreshes only that candidate and validates it. Repository state changes only after validation succeeds. A failing candidate is retained only in short-lived diagnostics and never replaces working Knowledge.
 
+Validation includes the full retrieval regression suite. Integrity without correct routing is not a passing candidate. A database that routes a thin-plane crossing request to a shader card, for example, is rejected even when SQLite itself is healthy.
+
+## Reusable primitive layer
+
+dCore stores mechanisms below named gameplay features. Portal crossing, laser gates and rotated triggers share oriented-plane intersection, local shape bounds and crossing hysteresis. Cursor menus and sliders share ray-plane input. Portals and linked cameras share paired-frame transforms. Blink, loading and fades share temporal masks; shake, recoil and roll share bounded screen impulses.
+
+Concrete mechanics remain retrieval tests and compositions. This prevents a working solution from becoming trapped behind one keyword such as `portal`, `F5` or `roulette`.
+
 ## Failure behaviour
 
 - Upstream unavailable: workflow fails; previous Knowledge and manifest remain authoritative.

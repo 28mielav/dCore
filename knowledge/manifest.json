@@ -1,14 +1,14 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-20T12:24:05.245488+00:00",
+  "generated_at": "2026-07-20T15:43:26.566388+00:00",
   "status": "verified",
-  "sha256": "8cc6a7cc8a3d116228ca48d21f219a25c7a8c7c8cf50b3e7b78e1aefa473a9bf",
-  "size": 16580608,
+  "sha256": "e5d9ca2210b931bee395d2f1acf68cffcb30b364ea31401e665871a96a9becc3",
+  "size": 16678912,
   "counts": {
-    "cards": 110,
+    "cards": 116,
     "meta_entries": 5429,
     "ide_diagnostics": 54,
-    "retrieval_tests": 77
+    "retrieval_tests": 87
   },
   "sources": [
     {
@@ -40,6 +40,7 @@
   "validation": {
     "integrity_check": "ok",
     "foreign_key_errors": 0,
+    "retrieval_failures": [],
     "failures": []
   }
 }

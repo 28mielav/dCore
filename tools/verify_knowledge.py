@@ -7,6 +7,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from retrieval import run_tests
+
 
 def table_exists(db: sqlite3.Connection, name: str) -> bool:
     return db.execute(
@@ -54,6 +56,10 @@ def main() -> int:
                     f"SELECT {','.join(wanted)} FROM meta_sources ORDER BY product"
                 )]
 
+        retrieval_failures = run_tests(db) if table_exists(db, "retrieval_tests") else []
+        if retrieval_failures:
+            failures.append(f"retrieval_failures={len(retrieval_failures)}")
+
     digest = hashlib.sha256(args.db.read_bytes()).hexdigest()
     manifest = {
         "name": "dCore",
@@ -66,6 +72,7 @@ def main() -> int:
         "validation": {
             "integrity_check": integrity,
             "foreign_key_errors": foreign_keys,
+            "retrieval_failures": retrieval_failures,
             "failures": failures,
         },
     }
@@ -77,4 +84,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

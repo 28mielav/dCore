@@ -111,6 +111,8 @@ jobs:
           cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
           cp tools/lint_denizen.py "dist/dCore-$date_utc/lint_denizen.py"
           cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"
+          cp tools/test_retrieval.py "dist/dCore-$date_utc/test_retrieval.py"
+          cp tools/retrieval.py "dist/dCore-$date_utc/retrieval.py"
           cd dist
           zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
           sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256"

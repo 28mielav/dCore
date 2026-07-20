@@ -10,7 +10,7 @@ Every Monday, and on manual request, GitHub Actions:
 
 1. compares the indexed upstream commits;
 2. updates Denizen, Denizen-Core, DenizenM, Voxizen, denizen-reflect and Refined DenizenScript metadata in an isolated database copy;
-3. validates SQLite integrity, foreign keys, catalogue minimums and retrieval-test inventory;
+3. validates SQLite integrity, foreign keys, catalogue minimums and every retrieval-routing regression;
 4. installs and commits only a passing candidate;
 5. deploys the verified manifest to the private Cloudflare bridge;
 6. publishes a dated private release when Knowledge changed.
