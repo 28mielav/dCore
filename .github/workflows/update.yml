@@ -1,7 +1,13 @@
-name: Update dCore knowledge
+name: Maintain dCore knowledge
 
 on:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish today's verified bundle even when upstream data is unchanged
+        required: false
+        default: false
+        type: boolean
   schedule:
     - cron: "23 4 * * 1"
 
@@ -9,11 +15,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: dcore-update
+  group: dcore-maintenance
   cancel-in-progress: false
 
 jobs:
-  update:
+  maintain:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -27,93 +33,117 @@ jobs:
 
       - name: Prepare isolated candidate
         run: |
-          mkdir -p build/bundle
-          cp bundle/dcore_0.25.sqlite build/bundle/dcore_0.25.sqlite
-          cp bundle/DCORE_INSTRUCTIONS.txt build/bundle/DCORE_INSTRUCTIONS.txt
-          cp bundle/dcore_lint.py build/bundle/dcore_lint.py
-          cp bundle/dcore_update.py build/bundle/dcore_update.py
+          mkdir -p build/knowledge
+          cp knowledge/dcore.sqlite build/knowledge/dcore.sqlite
+          cp knowledge/DCORE_INSTRUCTIONS.txt build/knowledge/DCORE_INSTRUCTIONS.txt
+          cp knowledge/manifest.json build/knowledge/manifest.json
 
       - name: Check upstream revisions
         id: upstream
-        shell: bash
         run: |
-          python build/bundle/dcore_update.py --db build/bundle/dcore_0.25.sqlite --check > build/check.json
+          python tools/update_knowledge.py --db build/knowledge/dcore.sqlite --check > build/check.json
           cat build/check.json
           required=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['update_required'])).lower())")
           echo "required=$required" >> "$GITHUB_OUTPUT"
 
       - name: Refresh upstream sources
         if: steps.upstream.outputs.required == 'true'
-        run: python build/bundle/dcore_update.py --db build/bundle/dcore_0.25.sqlite
+        run: python tools/update_knowledge.py --db build/knowledge/dcore.sqlite
 
       - name: Remove updater backup from candidate
-        run: rm -f build/bundle/*.pre_update_*.sqlite
+        run: rm -f build/knowledge/*.pre_update_*.sqlite
 
       - name: Validate candidate
-        run: python scripts/verify_bundle.py --db build/bundle/dcore_0.25.sqlite --output build/bundle/manifest.json
+        run: python tools/verify_knowledge.py --db build/knowledge/dcore.sqlite --output build/knowledge/manifest.json
 
-      - name: Detect database change
+      - name: Detect knowledge change
         id: changed
-        shell: bash
         run: |
-          if [[ "${{ steps.upstream.outputs.required }}" != "true" ]] || cmp -s bundle/dcore_0.25.sqlite build/bundle/dcore_0.25.sqlite; then
+          if [[ "${{ steps.upstream.outputs.required }}" != "true" ]] || cmp -s knowledge/dcore.sqlite build/knowledge/dcore.sqlite; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install verified database in repository
+      - name: Install verified knowledge
         if: steps.changed.outputs.value == 'true'
         run: |
-          cp build/bundle/dcore_0.25.sqlite bundle/dcore_0.25.sqlite
-          cp build/bundle/manifest.json bundle/manifest.json
+          cp build/knowledge/dcore.sqlite knowledge/dcore.sqlite
+          cp build/knowledge/manifest.json knowledge/manifest.json
 
-      - name: Commit verified update
+      - name: Commit verified knowledge
         if: steps.changed.outputs.value == 'true'
         run: |
-          git config user.name "dCore updater"
-          git config user.email "dcore-updater@users.noreply.github.com"
-          git add bundle/dcore_0.25.sqlite bundle/manifest.json
-          git commit -m "chore: update dCore knowledge"
+          git config user.name "dCore maintenance"
+          git config user.email "dcore-maintenance@users.noreply.github.com"
+          git add knowledge/dcore.sqlite knowledge/manifest.json
+          git commit -m "knowledge: update verified upstream data"
           git push
 
-      - name: Set up Node for Cloudflare deploy
+      - name: Set up Node for bridge deploy
         uses: actions/setup-node@v6
         with:
           node-version: "24"
 
-      - name: Deploy updated dCore bridge
-        working-directory: cloudflare
+      - name: Deploy freshness bridge
+        working-directory: services/update-bridge
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx --yes wrangler@4 deploy
 
-      - name: Build private release archive
-        if: steps.changed.outputs.value == 'true'
+      - name: Decide whether to publish
+        id: publish
         run: |
-          cd build
-          zip -9 -r dCore-latest.zip bundle
-          sha256sum dCore-latest.zip > dCore-latest.zip.sha256
+          if [[ "${{ steps.changed.outputs.value }}" == "true" || "${{ inputs.publish_release || false }}" == "true" ]]; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Publish private release
-        if: steps.changed.outputs.value == 'true'
+      - name: Build dated private release
+        if: steps.publish.outputs.value == 'true'
+        run: |
+          date_utc=$(date -u +%Y-%m-%d)
+          mkdir -p "dist/dCore-$date_utc"
+          cp build/knowledge/dcore.sqlite "dist/dCore-$date_utc/dcore.sqlite"
+          cp build/knowledge/DCORE_INSTRUCTIONS.txt "dist/dCore-$date_utc/DCORE_INSTRUCTIONS.txt"
+          cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
+          cp tools/lint_denizen.py "dist/dCore-$date_utc/lint_denizen.py"
+          cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"
+          cd dist
+          zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
+          sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256"
+
+      - name: Replace today's private release
+        if: steps.publish.outputs.value == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="dcore-auto-$(date -u +%Y%m%d-%H%M%S)"
-          gh release create "$tag" \
-            build/dCore-latest.zip \
-            build/dCore-latest.zip.sha256 \
-            build/bundle/manifest.json \
-            --title "dCore automatic update $(date -u +%Y-%m-%d)" \
-            --notes "Automated verified private knowledge update."
+          date_utc=$(date -u +%Y-%m-%d)
+          gh release delete "$date_utc" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$date_utc" \
+            "dist/dCore-$date_utc.zip" \
+            "dist/dCore-$date_utc.zip.sha256" \
+            "build/knowledge/manifest.json" \
+            --title "$date_utc" \
+            --notes "Verified private dCore Knowledge bundle for $date_utc. Replace the Custom GPT Knowledge files only when the manifest SHA-256 differs from the attached version."
 
-      - name: Upload diagnostic artifact
+      - name: Remove legacy timestamp releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --limit 100 --json tagName --jq '.[].tagName' \
+            | grep '^dcore-auto-' \
+            | while read -r tag; do gh release delete "$tag" --yes --cleanup-tag; done || true
+
+      - name: Upload maintenance diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dcore-update-diagnostics
-          path: build/bundle/manifest.json
+          name: dcore-maintenance-diagnostics
+          path: |
+            build/check.json
+            build/knowledge/manifest.json
           if-no-files-found: ignore
           retention-days: 14

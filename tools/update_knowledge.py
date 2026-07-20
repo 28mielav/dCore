@@ -1,11 +1,12 @@
-"""Session-local updater for dCore 0.25.
+"""Update the maintained dCore knowledge database.
 
 Refreshes the five indexed Denizen Meta sources plus the diagnostic catalogue
 embedded in the latest Refined DenizenScript VSIX.  Work is performed on a
 temporary SQLite copy, validated, backed up, and atomically committed.
 
-This updates only the writable database available in the current GPT/session.
-It cannot replace a Custom GPT Knowledge attachment permanently.
+The updater works on an isolated copy and atomically installs a candidate only
+after validation. It cannot replace a Custom GPT Knowledge attachment; that
+final platform-controlled step remains manual.
 """
 
 from __future__ import annotations
@@ -92,7 +93,7 @@ SHARP_COMMIT_RE = re.compile(
 
 
 def fetch(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "dCore-session-updater/0.25"})
+    request = urllib.request.Request(url, headers={"User-Agent": "dCore-knowledge-updater/1.0"})
     with urllib.request.urlopen(request, timeout=90) as response:
         return response.read()
 
@@ -475,7 +476,7 @@ def import_ide(db: sqlite3.Connection, version: str, commit: str, dll: bytes, sh
              fetched_at=excluded.fetched_at,compatibility=excluded.compatibility""",
         ("refined_denizenscript_installed", "Refined DenizenScript", version, f"release-{version}",
          hashlib.sha256(dll).hexdigest(), "https://github.com/Humususus/refined-denizenScript",
-         now, "latest public Refined VSIX", "Session-local update source.", 80, "MIT"),
+         now, "latest public Refined VSIX", "Maintained update source.", 80, "MIT"),
     )
     db.execute("DELETE FROM ide_diagnostics WHERE source_id='sharp_denizen_tools_installed'")
     db.executemany(
@@ -491,7 +492,7 @@ def import_ide(db: sqlite3.Connection, version: str, commit: str, dll: bytes, sh
     )
     db.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES('ide.layer',?)",
-        (f"Refined {version} + SharpDenizenTools {commit}; session-local update",),
+        (f"Refined {version} + SharpDenizenTools {commit}; maintained update",),
     )
     return len(diagnostics)
 
@@ -564,11 +565,15 @@ def apply_update(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Update the current session copy of dCore")
-    parser.add_argument("--db", type=Path, default=Path(__file__).with_name("dcore_0.25.sqlite"))
+    parser = argparse.ArgumentParser(description="Update the maintained dCore knowledge database")
+    parser.add_argument(
+        "--db",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite",
+    )
     parser.add_argument(
         "--output", type=Path,
-        help="write/update this session copy instead of replacing --db (useful for read-only Knowledge)",
+        help="write the validated candidate here instead of replacing --db",
     )
     parser.add_argument("--check", action="store_true", help="compare versions without rebuilding the DB")
     args = parser.parse_args()

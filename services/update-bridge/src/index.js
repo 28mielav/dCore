@@ -1,4 +1,4 @@
-import manifest from "../../bundle/manifest.json";
+import manifest from "../../../knowledge/manifest.json";
 
 function json(value, status = 200) {
   return new Response(JSON.stringify(value, null, 2), {

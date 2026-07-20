@@ -1,8 +1,12 @@
 build/
+dist/
 *.pre_update_*.sqlite
 __pycache__/
 *.pyc
+services/update-bridge/.wrangler/
+services/update-bridge/node_modules/
+services/update-bridge/.dev.vars
+# Pre-restructure local Wrangler cache; safe to ignore until manually removed.
 cloudflare/.wrangler/
-cloudflare/node_modules/
-cloudflare/.dev.vars
-
+*.secret
+*_PRIVATE.txt
