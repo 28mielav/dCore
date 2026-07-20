@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Read-only access to the latest verified private dCore knowledge release.
 servers:
-  - url: https://REPLACE_WITH_WORKER.workers.dev
+  - url: https://dcore-update-bridge.ru-tonystark.workers.dev
 paths:
   /v1/health:
     get:
@@ -39,4 +39,3 @@ paths:
           description: Missing or invalid bearer API key.
         "502":
           description: Private GitHub release could not be read.
-

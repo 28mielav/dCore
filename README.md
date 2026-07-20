@@ -16,8 +16,10 @@ The repository and its releases must remain private. No GitHub Pages deployment 
 ## Private GPT update bridge
 
 `cloudflare/` contains a minimal read-only Worker. It exposes only health and
-latest verified manifest endpoints. Its GitHub token and GPT action key must be
-stored as Cloudflare secrets; never commit them. `action/openapi.yaml` is the
+latest verified manifest endpoints. Only the GPT action key is stored as a
+Cloudflare secret; no GitHub token is exposed to the Worker. Cloudflare's Git
+integration rebuilds the Worker after the verified manifest changes.
+`action/openapi.yaml` is the
 schema to paste into the Custom GPT Actions editor after replacing its server
 URL with the deployed `workers.dev` address.
 
