@@ -1,0 +1,5 @@
+build/
+*.pre_update_*.sqlite
+__pycache__/
+*.pyc
+

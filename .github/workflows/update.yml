@@ -1,0 +1,107 @@
+name: Update dCore knowledge
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 4 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dcore-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out private repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prepare isolated candidate
+        run: |
+          mkdir -p build/bundle
+          cp bundle/dcore_0.25.sqlite build/bundle/dcore_0.25.sqlite
+          cp bundle/DCORE_INSTRUCTIONS.txt build/bundle/DCORE_INSTRUCTIONS.txt
+          cp bundle/dcore_lint.py build/bundle/dcore_lint.py
+          cp bundle/dcore_update.py build/bundle/dcore_update.py
+
+      - name: Check upstream revisions
+        id: upstream
+        shell: bash
+        run: |
+          python build/bundle/dcore_update.py --db build/bundle/dcore_0.25.sqlite --check > build/check.json
+          cat build/check.json
+          required=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['update_required'])).lower())")
+          echo "required=$required" >> "$GITHUB_OUTPUT"
+
+      - name: Refresh upstream sources
+        if: steps.upstream.outputs.required == 'true'
+        run: python build/bundle/dcore_update.py --db build/bundle/dcore_0.25.sqlite
+
+      - name: Remove updater backup from candidate
+        run: rm -f build/bundle/*.pre_update_*.sqlite
+
+      - name: Validate candidate
+        run: python scripts/verify_bundle.py --db build/bundle/dcore_0.25.sqlite --output build/bundle/manifest.json
+
+      - name: Detect database change
+        id: changed
+        shell: bash
+        run: |
+          if [[ "${{ steps.upstream.outputs.required }}" != "true" ]] || cmp -s bundle/dcore_0.25.sqlite build/bundle/dcore_0.25.sqlite; then
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install verified database in repository
+        if: steps.changed.outputs.value == 'true'
+        run: |
+          cp build/bundle/dcore_0.25.sqlite bundle/dcore_0.25.sqlite
+          cp build/bundle/manifest.json bundle/manifest.json
+
+      - name: Commit verified update
+        if: steps.changed.outputs.value == 'true'
+        run: |
+          git config user.name "dCore updater"
+          git config user.email "dcore-updater@users.noreply.github.com"
+          git add bundle/dcore_0.25.sqlite bundle/manifest.json
+          git commit -m "chore: update dCore knowledge"
+          git push
+
+      - name: Build private release archive
+        if: steps.changed.outputs.value == 'true'
+        run: |
+          cd build
+          zip -9 -r dCore-latest.zip bundle
+          sha256sum dCore-latest.zip > dCore-latest.zip.sha256
+
+      - name: Publish private release
+        if: steps.changed.outputs.value == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="dcore-auto-$(date -u +%Y%m%d-%H%M%S)"
+          gh release create "$tag" \
+            build/dCore-latest.zip \
+            build/dCore-latest.zip.sha256 \
+            build/bundle/manifest.json \
+            --title "dCore automatic update $(date -u +%Y-%m-%d)" \
+            --notes "Automated verified private knowledge update."
+
+      - name: Upload diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcore-update-diagnostics
+          path: build/bundle/manifest.json
+          if-no-files-found: ignore
+          retention-days: 14
