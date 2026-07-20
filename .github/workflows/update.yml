@@ -78,7 +78,6 @@ jobs:
           git push
 
       - name: Deploy updated dCore bridge
-        if: steps.changed.outputs.value == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
