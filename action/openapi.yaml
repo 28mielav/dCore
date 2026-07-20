@@ -1,0 +1,42 @@
+openapi: 3.1.0
+info:
+  title: dCore Private Update Status
+  version: 1.0.0
+  description: Read-only access to the latest verified private dCore knowledge release.
+servers:
+  - url: https://REPLACE_WITH_WORKER.workers.dev
+paths:
+  /v1/health:
+    get:
+      operationId: checkDcoreBridge
+      summary: Verify that the private dCore update bridge is available.
+      responses:
+        "200":
+          description: Bridge status.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  service:
+                    type: string
+  /v1/latest:
+    get:
+      operationId: getLatestDcoreRelease
+      summary: Get the version, validation status, source commits, counts, and SHA-256 of the latest verified dCore release.
+      description: Call this before claiming that the attached dCore Knowledge is current. This endpoint reports freshness but does not replace Custom GPT Knowledge files.
+      responses:
+        "200":
+          description: Latest verified private dCore release manifest.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          description: Missing or invalid bearer API key.
+        "502":
+          description: Private GitHub release could not be read.
+

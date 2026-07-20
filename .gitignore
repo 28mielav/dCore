@@ -2,4 +2,7 @@ build/
 *.pre_update_*.sqlite
 __pycache__/
 *.pyc
+cloudflare/.wrangler/
+cloudflare/node_modules/
+cloudflare/.dev.vars
 
