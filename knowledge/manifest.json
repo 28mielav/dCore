@@ -1,14 +1,14 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-22T08:50:03.409152+00:00",
+  "generated_at": "2026-07-22T08:53:22.864812+00:00",
   "status": "verified",
-  "sha256": "df4369e02db42c41eca6d41f27ea0fe604c5def5a3e28077d37aee2d6e14f3f0",
-  "size": 16592896,
-  "bundle_sha256": "6d0aed791460ff12fcb3938213a8c76840b2e3e02b37da1713055afef26a91b2",
+  "sha256": "300068ea632f3d16f1d7399a1998501b395c85692b8b177cd59572b2cbb0cc78",
+  "size": 16596992,
+  "bundle_sha256": "03b96a5d9b7acef233ddd40e417cb923122b5b36ba24b04a7e8a42ef332a28c3",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "df4369e02db42c41eca6d41f27ea0fe604c5def5a3e28077d37aee2d6e14f3f0",
-      "size": 16592896
+      "sha256": "300068ea632f3d16f1d7399a1998501b395c85692b8b177cd59572b2cbb0cc78",
+      "size": 16596992
     },
     "DCORE_INSTRUCTIONS.txt": {
       "sha256": "728a9c40ccd521f2db6496e244293dace8af3ad7902b10201ada1c9dcaf01ed7",
