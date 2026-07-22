@@ -61,10 +61,7 @@ jobs:
         run: python tools/update_knowledge.py --db build/knowledge/dcore.sqlite
 
       - name: Apply curated migrations
-        run: |
-          for migration in tools/migrations/[0-9][0-9][0-9]_*.py; do
-            python "$migration" --db build/knowledge/dcore.sqlite
-          done
+        run: python tools/apply_migrations.py --db build/knowledge/dcore.sqlite
 
       - name: Remove updater backup from candidate
         run: rm -f build/knowledge/*.pre_update_*.sqlite
