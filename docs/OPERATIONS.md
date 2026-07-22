@@ -20,7 +20,7 @@ Open **Actions → Maintain dCore knowledge → Run workflow**, enable **Publish
 3. If identical, do nothing.
 4. If different, download the newest private dated release.
 5. Replace the Custom GPT instruction field with `DCORE_INSTRUCTIONS.txt`.
-6. Replace Knowledge attachments with `dcore.sqlite`, `manifest.json`, `dcore_lint.py` and `DCORE_LINT_CONTRACT.example.json`.
+6. Replace Knowledge attachments with `dcore.sqlite`, `manifest.json`, `dcore_lint.py` and `lint_contract.example.json`.
 7. Keep `update_knowledge.py` only in local/admin environments; the Custom GPT Action checks freshness but cannot persistently rewrite its own attachments.
 8. Save/update the GPT and repeat both Action tests.
 

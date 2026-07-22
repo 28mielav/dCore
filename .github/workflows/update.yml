@@ -44,7 +44,7 @@ jobs:
           mkdir -p build/knowledge
           cp knowledge/dcore.sqlite build/knowledge/dcore.sqlite
           cp knowledge/DCORE_INSTRUCTIONS.txt build/knowledge/DCORE_INSTRUCTIONS.txt
-          cp knowledge/DCORE_LINT_CONTRACT.example.json build/knowledge/DCORE_LINT_CONTRACT.example.json
+          cp knowledge/lint_contract.example.json build/knowledge/lint_contract.example.json
           cp tools/dcore_lint.py build/knowledge/dcore_lint.py
           cp knowledge/manifest.json build/knowledge/manifest.json
 
@@ -73,7 +73,7 @@ jobs:
             --db build/knowledge/dcore.sqlite \
             --output build/knowledge/manifest.json \
             --artifact build/knowledge/DCORE_INSTRUCTIONS.txt \
-            --artifact build/knowledge/DCORE_LINT_CONTRACT.example.json \
+            --artifact build/knowledge/lint_contract.example.json \
             --artifact build/knowledge/dcore_lint.py
 
       - name: Detect knowledge change
@@ -128,7 +128,7 @@ jobs:
           mkdir -p "dist/dCore-$date_utc"
           cp build/knowledge/dcore.sqlite "dist/dCore-$date_utc/dcore.sqlite"
           cp build/knowledge/DCORE_INSTRUCTIONS.txt "dist/dCore-$date_utc/DCORE_INSTRUCTIONS.txt"
-          cp build/knowledge/DCORE_LINT_CONTRACT.example.json "dist/dCore-$date_utc/DCORE_LINT_CONTRACT.example.json"
+          cp build/knowledge/lint_contract.example.json "dist/dCore-$date_utc/lint_contract.example.json"
           cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
           cp build/knowledge/dcore_lint.py "dist/dCore-$date_utc/dcore_lint.py"
           cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"

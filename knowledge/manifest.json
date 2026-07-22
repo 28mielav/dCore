@@ -1,20 +1,20 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-22T08:55:19.617696+00:00",
+  "generated_at": "2026-07-22T09:16:28.734738+00:00",
   "status": "verified",
-  "sha256": "64363f57d64e88b76c531d6cba37916bdbdf3e170888ed733c05100cb9cc5ce0",
+  "sha256": "6079e474b8de91489a659dc613fb395e065c5bdbaaded28e4d7cef58c4485cba",
   "size": 16596992,
-  "bundle_sha256": "0a8f307499b749dadf27abb7cedf4cee7a782b6bf378ff480a47509e6432d27c",
+  "bundle_sha256": "74f177cd16f9c6a0ef42ede3080c0f02fe2bd046a8244a383655453e468245c9",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "64363f57d64e88b76c531d6cba37916bdbdf3e170888ed733c05100cb9cc5ce0",
+      "sha256": "6079e474b8de91489a659dc613fb395e065c5bdbaaded28e4d7cef58c4485cba",
       "size": 16596992
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "728a9c40ccd521f2db6496e244293dace8af3ad7902b10201ada1c9dcaf01ed7",
-      "size": 7998
+      "sha256": "1a5aec39d9fd369fe5d11ca5f629b8a436db08d398b224a0df59ed14fd0b6dcd",
+      "size": 7993
     },
-    "DCORE_LINT_CONTRACT.example.json": {
+    "lint_contract.example.json": {
       "sha256": "906f9b78e7d2531472ae5de9d2f67e4e7647843e1d8a8e5f3cd866a1f09a32ea",
       "size": 321
     },

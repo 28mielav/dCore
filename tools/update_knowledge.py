@@ -384,7 +384,10 @@ def set_meta_metadata(db: sqlite3.Connection, heads: dict[str, str], counts: dic
         "meta.denizenm.commit": by_product["DenizenM"],
         "meta.voxizen.commit": by_product["Voxizen"],
         "meta.reflect.commit": by_product["denizen-reflect"],
-        "meta.target": "Paper 1.21.11 + latest public DenizenM; installed runtime remains final proof",
+        "meta.target": (
+            "Multi-version Minecraft/Paper + Denizen/DenizenM; select exact source/build "
+            "per request and treat installed runtime as final proof"
+        ),
         "meta.raw_source_docs_included": "true",
         "meta.query_protocol": (
             "Search meta_search first; join meta_preferred and order precedence DESC. "

@@ -1,6 +1,8 @@
 # dCore
 
-Private source and maintenance repository for the dCore Custom GPT: a DenizenScript engineering assistant targeting Paper 1.21.11 and the maintained DenizenM line.
+Private source and maintenance repository for the dCore Custom GPT: a multi-version DenizenScript engineering assistant for Minecraft servers.
+
+dCore resolves the target Minecraft/Paper, Denizen or DenizenM, addon and resource-pack versions for each task. Paper 1.21.11 is one supported runtime profile, not the scope of the project. Version-neutral architecture is reused; version-sensitive syntax and rendering behavior remain tied to their documented source and build.
 
 This repository keeps the last known-good Knowledge bundle, refreshes version-sensitive Meta sources, validates every candidate, publishes dated private releases, and exposes a minimal read-only freshness API to the Custom GPT.
 
@@ -36,7 +38,7 @@ docs/                       Architecture and operating instructions
 
 - `knowledge/dcore.sqlite` — authoritative maintained database and update seed.
 - `knowledge/DCORE_INSTRUCTIONS.txt` — complete Custom GPT instruction block (under 8,000 characters).
-- `knowledge/DCORE_LINT_CONTRACT.example.json` — example behavior contract for full-file lint.
+- `knowledge/lint_contract.example.json` — example behavior contract for full-file lint.
 - `tools/dcore_lint.py` — portable mandatory Denizen structural/contract gate.
 - `knowledge/manifest.json` — database and bundle hashes, counts, validation and upstream commits.
 
