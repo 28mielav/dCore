@@ -1,6 +1,14 @@
 name: Maintain dCore knowledge
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update.yml"
+      - "knowledge/**"
+      - "tools/**"
+      - "services/update-bridge/**"
+      - "integrations/custom-gpt/**"
   workflow_dispatch:
     inputs:
       publish_release:
@@ -110,7 +118,7 @@ jobs:
       - name: Decide whether to publish
         id: publish
         run: |
-          if [[ "${{ steps.changed.outputs.value }}" == "true" || "${{ inputs.publish_release || false }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "push" || "${{ steps.changed.outputs.value }}" == "true" || "${{ inputs.publish_release || false }}" == "true" ]]; then
             echo "value=true" >> "$GITHUB_OUTPUT"
           else
             echo "value=false" >> "$GITHUB_OUTPUT"
