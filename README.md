@@ -34,9 +34,11 @@ docs/                       Architecture and operating instructions
 
 ## Knowledge files
 
-- `knowledge/dcore.sqlite` — authoritative maintained knowledge database and seed for future updates.
-- `knowledge/DCORE_INSTRUCTIONS.txt` — dCore operating contract.
-- `knowledge/manifest.json` — SHA-256, catalogue counts, validation result and exact upstream commits.
+- `knowledge/dcore.sqlite` — authoritative maintained database and update seed.
+- `knowledge/DCORE_INSTRUCTIONS.txt` — complete Custom GPT instruction block (under 8,000 characters).
+- `knowledge/DCORE_LINT_CONTRACT.example.json` — example behavior contract for full-file lint.
+- `tools/dcore_lint.py` — portable mandatory Denizen structural/contract gate.
+- `knowledge/manifest.json` — database and bundle hashes, counts, validation and upstream commits.
 
 The SQLite file intentionally stays in this private repository. The updater refreshes external Meta inside an existing curated database; it cannot reconstruct the authored cards, routing rules and retrieval tests from upstream repositories alone.
 

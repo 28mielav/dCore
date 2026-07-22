@@ -10,3 +10,4 @@ services/update-bridge/.dev.vars
 cloudflare/.wrangler/
 *.secret
 *_PRIVATE.txt
+work/

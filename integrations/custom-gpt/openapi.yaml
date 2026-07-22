@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: dCore Private Update Status
-  version: 1.1.0
+  version: 1.2.0
   description: Read-only access to the latest verified private dCore knowledge release.
 servers:
   - url: https://dcore-update-bridge.ru-tonystark.workers.dev
@@ -40,6 +40,8 @@ paths:
                   - status
                   - sha256
                   - size
+                  - bundle_sha256
+                  - artifacts
                   - counts
                   - sources
                   - validation
@@ -55,6 +57,18 @@ paths:
                     type: string
                   size:
                     type: integer
+                  bundle_sha256:
+                    type: string
+                  artifacts:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      required: [sha256, size]
+                      properties:
+                        sha256:
+                          type: string
+                        size:
+                          type: integer
                   counts:
                     type: object
                     required: [cards, meta_entries, ide_diagnostics, retrieval_tests]
@@ -89,6 +103,7 @@ paths:
                         type: integer
                       failures:
                         type: array
-                        items: {}
+                        items:
+                          type: string
         "401":
           description: Missing or invalid bearer API key.

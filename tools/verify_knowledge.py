@@ -20,6 +20,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--db", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--artifact", action="append", type=Path, default=[])
     args = parser.parse_args()
 
     failures: list[str] = []
@@ -61,12 +62,29 @@ def main() -> int:
             failures.append(f"retrieval_failures={len(retrieval_failures)}")
 
     digest = hashlib.sha256(args.db.read_bytes()).hexdigest()
+    artifacts = {
+        args.db.name: {"sha256": digest, "size": args.db.stat().st_size}
+    }
+    for path in args.artifact:
+        if not path.is_file():
+            failures.append(f"missing_artifact={path.name}")
+            continue
+        artifacts[path.name] = {
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "size": path.stat().st_size,
+        }
+    bundle_material = "\n".join(
+        f"{name}:{data['sha256']}:{data['size']}"
+        for name, data in sorted(artifacts.items())
+    ).encode("utf-8")
     manifest = {
         "name": "dCore",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "verified" if not failures else "failed",
         "sha256": digest,
         "size": args.db.stat().st_size,
+        "bundle_sha256": hashlib.sha256(bundle_material).hexdigest(),
+        "artifacts": artifacts,
         "counts": counts,
         "sources": sources,
         "validation": {

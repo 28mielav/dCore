@@ -36,6 +36,8 @@ jobs:
           mkdir -p build/knowledge
           cp knowledge/dcore.sqlite build/knowledge/dcore.sqlite
           cp knowledge/DCORE_INSTRUCTIONS.txt build/knowledge/DCORE_INSTRUCTIONS.txt
+          cp knowledge/DCORE_LINT_CONTRACT.example.json build/knowledge/DCORE_LINT_CONTRACT.example.json
+          cp tools/dcore_lint.py build/knowledge/dcore_lint.py
           cp knowledge/manifest.json build/knowledge/manifest.json
 
       - name: Check upstream revisions
@@ -50,16 +52,29 @@ jobs:
         if: steps.upstream.outputs.required == 'true'
         run: python tools/update_knowledge.py --db build/knowledge/dcore.sqlite
 
+      - name: Apply curated migrations
+        run: |
+          for migration in tools/migrations/[0-9][0-9][0-9]_*.py; do
+            python "$migration" --db build/knowledge/dcore.sqlite
+          done
+
       - name: Remove updater backup from candidate
         run: rm -f build/knowledge/*.pre_update_*.sqlite
 
       - name: Validate candidate
-        run: python tools/verify_knowledge.py --db build/knowledge/dcore.sqlite --output build/knowledge/manifest.json
+        run: |
+          python -m unittest tools/test_dcore_lint.py
+          python tools/verify_knowledge.py \
+            --db build/knowledge/dcore.sqlite \
+            --output build/knowledge/manifest.json \
+            --artifact build/knowledge/DCORE_INSTRUCTIONS.txt \
+            --artifact build/knowledge/DCORE_LINT_CONTRACT.example.json \
+            --artifact build/knowledge/dcore_lint.py
 
       - name: Detect knowledge change
         id: changed
         run: |
-          if [[ "${{ steps.upstream.outputs.required }}" != "true" ]] || cmp -s knowledge/dcore.sqlite build/knowledge/dcore.sqlite; then
+          if cmp -s knowledge/dcore.sqlite build/knowledge/dcore.sqlite; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
@@ -108,11 +123,13 @@ jobs:
           mkdir -p "dist/dCore-$date_utc"
           cp build/knowledge/dcore.sqlite "dist/dCore-$date_utc/dcore.sqlite"
           cp build/knowledge/DCORE_INSTRUCTIONS.txt "dist/dCore-$date_utc/DCORE_INSTRUCTIONS.txt"
+          cp build/knowledge/DCORE_LINT_CONTRACT.example.json "dist/dCore-$date_utc/DCORE_LINT_CONTRACT.example.json"
           cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
-          cp tools/lint_denizen.py "dist/dCore-$date_utc/lint_denizen.py"
+          cp build/knowledge/dcore_lint.py "dist/dCore-$date_utc/dcore_lint.py"
           cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"
           cp tools/test_retrieval.py "dist/dCore-$date_utc/test_retrieval.py"
           cp tools/retrieval.py "dist/dCore-$date_utc/retrieval.py"
+          cp integrations/custom-gpt/openapi.yaml "dist/dCore-$date_utc/openapi.yaml"
           cd dist
           zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
           sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256"

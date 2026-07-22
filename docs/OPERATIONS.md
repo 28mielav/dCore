@@ -19,9 +19,10 @@ Open **Actions → Maintain dCore knowledge → Run workflow**, enable **Publish
 2. Compare the returned SHA-256 with the attached `manifest.json`.
 3. If identical, do nothing.
 4. If different, download the newest private dated release.
-5. Replace the Knowledge attachments with `dcore.sqlite`, `DCORE_INSTRUCTIONS.txt` and `manifest.json`.
-6. Keep `lint_denizen.py` and `update_knowledge.py` available only when the GPT environment is expected to execute local tools.
-7. Save/update the GPT and repeat both Action tests.
+5. Replace the Custom GPT instruction field with `DCORE_INSTRUCTIONS.txt`.
+6. Replace Knowledge attachments with `dcore.sqlite`, `manifest.json`, `dcore_lint.py` and `DCORE_LINT_CONTRACT.example.json`.
+7. Keep `update_knowledge.py` only in local/admin environments; the Custom GPT Action checks freshness but cannot persistently rewrite its own attachments.
+8. Save/update the GPT and repeat both Action tests.
 
 The platform does not permit the Action to perform step 5 automatically.
 

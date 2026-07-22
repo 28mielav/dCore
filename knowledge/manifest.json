@@ -1,19 +1,38 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-20T15:43:26.566388+00:00",
+  "generated_at": "2026-07-22T08:50:03.409152+00:00",
   "status": "verified",
-  "sha256": "e5d9ca2210b931bee395d2f1acf68cffcb30b364ea31401e665871a96a9becc3",
-  "size": 16678912,
+  "sha256": "df4369e02db42c41eca6d41f27ea0fe604c5def5a3e28077d37aee2d6e14f3f0",
+  "size": 16592896,
+  "bundle_sha256": "6d0aed791460ff12fcb3938213a8c76840b2e3e02b37da1713055afef26a91b2",
+  "artifacts": {
+    "dcore.sqlite": {
+      "sha256": "df4369e02db42c41eca6d41f27ea0fe604c5def5a3e28077d37aee2d6e14f3f0",
+      "size": 16592896
+    },
+    "DCORE_INSTRUCTIONS.txt": {
+      "sha256": "728a9c40ccd521f2db6496e244293dace8af3ad7902b10201ada1c9dcaf01ed7",
+      "size": 7998
+    },
+    "DCORE_LINT_CONTRACT.example.json": {
+      "sha256": "906f9b78e7d2531472ae5de9d2f67e4e7647843e1d8a8e5f3cd866a1f09a32ea",
+      "size": 321
+    },
+    "dcore_lint.py": {
+      "sha256": "471bbb6d9f7512cf595ab8f55922e6d629f88ef1a030a2e2228ce1cbe7029a70",
+      "size": 6480
+    }
+  },
   "counts": {
-    "cards": 116,
-    "meta_entries": 5429,
+    "cards": 117,
+    "meta_entries": 5430,
     "ide_diagnostics": 54,
-    "retrieval_tests": 87
+    "retrieval_tests": 90
   },
   "sources": [
     {
       "product": "Denizen",
-      "commit_sha": "a28495271162211cf4f18b38daa38ca10d10642d",
+      "commit_sha": "6aa77dd16e44407fe4089cf2ed27dd3591a098ae",
       "source_id": "denizen_official_dev"
     },
     {

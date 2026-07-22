@@ -1,0 +1,16 @@
+{
+  "clauses": [
+    {
+      "id": "mainhand_input",
+      "required_all": ["context.hand", "mainhand"],
+      "required_any": [],
+      "forbidden": []
+    },
+    {
+      "id": "single_cleanup_owner",
+      "required_all": ["run example_cleanup"],
+      "required_any": [],
+      "forbidden": ["while true"]
+    }
+  ]
+}
