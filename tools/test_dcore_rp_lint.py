@@ -8,7 +8,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from tools.dcore_rp_lint import Pack, lint_pack
+from tools.dcore_rp_lint import Pack, lint_pack, render_report_table
 
 VERTEX = """#version 150
 in vec3 Position;
@@ -75,6 +75,18 @@ class ResourcePackLintTests(unittest.TestCase):
         self.assertIn("shader_pass_read_write_hazard", codes)
         self.assertIn("unknown_shader_target", codes)
 
+    def test_legacy_post_custom_program_must_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write(root, "pack.mcmeta", json.dumps({"pack": {"pack_format": 34, "description": "test"}}))
+            self.write(root, "assets/test/shaders/post/demo.json", json.dumps({
+                "targets": ["swap"],
+                "passes": [{"name": "test:copy", "intarget": "swap", "outtarget": "main"}],
+            }))
+            report = lint_pack(Pack.open(root), pack_format=34)
+        self.assertIn("shader_program_not_in_pack", self.codes(report))
+        self.assertEqual("ERROR", report["static_verdict"])
+
     def test_case_marker_and_route_conflicts(self) -> None:
         # A directory on Windows cannot contain these two paths, but a zip can.
         one = {"vertex": "x", "fragment": "x", "dcore_core_route": "entity", "dcore_marker_channel": "uv2"}
@@ -125,6 +137,17 @@ class ResourcePackLintTests(unittest.TestCase):
             report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=34)
         self.assertEqual("STATIC_OK", report["static_verdict"])
         self.assertIn("assets/minecraft/post_effect/demo.json", report["route_census"]["modern_post_json"])
+
+    def test_default_human_report_is_compact_table(self) -> None:
+        report = {
+            "static_verdict": "ERROR",
+            "runtime_verdict": "RUNTIME_UNVERIFIED",
+            "issues": [{"severity": "error", "code": "broken", "path": "pack.mcmeta", "message": "Bad JSON"}],
+            "proof_checklist": [{"check": "Open the pack", "status": "RUNTIME_UNVERIFIED"}],
+        }
+        rendered = render_report_table(report)
+        self.assertIn("| ERROR | `broken` |", rendered)
+        self.assertIn("Runtime proof still required", rendered)
 
 
 if __name__ == "__main__":

@@ -231,11 +231,11 @@ class DesignComparatorTests(unittest.TestCase):
         )
         decision = dcore_design.compare(document, self.db_path)
         clean = dcore_design.verify(document, decision, self.db_path)
-        self.assertEqual("PASS", clean["status"])
+        self.assertEqual("DECISION_REPRODUCED", clean["status"])
         tampered = deepcopy(decision)
         tampered["selected_for_proof"] = "polling"
         changed = dcore_design.verify(document, tampered, self.db_path)
-        self.assertEqual("FAIL", changed["status"])
+        self.assertEqual("DECISION_MISMATCH", changed["status"])
         self.assertTrue(any("selected_for_proof" in item for item in changed["differences"]))
 
     def test_route_count_and_required_fields_are_validated(self):
@@ -283,7 +283,7 @@ class DesignComparatorTests(unittest.TestCase):
             ]
         )
         self.assertEqual(0, code)
-        self.assertEqual("PASS", json.loads(verify_output.read_text(encoding="utf-8"))["status"])
+        self.assertEqual("DECISION_REPRODUCED", json.loads(verify_output.read_text(encoding="utf-8"))["status"])
 
 
 if __name__ == "__main__":

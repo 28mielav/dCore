@@ -9,11 +9,12 @@ Visual repositories are monitored, not blindly ingested. `visual_review_required
 ## Install or update the Custom GPT
 
 1. Call `getLatestDcoreRelease` and compare `bundle_sha256` with the attached `manifest.json`.
-2. If different, download the latest private dated release.
+2. If different, download and unpack the latest private dated release.
 3. Remove the old seven Knowledge attachments.
-4. Upload `dcore.sqlite`, `manifest.json`, `retrieval.py`, `dcore_lint.py`, `dcore_design.py`, `dcore_rp_lint.py` and `lint_contract.example.json`.
-5. Replace the GPT Instructions field with the complete contents of `DCORE_INSTRUCTIONS.txt`.
-6. Save the GPT; test `checkDcoreBridge`, `getLatestDcoreRelease`, one DenizenM Meta query, one route comparison and one lint invocation.
+4. Upload the seven files inside `GPT_Knowledge`.
+5. Replace the GPT Instructions field with `GPT_Instructions/DCORE_INSTRUCTIONS.txt`.
+6. If `Custom_GPT_Action/openapi.yaml` has a newer schema version than the installed Action, re-import it; keep the existing authentication key.
+7. Save the GPT; test `checkDcoreBridge`, `getLatestDcoreRelease`, one DenizenM Meta query, one route comparison and one lint invocation.
 
 Do not upload `update_knowledge.py`, source clones, secrets or local work directories as GPT Knowledge.
 
@@ -44,7 +45,7 @@ Cloudflare Worker and Custom GPT Action share only the Bearer value `DCORE_ACTIO
 Use the bundled/current Python runtime:
 
 ```text
-python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py
+python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py tools/test_build_gpt_bundle.py
 python tools/test_retrieval.py --db knowledge/dcore.sqlite
 python tools/verify_knowledge.py --db knowledge/dcore.sqlite --output knowledge/manifest.json [all seven artifact arguments]
 ```

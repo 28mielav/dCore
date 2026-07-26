@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import textwrap
 import sys
 import zipfile
 from collections import Counter, defaultdict
@@ -319,6 +320,11 @@ def shader_program_json_path(reference: str) -> str:
     return f"assets/{namespace}/shaders/{resource}.json"
 
 
+def legacy_program_json_path(reference: str) -> str:
+    namespace, resource = reference.split(":", 1) if ":" in reference else ("minecraft", reference)
+    return f"assets/{namespace}/shaders/program/{resource}.json"
+
+
 def lint_post_chain(pack: Pack, path: str, document: dict[str, Any], issues: list[dict[str, Any]]) -> None:
     raw_targets = document.get("targets", [])
     if isinstance(raw_targets, dict):
@@ -385,6 +391,21 @@ def lint_post_chain(pack: Pack, path: str, document: dict[str, Any], issues: lis
                 issues.append(issue("unknown_shader_target", "error", path, f"Pass {index} references unknown {role} '{target}'."))
         if isinstance(incoming, str) and incoming == outgoing:
             issues.append(issue("shader_pass_read_write_hazard", "warning", path, f"Pass {index} reads and writes '{incoming}' in one pass."))
+        program = shader_pass.get("name")
+        if not isinstance(program, str) or not program:
+            issues.append(issue("missing_shader_program", "error", path, f"Pass {index} lacks string 'name'."))
+        else:
+            wanted = legacy_program_json_path(program)
+            actual, wrong_case = pack.resolve(wanted)
+            if actual is None:
+                severity = "warning" if program.startswith("minecraft:") or ":" not in program else "error"
+                issues.append(issue(
+                    "shader_program_not_in_pack", severity, path,
+                    f"Pass {index} program '{program}' is not present in this pack.",
+                    expected=wanted,
+                ))
+            elif wrong_case:
+                issues.append(issue("path_case_mismatch", "error", path, f"Program declares '{wanted}', but pack contains '{actual}'."))
         for auxiliary in shader_pass.get("auxtargets", []):
             name = target_name(auxiliary)
             if name and not known_target(name):
@@ -413,19 +434,56 @@ def proof_checklist(minecraft: str | None, pack_format: float | None) -> list[di
     ]
 
 
+def _table_cell(value: object, width: int = 88) -> str:
+    text = " ".join(str(value).replace("|", "\\|").split())
+    return textwrap.shorten(text, width=width, placeholder="...") if len(text) > width else text
+
+
+def render_report_table(report: dict[str, Any]) -> str:
+    rows = ["| Sev | Code | Path | Problem |", "|---|---|---|---|"]
+    for item in report.get("issues", []):
+        rows.append(
+            f"| {item['severity'].upper()} | `{item['code']}` | `{item.get('path', '-')}` | "
+            f"{_table_cell(item['message'])} |"
+        )
+    if not report.get("issues"):
+        rows.append("| PASS | - | - | No static diagnostics. |")
+    counts = Counter(item["severity"] for item in report.get("issues", []))
+    rows.extend([
+        "",
+        "| Static | Runtime | Error | Warning |",
+        "|---|---|---:|---:|",
+        f"| **{report['static_verdict']}** | **{report['runtime_verdict']}** | {counts['error']} | {counts['warning']} |",
+        "",
+        "Runtime proof still required:",
+        "",
+        "| Check | Status |",
+        "|---|---|",
+    ])
+    rows.extend(
+        f"| {_table_cell(item['check'])} | {item['status']} |"
+        for item in report.get("proof_checklist", [])
+    )
+    return "\n".join(rows)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Static Minecraft resource-pack and shader pipeline linter.")
     parser.add_argument("input", type=Path, help="Resource-pack directory or zip archive")
     parser.add_argument("--minecraft", help="Target Minecraft version")
     parser.add_argument("--pack-format", type=float, help="Target resource-pack format (integer or decimal)")
-    parser.add_argument("--json", action="store_true", help="Emit JSON (the default output format)")
+    parser.add_argument("--json", action="store_true", help="Emit machine JSON instead of the human table")
+    parser.add_argument("--format", choices=("table", "json"), default="table")
     parser.add_argument("--probe-plan", action="store_true", help="Include runtime checklist (included by default)")
     args = parser.parse_args(argv)
     try:
         report = lint_pack(Pack.open(args.input), args.minecraft, args.pack_format)
     except (OSError, ValueError, zipfile.BadZipFile) as exc:
         report = {"verdict": "ERROR", "static_verdict": "ERROR", "runtime_verdict": "RUNTIME_UNVERIFIED", "statuses": ["ERROR", "RUNTIME_UNVERIFIED"], "issues": [issue("input_error", "error", str(args.input), str(exc))], "proof_checklist": proof_checklist(args.minecraft, args.pack_format)}
-    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if args.json or args.format == "json":
+        print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    else:
+        print(render_report_table(report))
     return 1 if report["static_verdict"] == "ERROR" else 0
 
 

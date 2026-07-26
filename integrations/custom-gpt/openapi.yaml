@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: dCore Private Update Status
-  version: 1.2.0
+  version: 1.3.0
   description: Read-only access to the latest verified private dCore knowledge release.
 servers:
   - url: https://dcore-update-bridge.ru-tonystark.workers.dev
@@ -36,6 +36,7 @@ paths:
                 type: object
                 required:
                   - name
+                  - version
                   - generated_at
                   - status
                   - sha256
@@ -47,6 +48,8 @@ paths:
                   - validation
                 properties:
                   name:
+                    type: string
+                  version:
                     type: string
                   generated_at:
                     type: string

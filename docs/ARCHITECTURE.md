@@ -40,27 +40,27 @@ request
   -> freshness check
   -> retrieval.py (intent, domains, dependencies, contrasts, route patterns)
   -> exact DenizenM-first Meta lookup
-  -> route dossier with 2-4 real candidates
-  -> dcore_design.py (hard gates + Pareto comparison)
+  -> route dossier only when genuine alternatives can change the design
+  -> dcore_design.py for complex hard-gate + Pareto comparison
   -> pre-code ownership/cost/behavior contract
   -> implementation
   -> dcore_lint.py and, when applicable, dcore_rp_lint.py
   -> Refined + reload + focused runtime proof
 ```
 
-The route comparator cannot declare runtime success. `READY_FOR_PROOF` means one route is the unique proven pre-code candidate for the supplied facts. Unknown evidence, conflicting evidence or multiple non-dominated routes remain `INCOMPLETE`.
+The route comparator cannot declare runtime success. `READY_FOR_PROOF` means one route is the unique proven pre-code candidate for supplied facts. `DECISION_REPRODUCED` means only that verification recomputed the same artifact. Small exact fixes do not manufacture route dossiers.
 
 ## Clean-code boundary
 
 Entry events prove identity and dispatch. Feature tasks own cohesive lifecycle phases. Connected state has one authoritative writer. Every acquired resource has one cleanup owner. Dormant objects have no queue, entity or chunk ticket. Provider-specific calls live in one adapter. Abstractions require a second consumer, removed duplication or isolated volatility.
 
-`dcore_lint.py` distinguishes errors, warnings, suggestions and provenance. It understands the selected core/addon dialect; valid denizen-reflect syntax is not misclassified as unknown core syntax, but exact Java signatures still require installed-version proof.
+`dcore_lint.py` distinguishes errors, warnings, suggestions and provenance, and defaults to a compact human table. It checks terminal-command reachability, event blast radius and ceremonial forwarding tasks. Valid denizen-reflect syntax is not misclassified as unknown core syntax, but exact Java signatures still require installed-version proof.
 
 ## Shader workbench boundary
 
 The visual registry stores mechanisms below feature names: route probing, control channels, camera/plane transforms, temporal history, bloom graphs, custom particle encoding and GPU budgets. Public examples do not become production code merely because they render in an older client.
 
-`dcore_rp_lint.py` analyzes the final merged directory or ZIP: JSON, `#moj_import`, stage/interface linkage, post targets, path case, reserved channels and route ownership. `STATIC_OK` always carries `RUNTIME_UNVERIFIED`; route selection, F5, graphics modes and frame cost require the exact client.
+`dcore_rp_lint.py` analyzes the final merged directory or ZIP: JSON, `#moj_import`, namespace-aware program/stage linkage, post targets, path case, channels and route ownership. `STATIC_OK` always carries `RUNTIME_UNVERIFIED`; route selection, F5, graphics modes and frame cost require the exact client.
 
 ## Update transaction
 

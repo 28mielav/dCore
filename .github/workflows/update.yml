@@ -73,7 +73,7 @@ jobs:
 
       - name: Validate candidate
         run: |
-          python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py
+          python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py tools/test_build_gpt_bundle.py
           python tools/test_retrieval.py --db build/knowledge/dcore.sqlite
           python tools/verify_knowledge.py \
             --db build/knowledge/dcore.sqlite \
@@ -136,19 +136,10 @@ jobs:
         if: steps.publish.outputs.value == 'true'
         run: |
           date_utc=$(date -u +%Y-%m-%d)
-          mkdir -p "dist/dCore-$date_utc"
-          cp build/knowledge/dcore.sqlite "dist/dCore-$date_utc/dcore.sqlite"
-          cp build/knowledge/DCORE_INSTRUCTIONS.txt "dist/dCore-$date_utc/DCORE_INSTRUCTIONS.txt"
-          cp build/knowledge/lint_contract.example.json "dist/dCore-$date_utc/lint_contract.example.json"
-          cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
-          cp build/knowledge/dcore_lint.py "dist/dCore-$date_utc/dcore_lint.py"
-          cp build/knowledge/dcore_design.py "dist/dCore-$date_utc/dcore_design.py"
-          cp build/knowledge/dcore_rp_lint.py "dist/dCore-$date_utc/dcore_rp_lint.py"
-          cp build/knowledge/retrieval.py "dist/dCore-$date_utc/retrieval.py"
-          cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"
-          cp knowledge/visual_sources.json "dist/dCore-$date_utc/visual_sources.json"
-          cp tools/test_retrieval.py "dist/dCore-$date_utc/test_retrieval.py"
-          cp integrations/custom-gpt/openapi.yaml "dist/dCore-$date_utc/openapi.yaml"
+          python tools/build_gpt_bundle.py \
+            --root . \
+            --knowledge build/knowledge \
+            --output "dist/dCore-$date_utc"
           cd dist
           zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
           sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256"

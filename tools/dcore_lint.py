@@ -15,6 +15,7 @@ import argparse
 import json
 import re
 import sqlite3
+import textwrap
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -65,6 +66,10 @@ CONTRAST_HINTS = {
     "reflect_boundary": "CX-DEN-007",
     "large_event_handler": "CX-DEN-012",
     "oversized_event_handler": "CX-DEN-012",
+    "forwarding_task": "CX-DEN-013",
+    "ceremonial_container_name": "CX-DEN-013",
+    "unreachable_after_terminal_command": "CX-DEN-014",
+    "permission_policy_review": "CX-DEN-015",
 }
 MUTATION_COMMANDS = {
     "adjust", "adjustblock", "animate", "create", "determine", "equip",
@@ -507,7 +512,7 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
         end = ordered_scripts[index + 1][1] - 1 if index + 1 < len(ordered_scripts) else len(parsed.lines)
         container_type = None
         for number in range(start + 1, end + 1):
-            match = re.match(r"^\s{2}type:\s*([A-Za-z_\-]+)", strip_comment(parsed.lines[number - 1]), re.I)
+            match = re.match(r"^\s+type:\s*([A-Za-z_\-]+)", strip_comment(parsed.lines[number - 1]), re.I)
             if match:
                 container_type = match.group(1).lower()
                 break
@@ -525,6 +530,37 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
     # thresholds are review gates: large cohesive recovery code can be valid,
     # but it must be deliberately decomposed or justified.
     commands = list(command_lines(parsed))
+
+    # A non-passive determine and an unconditional stop terminate the current
+    # queue path. The next command at the same indentation is therefore dead;
+    # a lower indentation has left the branch and remains reachable.
+    for index, (number, content) in enumerate(commands):
+        lowered = content.lower()
+        terminal = (
+            lowered == "stop"
+            or (lowered.startswith("determine ") and not lowered.startswith("determine passively "))
+        )
+        if not terminal:
+            continue
+        scope_end = next(
+            (event_end for event_start, event_end, _ in parsed.events if event_start < number <= event_end),
+            next((end for _, start, end, _ in container_regions if start < number <= end), number),
+        )
+        indent = len(parsed.lines[number - 1]) - len(parsed.lines[number - 1].lstrip(" "))
+        for following_number, _ in commands[index + 1:]:
+            if following_number > scope_end:
+                break
+            following_indent = len(parsed.lines[following_number - 1]) - len(parsed.lines[following_number - 1].lstrip(" "))
+            if following_indent > indent:
+                continue
+            if following_indent == indent:
+                results.append(issue(
+                    "unreachable_after_terminal_command", "error", following_number,
+                    f"This command is unreachable because line {number} terminates the current queue path.",
+                    layer="control_flow", source="dCore terminal-command rule",
+                    suggestion="Move required work before the terminal command, or use `determine passively` only when continued execution is intentional.",
+                ))
+            break
 
     def region_metrics(start: int, end: int) -> tuple[list[tuple[int, str]], int, int, int]:
         region = [(number, content) for number, content in commands if start < number <= end]
@@ -610,6 +646,35 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
             continue
         region, nesting, branches, ladder = region_metrics(start, end)
         count = len(region)
+        if container_type == "command":
+            for line_number in range(start + 1, end + 1):
+                if re.match(r"^\s+permission:\s*\S+", strip_comment(parsed.lines[line_number - 1]), re.I):
+                    results.append(issue(
+                        "permission_policy_review", "suggestion", line_number,
+                        f"Command '{name}' declares an access permission.",
+                        layer="access_contract", source="dCore permission-policy rule",
+                        suggestion="Keep it only when the requested access policy requires it, and test both allowed and denied behavior.",
+                    ))
+        if container_type == "task" and count == 1:
+            command = COMMAND_TOKEN.match(region[0][1])
+            if command and command.group(1).lower() in {"inject", "run"}:
+                results.append(issue(
+                    "forwarding_task", "suggestion", start,
+                    f"Task '{name}' only forwards to another container.",
+                    layer="maintainability", source="dCore clean-code budget",
+                    suggestion="Call the cohesive owner directly, or inline the forwarding boundary if it has no independent contract.",
+                ))
+        if (
+            container_type in {"task", "procedure"}
+            and count <= 5
+            and re.search(r"(?:^|_)(?:manager|service|processor|orchestrator|helper)(?:_|$)", name)
+        ):
+            results.append(issue(
+                "ceremonial_container_name", "suggestion", start,
+                f"Small {container_type} '{name}' uses an architectural role name without showing that responsibility.",
+                layer="maintainability", source="dCore clean-code budget",
+                suggestion="Name the domain action or owned transition; keep manager/service names only when the container actually owns that lifecycle.",
+            ))
         if count > 90:
             results.append(issue(
                 "oversized_executable_container", "warning", start,
@@ -757,7 +822,7 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
                 ))
             else:
                 results.append(issue(
-                    "broad_event_guarded", "suggestion", start,
+                    "broad_event_guarded", "information", start,
                     "This global matcher is guarded, but still receives unrelated world events.",
                     layer="performance",
                     source="dCore event blast-radius rule",
@@ -952,15 +1017,60 @@ def default_db() -> Path | None:
     return next((path for path in candidates if path.is_file()), None)
 
 
+def _table_cell(value: object, width: int) -> str:
+    text = " ".join(str(value).replace("|", "\\|").split())
+    return textwrap.shorten(text, width=width, placeholder="...") if len(text) > width else text
+
+
+def render_table(results: list[dict], *, show_information: bool = False) -> str:
+    visible = [
+        result for result in results
+        if show_information or result["severity"] != "information"
+    ]
+    rows = ["| Sev | Code | Location | Problem | Fix |", "|---|---|---|---|---|"]
+    for result in visible:
+        location = Path(result["file"]).name
+        if result["line"]:
+            location += f":{result['line']}"
+        rows.append(
+            "| {sev} | `{code}` | `{location}` | {problem} | {fix} |".format(
+                sev=result["severity"].upper(),
+                code=result["code"],
+                location=location,
+                problem=_table_cell(result["message"], 72),
+                fix=_table_cell(result.get("suggestion", "-"), 72),
+            )
+        )
+    if not visible:
+        rows.append("| PASS | - | - | No static diagnostics. | - |")
+    counts = Counter(result["severity"] for result in results)
+    blocking = counts["error"] > 0
+    verdict = "ERROR" if blocking else "STATIC_OK"
+    rows.extend([
+        "",
+        "| Verdict | Error | Warning | Suggestion | Information |",
+        "|---|---:|---:|---:|---:|",
+        f"| **{verdict}** | {counts['error']} | {counts['warning']} | {counts['suggestion']} | {counts['information']} |",
+        "",
+        "Scope: static structure/API/lifecycle only; Refined, `/ex reload`, and gameplay remain separate proof.",
+    ])
+    if counts["information"] and not show_information:
+        rows.append("Information rows are hidden; use `--show-information` when provenance is needed.")
+    return "\n".join(rows)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="DenizenM-aware structural, API and lifecycle lint")
     parser.add_argument("paths", nargs="+", type=Path)
-    parser.add_argument("--json", action="store_true")
+    parser.add_argument("--json", action="store_true", help="Emit machine JSON instead of the human table")
+    parser.add_argument("--format", choices=("table", "json"), default="table")
+    parser.add_argument("--show-information", action="store_true", help="Include provenance-only rows in table output")
     parser.add_argument("--contract", type=Path, help="JSON behavior witness manifest")
     parser.add_argument("--decision", type=Path, help="JSON result emitted by dcore_design compare")
     parser.add_argument("--db", type=Path, default=default_db())
     parser.add_argument("--profile", choices=("denizenm", "official"), default="denizenm")
     parser.add_argument("--addon", action="append", choices=("reflect", "voxizen"), default=[])
+    parser.add_argument("--external-script", action="append", default=[], help="Known project script intentionally outside this partial lint artifact")
     parser.add_argument("--closed-world", action="store_true", help="unresolved script references are errors")
     parser.add_argument("--strict-warnings", action="store_true")
     args = parser.parse_args()
@@ -971,6 +1081,7 @@ def main() -> int:
         parsed_files[path] = parse_file(text)
     meta = MetaIndex(args.db, args.profile, set(args.addon))
     all_scripts = {name for parsed in parsed_files.values() for name in parsed.scripts}
+    all_scripts.update(name.casefold() for name in args.external_script)
     all_results: list[dict] = []
     contract = json.loads(args.contract.read_text(encoding="utf-8")) if args.contract else None
     decision = json.loads(args.decision.read_text(encoding="utf-8")) if args.decision else None
@@ -991,22 +1102,10 @@ def main() -> int:
             results.extend(lint_contract(parsed.text, contract, decision))
         all_results.extend({"file": str(path), **result} for result in results)
 
-    if args.json:
+    if args.json or args.format == "json":
         print(json.dumps(all_results, ensure_ascii=False, indent=2))
     else:
-        for result in all_results:
-            print(
-                f"{result['file']}:{result['line']} [{result['severity']}] "
-                f"{result['code']} ({result['layer']}): {result['message']}"
-            )
-            if result.get("suggestion"):
-                print(f"  suggestion: {result['suggestion']}")
-        counts = Counter(result["severity"] for result in all_results)
-        print(
-            "dCore lint: "
-            + ", ".join(f"{name}={counts.get(name, 0)}" for name in ("error", "warning", "suggestion", "information"))
-        )
-        print("scope: static structure/API/lifecycle only; Refined, /ex reload and gameplay are still required")
+        print(render_table(all_results, show_information=args.show_information))
     blocking = any(result["severity"] == "error" for result in all_results)
     if args.strict_warnings:
         blocking = blocking or any(result["severity"] == "warning" for result in all_results)

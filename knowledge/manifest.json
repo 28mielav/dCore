@@ -1,47 +1,48 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-26T16:41:29.440646+00:00",
+  "version": "0.30",
+  "generated_at": "2026-07-26T19:22:23.381079+00:00",
   "status": "verified",
-  "sha256": "c5a14a64d2a152b64b464906016acc02fe60d6c9b2fb73df8972a0137fe284ef",
-  "size": 16789504,
-  "bundle_sha256": "1572e0113a36c7f9ab4d59be206cfea6dc2681d3f40edccc94577ba3b0b13aa5",
+  "sha256": "dbd32997e5c736dbd39eec89edbf5a62d78f9796db544e87c49bf18eaeb688be",
+  "size": 16859136,
+  "bundle_sha256": "ff411671ebc13319545cad7d0bb66ac0764ea60446331de5566feea5795ab0bf",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "c5a14a64d2a152b64b464906016acc02fe60d6c9b2fb73df8972a0137fe284ef",
-      "size": 16789504
+      "sha256": "dbd32997e5c736dbd39eec89edbf5a62d78f9796db544e87c49bf18eaeb688be",
+      "size": 16859136
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "c54aac3f2167b6d1f0356c1009d10c42356d1e6363f100d7bbe69194d74db034",
-      "size": 7590
+      "sha256": "a0aa6fb45b3371df9a7c1d67f3e3288cc8b9460c4998240f54878a824c71331b",
+      "size": 7921
     },
     "lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
       "size": 1306
     },
+    "dcore_lint.py": {
+      "sha256": "aebe017a15a462b637055cc59a47aa0f4103a63c8dcdd2b49f3bd826ae1256cf",
+      "size": 52563
+    },
+    "dcore_design.py": {
+      "sha256": "f72f06f69ab7a3b4645918fffccf3f28a2aafa33aaa2c6b860bd1c223afeec9b",
+      "size": 38763
+    },
+    "dcore_rp_lint.py": {
+      "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
+      "size": 26423
+    },
     "retrieval.py": {
       "sha256": "ade2ec04241970685950d021bfc03183327c3fae848e644330d2c0ec4bab5604",
       "size": 20033
-    },
-    "dcore_lint.py": {
-      "sha256": "4e8f1c142258cc93e5c3ab96f58dc0dbe192c4dca516f3273ba560c7cf8c54c5",
-      "size": 46991
-    },
-    "dcore_design.py": {
-      "sha256": "6901341fe8c4339c17a1aaf18e3e2fc9af66681ecbc1b0cdb16eb0241f0a8dad",
-      "size": 38720
-    },
-    "dcore_rp_lint.py": {
-      "sha256": "5ba95eed3a410eaa6ce93f69bde79919c05fb545565f39c0b7d3f33335f542c9",
-      "size": 23863
     }
   },
   "counts": {
-    "cards": 139,
+    "cards": 145,
     "meta_entries": 5430,
     "ide_diagnostics": 54,
-    "retrieval_tests": 117,
+    "retrieval_tests": 122,
     "visual_sources": 5,
-    "contrast_examples": 24,
+    "contrast_examples": 28,
     "route_patterns": 10
   },
   "sources": [

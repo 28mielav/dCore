@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from tools.dcore_lint import MetaIndex, lint_contract, lint_text
+from tools.dcore_lint import MetaIndex, lint_contract, lint_text, render_table
 
 
 class DcoreLintTests(unittest.TestCase):
@@ -165,6 +165,32 @@ example:
         self.assertNotIn("broad_cancel_without_identity_guard", good_codes)
         self.assertIn("broad_event_guarded", good_codes)
 
+    def test_terminal_determine_makes_following_command_unreachable(self) -> None:
+        text = """example:
+  type: world
+  events:
+    on player tries to attack slime:
+    - determine cancelled
+    - run treasure_dig
+"""
+        self.assertIn(
+            "unreachable_after_terminal_command",
+            {item["code"] for item in lint_text(text)},
+        )
+
+    def test_passive_determine_keeps_following_command_reachable(self) -> None:
+        text = """example:
+  type: world
+  events:
+    on player clicks:
+    - determine passively cancelled
+    - narrate ok
+"""
+        self.assertNotIn(
+            "unreachable_after_terminal_command",
+            {item["code"] for item in lint_text(text)},
+        )
+
     def test_casted_entity_type_is_not_ambiguous(self) -> None:
         generic = "example:\n  type: task\n  script:\n  - if <[entity].type> == wolf:\n    - stop\n"
         casted = "example:\n  type: task\n  script:\n  - if <[entity].as[entity].type> == wolf:\n    - stop\n"
@@ -224,6 +250,42 @@ example:
         self.assertNotIn("oversized_event_handler", codes)
         self.assertNotIn("large_event_handler", codes)
         self.assertNotIn("deep_control_nesting", codes)
+
+    def test_container_type_accepts_valid_deeper_indentation(self) -> None:
+        text = "example:\n    type: task\n    script:\n    - narrate ok\n"
+        self.assertNotIn("missing_container_type", {item["code"] for item in lint_text(text)})
+
+    def test_forwarding_task_is_reviewed(self) -> None:
+        text = """bridge:
+  type: task
+  script:
+  - run real_owner
+
+real_owner:
+  type: task
+  script:
+  - narrate ok
+"""
+        self.assertIn("forwarding_task", {item["code"] for item in lint_text(text)})
+
+    def test_command_permission_requires_product_policy_review(self) -> None:
+        text = """demo_command:
+  type: command
+  name: demo
+  permission: demo.use
+  script:
+  - narrate ok
+"""
+        self.assertIn("permission_policy_review", {item["code"] for item in lint_text(text)})
+
+    def test_human_table_hides_information_by_default(self) -> None:
+        report = render_table([
+            {"file": "demo.dsc", "line": 4, "severity": "warning", "code": "demo", "message": "Problem", "suggestion": "Fix"},
+            {"file": "demo.dsc", "line": 0, "severity": "information", "code": "source", "message": "Provenance"},
+        ])
+        self.assertIn("| WARNING |", report)
+        self.assertNotIn("`source`", report)
+        self.assertIn("Information rows are hidden", report)
 
 
 if __name__ == "__main__":

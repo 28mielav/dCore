@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 
-TOOL_VERSION = "0.29"
+TOOL_VERSION = "0.30"
 SCHEMA_VERSION = 1
 
 DEFAULT_AXES: Dict[str, str] = {
@@ -839,7 +839,7 @@ def verify(document: Any, decision: Any, db_path: Optional[Path] = None) -> Dict
     return {
         "tool": "dcore_design",
         "tool_version": TOOL_VERSION,
-        "status": "PASS" if not differences else "FAIL",
+        "status": "DECISION_REPRODUCED" if not differences else "DECISION_MISMATCH",
         "input_sha256": sha256_json(document),
         "decision_status": expected["status"],
         "selected_for_proof": expected["selected_for_proof"],
@@ -903,7 +903,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         decision = _read_json(args.decision)
         result = verify(document, decision, args.db)
         _write_json(result, args.output, args.pretty)
-        return 0 if result["status"] == "PASS" else 3
+        return 0 if result["status"] == "DECISION_REPRODUCED" else 3
     except InputError as exc:
         result = {
             "tool": "dcore_design",
