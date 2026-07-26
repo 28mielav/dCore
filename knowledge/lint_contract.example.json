@@ -1,4 +1,24 @@
 {
+  "design": {
+    "expected_scale": "Up to 50 online players and 10 concurrent sessions.",
+    "entry_points": ["main-hand item click", "quit", "reload"],
+    "state_owners": ["one session map owned by the initiating player"],
+    "hot_path_budget": "One narrow event; no global tick, scan or forced chunk.",
+    "concurrency": "A token replaces the previous session; stale writers stop.",
+    "persistence_reload": "Session is transient and cleanup runs before reload.",
+    "failure_cleanup": "Every exit after acquisition calls example_cleanup.",
+    "change_axes": ["input item", "duration", "feedback"],
+    "code_shape_budget": {
+      "containers": 3,
+      "events": 3,
+      "max_handler_commands": 35,
+      "max_control_nesting": 3
+    },
+    "route_decision": {
+      "selected_for_proof": "native_denizenm",
+      "rationale": "Exact target Meta satisfies the capability with the smallest blast radius; console and Reflect routes remain rejected alternatives."
+    }
+  },
   "clauses": [
     {
       "id": "mainhand_input",

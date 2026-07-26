@@ -2,65 +2,51 @@
 
 ## Routine maintenance
 
-No weekly action is required. The workflow runs every Monday at 04:23 UTC.
+The private workflow runs Monday at 04:23 UTC and on manual dispatch. A green run either confirms the current bundle or publishes/replaces the private release named `YYYY-MM-DD`.
 
-A successful run can produce either:
+Visual repositories are monitored, not blindly ingested. `visual_review_required=true` means a registered repository moved beyond its curated commit. Existing knowledge remains usable and pinned; review the upstream diff before advancing its indexed SHA or copying code.
 
-- no release: upstream commits and Knowledge were already current;
-- a `YYYY-MM-DD` release: a changed candidate passed validation.
+## Install or update the Custom GPT
 
-## Force a fresh dated bundle
+1. Call `getLatestDcoreRelease` and compare `bundle_sha256` with the attached `manifest.json`.
+2. If different, download the latest private dated release.
+3. Remove the old seven Knowledge attachments.
+4. Upload `dcore.sqlite`, `manifest.json`, `retrieval.py`, `dcore_lint.py`, `dcore_design.py`, `dcore_rp_lint.py` and `lint_contract.example.json`.
+5. Replace the GPT Instructions field with the complete contents of `DCORE_INSTRUCTIONS.txt`.
+6. Save the GPT; test `checkDcoreBridge`, `getLatestDcoreRelease`, one DenizenM Meta query, one route comparison and one lint invocation.
 
-Open **Actions → Maintain dCore knowledge → Run workflow**, enable **Publish today's verified bundle**, and run it. A second run on the same UTC date replaces that day's release instead of creating duplicates.
+Do not upload `update_knowledge.py`, source clones, secrets or local work directories as GPT Knowledge.
 
-## Update Custom GPT Knowledge
+## Force a release
 
-1. Ask dCore to call `getLatestDcoreRelease`.
-2. Compare the returned SHA-256 with the attached `manifest.json`.
-3. If identical, do nothing.
-4. If different, download the newest private dated release.
-5. Replace the Custom GPT instruction field with `DCORE_INSTRUCTIONS.txt`.
-6. Replace Knowledge attachments with `dcore.sqlite`, `manifest.json`, `dcore_lint.py` and `lint_contract.example.json`.
-7. Keep `update_knowledge.py` only in local/admin environments; the Custom GPT Action checks freshness but cannot persistently rewrite its own attachments.
-8. Save/update the GPT and repeat both Action tests.
-
-The platform does not permit the Action to perform step 5 automatically.
+Open **Actions -> Maintain dCore knowledge -> Run workflow**, enable **Publish today's verified bundle**, and run it. A second run on the same UTC date replaces that date's release.
 
 ## Required secrets
 
-GitHub Actions repository secrets:
+GitHub repository secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
 
-Cloudflare Worker secret:
+Cloudflare Worker and Custom GPT Action share only the Bearer value `DCORE_ACTION_KEY`. Never commit it or put it in a release/Knowledge file.
 
-- `DCORE_ACTION_KEY`
+## Failure recovery
 
-Custom GPT Action authentication uses the same `DCORE_ACTION_KEY` as a Bearer API key. Never put any secret in the repository, release archive or GPT Knowledge.
+- **Before validation:** rerun later; canonical Knowledge was not touched.
+- **Validation failure:** download the diagnostic artifact, fix the failing invariant/test, and rerun. Do not force-install the candidate.
+- **Worker deploy failure:** database/release may be valid, but Action freshness stays on the previous deployed manifest until a successful deploy.
+- **Action 401:** rotate `DCORE_ACTION_KEY` in the Worker and GPT Action authentication.
+- **Manifest mismatch:** rerun maintenance; never claim current Knowledge from bridge health alone.
+- **Database corruption:** restore `knowledge/dcore.sqlite` and `manifest.json` from the latest verified private release, then run all validation before pushing.
 
-## Recovery
+## Local release check
 
-### Workflow fails before validation
+Use the bundled/current Python runtime:
 
-Leave the repository untouched and rerun later. The last committed database is still the last known-good version.
+```text
+python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py
+python tools/test_retrieval.py --db knowledge/dcore.sqlite
+python tools/verify_knowledge.py --db knowledge/dcore.sqlite --output knowledge/manifest.json [all seven artifact arguments]
+```
 
-### Workflow fails during Worker deployment
-
-Inspect `Deploy freshness bridge`. Fix credentials or deployment configuration and rerun. The previously deployed manifest remains readable.
-
-### Action returns 401
-
-The GPT and Worker keys differ. Generate one replacement key, update the Worker secret, then update GPT Action authentication.
-
-### Action reports an older SHA than GitHub
-
-Rerun the workflow. Worker deployment is deliberately after candidate validation/commit.
-
-### Database corruption suspected
-
-Do not overwrite the repository seed. Download the last dated release whose manifest has `status: verified`, confirm its published SHA-256 file, restore `knowledge/dcore.sqlite`, then run the workflow.
-
-## Key rotation
-
-Rotate `DCORE_ACTION_KEY` if it is exposed. Rotate `CLOUDFLARE_API_TOKEN` if GitHub deployment credentials are exposed. They have different authority and must never be reused.
+Static success is not server/client runtime proof. Preserve the runtime checklist produced by the relevant tool.

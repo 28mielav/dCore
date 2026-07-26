@@ -1,70 +1,65 @@
 # dCore
 
-Private source and maintenance repository for the dCore Custom GPT: a multi-version DenizenScript engineering assistant for Minecraft servers.
+Private source and maintenance repository for dCore, a multi-version DenizenScript and Minecraft resource-pack engineering GPT.
 
-dCore resolves the target Minecraft/Paper, Denizen or DenizenM, addon and resource-pack versions for each task. Paper 1.21.11 is one supported runtime profile, not the scope of the project. Version-neutral architecture is reused; version-sensitive syntax and rendering behavior remain tied to their documented source and build.
+dCore is not tied to Paper 1.21.11. Each request resolves its own Minecraft/Paper, Denizen or DenizenM, addon and resource-pack versions. Version-neutral engineering rules are reusable; syntax, plugin bindings and rendering behavior remain pinned to evidence for the selected build.
 
-This repository keeps the last known-good Knowledge bundle, refreshes version-sensitive Meta sources, validates every candidate, publishes dated private releases, and exposes a minimal read-only freshness API to the Custom GPT.
+## What 0.29 adds
 
-## What is automated
+- deterministic comparison of 2-4 implementation routes before code is written;
+- a DenizenM-native-first gate, with addon, Reflect and console fallbacks kept behind explicit boundaries;
+- executable bad/good contrast fixtures for code quality and shader design;
+- a final-pack resource-pack/shader linter with route census and runtime proof plan;
+- pinned public visual sources with commit, license, version and ingest policy;
+- automatic upstream monitoring that marks changed visual sources `review_pending` instead of silently copying them;
+- stricter clean-code, event blast-radius, ownership and lifecycle verification.
 
-Every Monday, and on manual request, GitHub Actions:
+## Maintenance flow
 
-1. compares the indexed upstream commits;
-2. updates Denizen, Denizen-Core, DenizenM, Voxizen, denizen-reflect and Refined DenizenScript metadata in an isolated database copy;
-3. validates SQLite integrity, foreign keys, catalogue minimums and every retrieval-routing regression;
-4. installs and commits only a passing candidate;
-5. deploys the verified manifest to the private Cloudflare bridge;
-6. publishes a dated private release when Knowledge changed.
+GitHub Actions runs weekly and on demand:
 
-The last known-good database remains untouched when download, import or validation fails.
+1. copies the last verified SQLite database into an isolated build directory;
+2. checks Denizen, Denizen-Core, DenizenM, Voxizen, denizen-reflect, Refined DenizenScript and registered visual sources;
+3. refreshes source Meta and IDE diagnostics; visual source changes are recorded for human review;
+4. applies curated migrations;
+5. runs unit, retrieval, integrity, provenance and artifact validation;
+6. commits only a passing candidate, deploys the read-only freshness bridge and publishes a private UTC-dated release.
 
-## What remains manual
-
-Custom GPT Actions cannot replace files attached to GPT Knowledge. The Action can prove that a newer verified bundle exists, but the owner must still download the private dated release and replace the GPT Knowledge attachments when the SHA-256 differs.
+A failed download, import or test never replaces the last known-good database.
 
 ## Repository layout
 
 ```text
-knowledge/                  Last known-good GPT Knowledge and manifest
-tools/                      Updater, validator and Denizen lint helper
-services/update-bridge/     Read-only Cloudflare Worker
-integrations/custom-gpt/    OpenAPI schema for the GPT Action
-docs/                       Architecture and operating instructions
-.github/workflows/          Scheduled maintenance pipeline
+knowledge/                  Canonical database, GPT instructions and manifest
+tools/                      Retrieval, route decision, lint, updater and tests
+services/update-bridge/     Read-only Cloudflare freshness API
+integrations/custom-gpt/    Custom GPT OpenAPI schema
+docs/                       Architecture and operating procedure
+.github/workflows/          Scheduled verified maintenance
 ```
 
-## Knowledge files
+## Custom GPT attachment set
 
-- `knowledge/dcore.sqlite` — authoritative maintained database and update seed.
-- `knowledge/DCORE_INSTRUCTIONS.txt` — complete Custom GPT instruction block (under 8,000 characters).
-- `knowledge/lint_contract.example.json` — example behavior contract for full-file lint.
-- `tools/dcore_lint.py` — portable mandatory Denizen structural/contract gate.
-- `knowledge/manifest.json` — database and bundle hashes, counts, validation and upstream commits.
+Upload exactly these Knowledge files:
 
-The SQLite file intentionally stays in this private repository. The updater refreshes external Meta inside an existing curated database; it cannot reconstruct the authored cards, routing rules and retrieval tests from upstream repositories alone.
+- `knowledge/dcore.sqlite`
+- `knowledge/manifest.json`
+- `tools/retrieval.py`
+- `tools/dcore_lint.py`
+- `tools/dcore_design.py`
+- `tools/dcore_rp_lint.py`
+- `knowledge/lint_contract.example.json`
 
-## Normal operation
+Paste `knowledge/DCORE_INSTRUCTIONS.txt` into the GPT Instructions field; it is not a Knowledge attachment.
 
-- Scheduled maintenance requires no intervention.
-- Check workflow health under **Actions → Maintain dCore knowledge**.
-- A green run with no new release means all indexed sources were already current.
-- A new release is named only by its UTC date: `YYYY-MM-DD`.
-- Detailed recovery and rotation procedures are in [docs/OPERATIONS.md](docs/OPERATIONS.md).
+The SQLite file intentionally remains versioned in this private repository. Public Meta cannot reconstruct the authored cards, routing graph, contrast corpus, source policies or retrieval tests. The repository database is the reproducible update seed and rollback point, while private releases are immutable distribution snapshots.
 
-## Security boundary
+## Public source policy
 
-- The repository and releases remain private.
-- GitHub stores only the Cloudflare deployment token and account ID as Actions secrets.
-- Cloudflare stores only `DCORE_ACTION_KEY`.
-- The Custom GPT receives only the read-only Action key.
-- The Worker returns health and the verified manifest; it cannot modify GitHub, Cloudflare or Knowledge.
-- `DCORE_ACTION_KEY_PRIVATE.txt`, `.dev.vars` and other secrets must never be committed or uploaded as GPT Knowledge.
+`knowledge/visual_sources.json` registers external repositories by exact commit. Licensed material may be studied under its recorded policy. Missing-license sources are reference-only: dCore may extract facts and architecture, but must not redistribute their code. Historical shader packs are mechanisms to port and test, never proof of current compatibility.
 
-## Status API
+## Manual boundary
 
-- `GET /v1/health` — bridge health.
-- `GET /v1/latest` — latest verified manifest.
-- `GET /privacy` — public privacy policy.
+GitHub Actions and the Cloudflare bridge can report a newer verified bundle, but the Custom GPT platform cannot replace its own attached Knowledge. The owner must download the private release and replace the seven files when `bundle_sha256` changes.
 
-The Custom GPT schema is [integrations/custom-gpt/openapi.yaml](integrations/custom-gpt/openapi.yaml).
+See [Architecture](docs/ARCHITECTURE.md) and [Operations](docs/OPERATIONS.md).

@@ -3,49 +3,67 @@
 ## Trust flow
 
 ```text
-Public upstream repositories
-          ↓ exact commits
-Isolated SQLite candidate
-          ↓ mandatory validation
-Private GitHub repository (last known-good)
-          ├─ dated private release for the owner
-          └─ verified manifest → Cloudflare Worker → Custom GPT Action
+pinned public sources + authored rules
+                |
+                v
+       isolated SQLite candidate
+                |
+     migrations + executable tests
+                |
+                v
+ private last-known-good repository
+       |                    |
+       v                    v
+ dated owner bundle    manifest freshness API
 ```
+
+The Cloudflare Worker is not a database and cannot update dCore. It exposes only the latest verified manifest. GitHub Actions maintains the repository candidate. Custom GPT Knowledge replacement remains manual.
 
 ## Sources of truth
 
 | Fact | Owner |
 |---|---|
-| Curated cards, routing and retrieval tests | `knowledge/dcore.sqlite` |
-| Current indexed upstream revisions | `meta_sources` inside SQLite |
-| Integrity and release identity | `knowledge/manifest.json` |
-| GPT behaviour contract | `knowledge/DCORE_INSTRUCTIONS.txt` |
-| Deployment procedure | `.github/workflows/update.yml` |
-| GPT freshness view | Cloudflare Worker response |
+| Curated engineering cards and dependencies | `cards`, `card_links` |
+| Exact Denizen APIs | `meta_sources`, `meta_entries`, `meta_preferred` |
+| IDE diagnostics | `ide_sources`, `ide_diagnostics` |
+| Retrieval behavior | routing tables plus `retrieval_tests` |
+| Bad/good engineering examples | `contrast_examples` |
+| Candidate implementation families | `route_patterns` |
+| Public visual provenance | `visual_sources` |
+| GPT behavior | `knowledge/DCORE_INSTRUCTIONS.txt` |
+| Release identity | `knowledge/manifest.json` |
 
-The Worker is not a database and the Action is not an updater. They expose the identity of the latest verified bundle so dCore can distinguish current, stale and unknown freshness states.
+## Request pipeline
+
+```text
+request
+  -> freshness check
+  -> retrieval.py (intent, domains, dependencies, contrasts, route patterns)
+  -> exact DenizenM-first Meta lookup
+  -> route dossier with 2-4 real candidates
+  -> dcore_design.py (hard gates + Pareto comparison)
+  -> pre-code ownership/cost/behavior contract
+  -> implementation
+  -> dcore_lint.py and, when applicable, dcore_rp_lint.py
+  -> Refined + reload + focused runtime proof
+```
+
+The route comparator cannot declare runtime success. `READY_FOR_PROOF` means one route is the unique proven pre-code candidate for the supplied facts. Unknown evidence, conflicting evidence or multiple non-dominated routes remain `INCOMPLETE`.
+
+## Clean-code boundary
+
+Entry events prove identity and dispatch. Feature tasks own cohesive lifecycle phases. Connected state has one authoritative writer. Every acquired resource has one cleanup owner. Dormant objects have no queue, entity or chunk ticket. Provider-specific calls live in one adapter. Abstractions require a second consumer, removed duplication or isolated volatility.
+
+`dcore_lint.py` distinguishes errors, warnings, suggestions and provenance. It understands the selected core/addon dialect; valid denizen-reflect syntax is not misclassified as unknown core syntax, but exact Java signatures still require installed-version proof.
+
+## Shader workbench boundary
+
+The visual registry stores mechanisms below feature names: route probing, control channels, camera/plane transforms, temporal history, bloom graphs, custom particle encoding and GPU budgets. Public examples do not become production code merely because they render in an older client.
+
+`dcore_rp_lint.py` analyzes the final merged directory or ZIP: JSON, `#moj_import`, stage/interface linkage, post targets, path case, reserved channels and route ownership. `STATIC_OK` always carries `RUNTIME_UNVERIFIED`; route selection, F5, graphics modes and frame cost require the exact client.
 
 ## Update transaction
 
-The workflow copies the last known-good database to `build/`, refreshes only that candidate and validates it. Repository state changes only after validation succeeds. A failing candidate is retained only in short-lived diagnostics and never replaces working Knowledge.
+The workflow mutates only a build copy. Curated migrations are deterministic. Upstream Denizen/IDE data may refresh automatically because it is indexed source material. A changed visual repository only updates `latest_seen_sha` and `review_status=review_pending`; its indexed commit, cards and excerpts do not move without review.
 
-Validation includes the full retrieval regression suite. Integrity without correct routing is not a passing candidate. A database that routes a thin-plane crossing request to a shader card, for example, is rejected even when SQLite itself is healthy.
-
-## Reusable primitive layer
-
-dCore stores mechanisms below named gameplay features. Portal crossing, laser gates and rotated triggers share oriented-plane intersection, local shape bounds and crossing hysteresis. Cursor menus and sliders share ray-plane input. Portals and linked cameras share paired-frame transforms. Blink, loading and fades share temporal masks; shake, recoil and roll share bounded screen impulses.
-
-Concrete mechanics remain retrieval tests and compositions. This prevents a working solution from becoming trapped behind one keyword such as `portal`, `F5` or `roulette`.
-
-## Failure behaviour
-
-- Upstream unavailable: workflow fails; previous Knowledge and manifest remain authoritative.
-- Import failure: candidate is discarded.
-- Validation failure: candidate is not committed, released or advertised.
-- Worker deployment failure: database may be current, but Action freshness remains at the previous deployed manifest until the next successful run.
-- Action unavailable: dCore must report freshness as unknown, not fabricate currency.
-- Custom GPT Knowledge stale: owner replaces attachments from the latest private release.
-
-## Why SQLite is versioned
-
-External Meta is only one layer. The database also contains authored architecture cards, diagnostics, routing knowledge and retrieval tests. Those cannot be regenerated from the five upstream repositories. Keeping the last passing SQLite file privately versioned supplies rollback, reproducibility and a safe seed for unattended maintenance.
+Validation covers SQLite integrity, foreign keys, minimum corpus sizes, required policy cards, source-license gates, retrieval regressions, tool unit tests and hashes of every GPT attachment. Only a passing bundle reaches the canonical database and private release.

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "source_id": "jnngl_vanilla_shaders",
+      "repository": "JNNGL/vanilla-shaders",
+      "url": "https://github.com/JNNGL/vanilla-shaders",
+      "branch": "main",
+      "indexed_commit_sha": "d1ec6c4a432c4ce116d65b10ca4f91d421165d0e",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "mechanism_and_licensed_excerpt",
+      "version_scope": "Mixed historical native packs: Minecraft 1.20.4, 1.21, 1.21.3, 1.21.4 and snapshot 24w46a; never assume current compatibility",
+      "pipelines": ["core", "post", "fabulous"],
+      "graphics_modes": ["fabulous_required_for_selected_modules", "module_specific"],
+      "modules": ["bloom", "colored_lights", "motion_blur", "custom_blur", "camera_control", "dynamic_fov", "lightmap_uniforms", "rgb_maps", "gui_models"],
+      "notes": "Extract reusable mechanisms and porting boundaries, not copy old packs as current production code."
+    },
+    {
+      "source_id": "midorikuma_variables_viewer",
+      "repository": "midorikuma/VariablesViewer",
+      "url": "https://github.com/midorikuma/VariablesViewer",
+      "branch": "main",
+      "indexed_commit_sha": "52b227a1b9a20015465b75f72b254b391c48640a",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "diagnostic_mechanism_and_licensed_excerpt",
+      "version_scope": "Historical core/post shader diagnostic pack; exact shader filenames and variables are target-version sensitive",
+      "pipelines": ["core", "post", "diagnostic"],
+      "graphics_modes": ["core_route_specific", "fabulous_for_post"],
+      "modules": ["variable_viewer", "vertex_id_viewer", "route_probe", "debug_texture_generator"],
+      "notes": "Use as temporary instrumentation. Never ship diagnostic overrides in the production pack."
+    },
+    {
+      "source_id": "cloudwolf_shader_selector_v2",
+      "repository": "CloudWolfYT/ShaderSelectorV2",
+      "url": "https://github.com/CloudWolfYT/ShaderSelectorV2",
+      "branch": "main",
+      "indexed_commit_sha": "a89472712fa813e0980c0683bc0b04a7a7079cee",
+      "license": "CC0-1.0",
+      "license_status": "verified_repository_license_lineage_review_required",
+      "ingest_policy": "mechanism_only_until_upstream_lineage_is_clear",
+      "version_scope": "Historical particle control-buffer and post examples; target assets must be re-derived for the exact client version",
+      "pipelines": ["core", "post", "control_buffer"],
+      "graphics_modes": ["fabulous_for_post"],
+      "modules": ["marker_channel", "screen_shake", "phosphor", "previous_frame", "overlay_control"],
+      "notes": "Repository credits common-shaders as source; retain provenance and do not silently relicense upstream material."
+    },
+    {
+      "source_id": "halbfettkaese_common_shaders",
+      "repository": "HalbFettKaese/common-shaders",
+      "url": "https://github.com/HalbFettKaese/common-shaders",
+      "branch": "main",
+      "indexed_commit_sha": "5a720dec8a2546ea7ec71073171c1034d5004fea",
+      "license": "NOASSERTION",
+      "license_status": "missing",
+      "ingest_policy": "reference_only_no_code_redistribution",
+      "version_scope": "Historical combined vanilla shader pack; exact target version is not asserted by the repository README",
+      "pipelines": ["core", "post", "control_buffer", "font_offset"],
+      "graphics_modes": ["fabulous_for_post"],
+      "modules": ["marker_grid", "shared_data_buffer", "screen_parameter_transport", "text_offset_encoding"],
+      "notes": "Facts and architecture may be analyzed; code must not be copied into dCore while the license is absent."
+    },
+    {
+      "source_id": "psdps_mc_charcoal",
+      "repository": "ps-dps/mc-Charcoal",
+      "url": "https://github.com/ps-dps/mc-Charcoal",
+      "branch": "main",
+      "indexed_commit_sha": "24a8bf33c67faf707650a5d36a251112a7862a93",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "mechanism_and_licensed_excerpt",
+      "version_scope": "Requires Minecraft 1.20.5 or higher per repository; exact particle core shader must still match the target client",
+      "pipelines": ["core", "particle"],
+      "graphics_modes": ["vanilla_shader_pipeline"],
+      "modules": ["custom_particle_atlas", "header_pixel_metadata", "particle_marker_encoding"],
+      "notes": "Merge at the particle shader boundary; incompatible competing particle.vsh overrides must be reported."
+    }
+  ]
+}

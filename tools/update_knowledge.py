@@ -1,8 +1,9 @@
 """Update the maintained dCore knowledge database.
 
 Refreshes the five indexed Denizen Meta sources plus the diagnostic catalogue
-embedded in the latest Refined DenizenScript VSIX.  Work is performed on a
-temporary SQLite copy, validated, backed up, and atomically committed.
+embedded in the latest Refined DenizenScript VSIX. It also watches pinned
+visual/shader repositories. A new visual commit is recorded as review_pending;
+curated cards are never silently rewritten from upstream code.
 
 The updater works on an isolated copy and atomically installs a candidate only
 after validation. It cannot replace a Custom GPT Knowledge attachment; that
@@ -32,6 +33,13 @@ from pathlib import Path
 GITHUB_API = "https://api.github.com"
 REFINED_RELEASE_API = f"{GITHUB_API}/repos/Humususus/refined-denizenScript/releases/latest"
 SHARP_ZIP = "https://github.com/DenizenScript/SharpDenizenTools/archive/{commit}.zip"
+
+
+def bundled_path(name: str) -> Path:
+    """Resolve both repository layout and the flattened private release."""
+    beside_tool = Path(__file__).resolve().with_name(name)
+    repository_copy = Path(__file__).resolve().parents[1] / "knowledge" / name
+    return beside_tool if beside_tool.exists() else repository_copy
 
 
 @dataclass(frozen=True)
@@ -111,6 +119,27 @@ def branch_head(source: MetaSource) -> str:
 
 def meta_heads() -> dict[str, str]:
     return {source.source_id: branch_head(source) for source in META_SOURCES}
+
+
+def load_visual_registry(path: Path) -> list[dict]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    sources = payload.get("sources") if isinstance(payload, dict) else None
+    if not isinstance(sources, list) or not sources:
+        raise RuntimeError("visual source registry is empty or invalid")
+    return sources
+
+
+def visual_heads(registry: list[dict]) -> dict[str, str]:
+    heads: dict[str, str] = {}
+    for source in registry:
+        repository = source.get("repository", "")
+        branch = source.get("branch", "")
+        source_id = source.get("source_id", "")
+        if not all(isinstance(value, str) and value for value in (repository, branch, source_id)):
+            raise RuntimeError("visual source registry contains an invalid repository entry")
+        data = fetch_json(f"{GITHUB_API}/repos/{repository}/commits/{branch}")
+        heads[source_id] = data["sha"]
+    return heads
 
 
 def refined_release_info() -> tuple[str, str]:
@@ -500,13 +529,37 @@ def import_ide(db: sqlite3.Connection, version: str, commit: str, dll: bytes, sh
     return len(diagnostics)
 
 
-def current_versions(db_path: Path) -> tuple[dict[str, str], dict[str, str]]:
+def current_versions(db_path: Path) -> tuple[dict[str, str], dict[str, str], dict[str, dict[str, str]]]:
     with closing(sqlite3.connect(db_path)) as db:
         meta_exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='meta_sources'").fetchone()
         ide_exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='ide_sources'").fetchone()
+        visual_exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='visual_sources'").fetchone()
         meta = dict(db.execute("SELECT source_id,commit_sha FROM meta_sources")) if meta_exists else {}
         ide = dict(db.execute("SELECT product,version || ' @ ' || commit_sha FROM ide_sources")) if ide_exists else {}
-    return meta, ide
+        visual = {
+            row[0]: {"indexed": row[1], "latest_seen": row[2], "review_status": row[3]}
+            for row in db.execute(
+                "SELECT source_id,indexed_commit_sha,latest_seen_sha,review_status FROM visual_sources"
+            )
+        } if visual_exists else {}
+    return meta, ide, visual
+
+
+def record_visual_heads(db: sqlite3.Connection, heads: dict[str, str]) -> None:
+    exists = db.execute("SELECT 1 FROM sqlite_master WHERE name='visual_sources'").fetchone()
+    if not exists:
+        return
+    for source_id, latest in heads.items():
+        row = db.execute(
+            "SELECT indexed_commit_sha FROM visual_sources WHERE source_id=?", (source_id,)
+        ).fetchone()
+        if row is None:
+            raise RuntimeError(f"visual source '{source_id}' is absent from the curated registry")
+        status = "indexed" if row[0] == latest else "review_pending"
+        db.execute(
+            "UPDATE visual_sources SET latest_seen_sha=?,review_status=? WHERE source_id=?",
+            (latest, status, source_id),
+        )
 
 
 def network_failure_payload(exc: Exception, update_required=None) -> dict:
@@ -524,6 +577,7 @@ def apply_update(
     heads: dict[str, str],
     snapshots: dict[str, bytes],
     ide_bundle: tuple[str, str, bytes, bytes],
+    visual_latest: dict[str, str],
 ) -> tuple[Path, dict[str, int], int]:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     backup = db_path.with_name(f"{db_path.stem}.pre_update_{stamp}{db_path.suffix}")
@@ -544,6 +598,7 @@ def apply_update(
             classify_deltas(db)
             set_meta_metadata(db, heads, counts)
             diagnostics = import_ide(db, *ide_bundle)
+            record_visual_heads(db, visual_latest)
             db.execute("INSERT INTO meta_search(meta_search) VALUES('optimize')")
             db.execute("INSERT INTO ide_search(ide_search) VALUES('optimize')")
             db.commit()
@@ -572,35 +627,61 @@ def main() -> int:
     parser.add_argument(
         "--db",
         type=Path,
-        default=Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite",
+        default=bundled_path("dcore.sqlite"),
     )
     parser.add_argument(
         "--output", type=Path,
         help="write the validated candidate here instead of replacing --db",
     )
     parser.add_argument("--check", action="store_true", help="compare versions without rebuilding the DB")
+    parser.add_argument(
+        "--visual-registry", type=Path,
+        default=bundled_path("visual_sources.json"),
+    )
     args = parser.parse_args()
 
     target = args.output or args.db
     current_path = target if target.exists() else args.db
-    current_meta, current_ide = current_versions(current_path)
+    current_meta, current_ide, current_visual = current_versions(current_path)
     try:
         heads = meta_heads()
+        visual_registry = load_visual_registry(args.visual_registry)
+        latest_visual = visual_heads(visual_registry)
         release_tag, asset_url = refined_release_info()
     except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError, KeyError, RuntimeError) as exc:
         print(json.dumps(network_failure_payload(exc), ensure_ascii=False))
-        return 0 if args.check else 2
+        return 2
     stale_meta = [source.product for source in META_SOURCES if current_meta.get(source.source_id) != heads[source.source_id]]
     current_refined = current_ide.get("Refined DenizenScript", "none")
     refined_stale = release_tag.lstrip("v") not in current_refined
+    visual_record_stale = sorted(
+        source_id for source_id, latest in latest_visual.items()
+        if current_visual.get(source_id, {}).get("latest_seen") != latest
+    )
+    visual_review_pending = sorted(
+        source_id for source_id, latest in latest_visual.items()
+        if current_visual.get(source_id, {}).get("indexed") != latest
+    )
     print(json.dumps({
-        "update_required": bool(stale_meta or refined_stale),
+        "update_required": bool(stale_meta or refined_stale or visual_record_stale),
         "network_available": True,
         "database_modified": False,
         "meta_stale": stale_meta,
         "refined_latest": release_tag,
         "refined_current": current_refined,
         "refined_stale": refined_stale,
+        "visual_record_stale": visual_record_stale,
+        "visual_review_required": bool(visual_review_pending),
+        "visual_review_pending": visual_review_pending,
+        "visual_sources": [
+            {
+                "source_id": source_id,
+                "indexed": current_visual.get(source_id, {}).get("indexed"),
+                "latest": latest_visual[source_id],
+                "review_status": "indexed" if current_visual.get(source_id, {}).get("indexed") == latest_visual[source_id] else "review_pending",
+            }
+            for source_id in sorted(latest_visual)
+        ],
     }, ensure_ascii=False))
     if args.check:
         return 0
@@ -617,7 +698,7 @@ def main() -> int:
     if target != args.db and not target.exists():
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(args.db, target)
-    backup, counts, diagnostics = apply_update(target, heads, snapshots, ide_bundle)
+    backup, counts, diagnostics = apply_update(target, heads, snapshots, ide_bundle, latest_visual)
     print(json.dumps({
         "updated": str(target),
         "backup": str(backup),

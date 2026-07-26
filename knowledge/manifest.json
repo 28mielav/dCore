@@ -1,33 +1,48 @@
 {
   "name": "dCore",
-  "generated_at": "2026-07-22T09:16:28.734738+00:00",
+  "generated_at": "2026-07-26T16:41:29.440646+00:00",
   "status": "verified",
-  "sha256": "6079e474b8de91489a659dc613fb395e065c5bdbaaded28e4d7cef58c4485cba",
-  "size": 16596992,
-  "bundle_sha256": "74f177cd16f9c6a0ef42ede3080c0f02fe2bd046a8244a383655453e468245c9",
+  "sha256": "c5a14a64d2a152b64b464906016acc02fe60d6c9b2fb73df8972a0137fe284ef",
+  "size": 16789504,
+  "bundle_sha256": "1572e0113a36c7f9ab4d59be206cfea6dc2681d3f40edccc94577ba3b0b13aa5",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "6079e474b8de91489a659dc613fb395e065c5bdbaaded28e4d7cef58c4485cba",
-      "size": 16596992
+      "sha256": "c5a14a64d2a152b64b464906016acc02fe60d6c9b2fb73df8972a0137fe284ef",
+      "size": 16789504
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "1a5aec39d9fd369fe5d11ca5f629b8a436db08d398b224a0df59ed14fd0b6dcd",
-      "size": 7993
+      "sha256": "c54aac3f2167b6d1f0356c1009d10c42356d1e6363f100d7bbe69194d74db034",
+      "size": 7590
     },
     "lint_contract.example.json": {
-      "sha256": "906f9b78e7d2531472ae5de9d2f67e4e7647843e1d8a8e5f3cd866a1f09a32ea",
-      "size": 321
+      "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
+      "size": 1306
+    },
+    "retrieval.py": {
+      "sha256": "ade2ec04241970685950d021bfc03183327c3fae848e644330d2c0ec4bab5604",
+      "size": 20033
     },
     "dcore_lint.py": {
-      "sha256": "471bbb6d9f7512cf595ab8f55922e6d629f88ef1a030a2e2228ce1cbe7029a70",
-      "size": 6480
+      "sha256": "4e8f1c142258cc93e5c3ab96f58dc0dbe192c4dca516f3273ba560c7cf8c54c5",
+      "size": 46991
+    },
+    "dcore_design.py": {
+      "sha256": "6901341fe8c4339c17a1aaf18e3e2fc9af66681ecbc1b0cdb16eb0241f0a8dad",
+      "size": 38720
+    },
+    "dcore_rp_lint.py": {
+      "sha256": "5ba95eed3a410eaa6ce93f69bde79919c05fb545565f39c0b7d3f33335f542c9",
+      "size": 23863
     }
   },
   "counts": {
-    "cards": 117,
+    "cards": 139,
     "meta_entries": 5430,
     "ide_diagnostics": 54,
-    "retrieval_tests": 90
+    "retrieval_tests": 117,
+    "visual_sources": 5,
+    "contrast_examples": 24,
+    "route_patterns": 10
   },
   "sources": [
     {
@@ -54,6 +69,58 @@
       "product": "denizen-reflect",
       "commit_sha": "4e2b26e94a4bc9ef0fb2b3852f44f9b2d4fcdb18",
       "source_id": "denizen_reflect_public_main"
+    }
+  ],
+  "visual_sources": [
+    {
+      "source_id": "cloudwolf_shader_selector_v2",
+      "repository": "CloudWolfYT/ShaderSelectorV2",
+      "indexed_commit_sha": "a89472712fa813e0980c0683bc0b04a7a7079cee",
+      "latest_seen_sha": "a89472712fa813e0980c0683bc0b04a7a7079cee",
+      "license": "CC0-1.0",
+      "license_status": "verified_repository_license_lineage_review_required",
+      "ingest_policy": "mechanism_only_until_upstream_lineage_is_clear",
+      "review_status": "indexed"
+    },
+    {
+      "source_id": "halbfettkaese_common_shaders",
+      "repository": "HalbFettKaese/common-shaders",
+      "indexed_commit_sha": "5a720dec8a2546ea7ec71073171c1034d5004fea",
+      "latest_seen_sha": "5a720dec8a2546ea7ec71073171c1034d5004fea",
+      "license": "NOASSERTION",
+      "license_status": "missing",
+      "ingest_policy": "reference_only_no_code_redistribution",
+      "review_status": "indexed"
+    },
+    {
+      "source_id": "jnngl_vanilla_shaders",
+      "repository": "JNNGL/vanilla-shaders",
+      "indexed_commit_sha": "d1ec6c4a432c4ce116d65b10ca4f91d421165d0e",
+      "latest_seen_sha": "d1ec6c4a432c4ce116d65b10ca4f91d421165d0e",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "mechanism_and_licensed_excerpt",
+      "review_status": "indexed"
+    },
+    {
+      "source_id": "midorikuma_variables_viewer",
+      "repository": "midorikuma/VariablesViewer",
+      "indexed_commit_sha": "52b227a1b9a20015465b75f72b254b391c48640a",
+      "latest_seen_sha": "52b227a1b9a20015465b75f72b254b391c48640a",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "diagnostic_mechanism_and_licensed_excerpt",
+      "review_status": "indexed"
+    },
+    {
+      "source_id": "psdps_mc_charcoal",
+      "repository": "ps-dps/mc-Charcoal",
+      "indexed_commit_sha": "24a8bf33c67faf707650a5d36a251112a7862a93",
+      "latest_seen_sha": "24a8bf33c67faf707650a5d36a251112a7862a93",
+      "license": "MIT",
+      "license_status": "verified",
+      "ingest_policy": "mechanism_and_licensed_excerpt",
+      "review_status": "indexed"
     }
   ],
   "validation": {

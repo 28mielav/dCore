@@ -46,6 +46,9 @@ jobs:
           cp knowledge/DCORE_INSTRUCTIONS.txt build/knowledge/DCORE_INSTRUCTIONS.txt
           cp knowledge/lint_contract.example.json build/knowledge/lint_contract.example.json
           cp tools/dcore_lint.py build/knowledge/dcore_lint.py
+          cp tools/dcore_design.py build/knowledge/dcore_design.py
+          cp tools/dcore_rp_lint.py build/knowledge/dcore_rp_lint.py
+          cp tools/retrieval.py build/knowledge/retrieval.py
           cp knowledge/manifest.json build/knowledge/manifest.json
 
       - name: Check upstream revisions
@@ -53,6 +56,8 @@ jobs:
         run: |
           python tools/update_knowledge.py --db build/knowledge/dcore.sqlite --check > build/check.json
           cat build/check.json
+          network=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['network_available'])).lower())")
+          test "$network" = true
           required=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['update_required'])).lower())")
           echo "required=$required" >> "$GITHUB_OUTPUT"
 
@@ -68,18 +73,24 @@ jobs:
 
       - name: Validate candidate
         run: |
-          python -m unittest tools/test_dcore_lint.py
+          python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py
+          python tools/test_retrieval.py --db build/knowledge/dcore.sqlite
           python tools/verify_knowledge.py \
             --db build/knowledge/dcore.sqlite \
             --output build/knowledge/manifest.json \
             --artifact build/knowledge/DCORE_INSTRUCTIONS.txt \
             --artifact build/knowledge/lint_contract.example.json \
-            --artifact build/knowledge/dcore_lint.py
+            --artifact build/knowledge/dcore_lint.py \
+            --artifact build/knowledge/dcore_design.py \
+            --artifact build/knowledge/dcore_rp_lint.py \
+            --artifact build/knowledge/retrieval.py
 
       - name: Detect knowledge change
         id: changed
         run: |
-          if cmp -s knowledge/dcore.sqlite build/knowledge/dcore.sqlite; then
+          old_bundle=$(python -c "import json; print(json.load(open('knowledge/manifest.json')).get('bundle_sha256',''))")
+          new_bundle=$(python -c "import json; print(json.load(open('build/knowledge/manifest.json')).get('bundle_sha256',''))")
+          if [[ "$old_bundle" == "$new_bundle" ]]; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
@@ -131,9 +142,12 @@ jobs:
           cp build/knowledge/lint_contract.example.json "dist/dCore-$date_utc/lint_contract.example.json"
           cp build/knowledge/manifest.json "dist/dCore-$date_utc/manifest.json"
           cp build/knowledge/dcore_lint.py "dist/dCore-$date_utc/dcore_lint.py"
+          cp build/knowledge/dcore_design.py "dist/dCore-$date_utc/dcore_design.py"
+          cp build/knowledge/dcore_rp_lint.py "dist/dCore-$date_utc/dcore_rp_lint.py"
+          cp build/knowledge/retrieval.py "dist/dCore-$date_utc/retrieval.py"
           cp tools/update_knowledge.py "dist/dCore-$date_utc/update_knowledge.py"
+          cp knowledge/visual_sources.json "dist/dCore-$date_utc/visual_sources.json"
           cp tools/test_retrieval.py "dist/dCore-$date_utc/test_retrieval.py"
-          cp tools/retrieval.py "dist/dCore-$date_utc/retrieval.py"
           cp integrations/custom-gpt/openapi.yaml "dist/dCore-$date_utc/openapi.yaml"
           cd dist
           zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
