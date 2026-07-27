@@ -1,15 +1,15 @@
 {
   "name": "dCore",
   "version": "0.30",
-  "generated_at": "2026-07-26T19:22:23.381079+00:00",
+  "generated_at": "2026-07-27T13:45:38.413913+00:00",
   "status": "verified",
-  "sha256": "dbd32997e5c736dbd39eec89edbf5a62d78f9796db544e87c49bf18eaeb688be",
-  "size": 16859136,
-  "bundle_sha256": "ff411671ebc13319545cad7d0bb66ac0764ea60446331de5566feea5795ab0bf",
+  "sha256": "6c684ea4376108a7fa346f67f25908ec439d32f0d03cc9c6748b4fa74c97aef3",
+  "size": 16703488,
+  "bundle_sha256": "c232d4336a4822f4d47698d0c90e37ada5fc3ebae139db41ca3e618fcf532717",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "dbd32997e5c736dbd39eec89edbf5a62d78f9796db544e87c49bf18eaeb688be",
-      "size": 16859136
+      "sha256": "6c684ea4376108a7fa346f67f25908ec439d32f0d03cc9c6748b4fa74c97aef3",
+      "size": 16703488
     },
     "DCORE_INSTRUCTIONS.txt": {
       "sha256": "a0aa6fb45b3371df9a7c1d67f3e3288cc8b9460c4998240f54878a824c71331b",
@@ -48,12 +48,12 @@
   "sources": [
     {
       "product": "Denizen",
-      "commit_sha": "6aa77dd16e44407fe4089cf2ed27dd3591a098ae",
+      "commit_sha": "ecede59e929a019b96dae975c99ae7ecd8554401",
       "source_id": "denizen_official_dev"
     },
     {
       "product": "Denizen-Core",
-      "commit_sha": "31300d6ab58c840a3168bd15bc46caf00b5fc418",
+      "commit_sha": "273ad9fc7eaf2e4d63de0332adb062449a9252f0",
       "source_id": "denizencore_official_master"
     },
     {
