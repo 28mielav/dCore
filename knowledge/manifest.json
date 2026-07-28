@@ -1,19 +1,19 @@
 {
   "name": "dCore",
   "version": "0.31",
-  "generated_at": "2026-07-28T22:46:18.197875+00:00",
+  "generated_at": "2026-07-28T22:46:57.437665+00:00",
   "status": "verified",
   "sha256": "455a0c6af102fb8352fb3a092cf49224ff41d5e3fd4706fc6ab78d4aba177e08",
   "size": 17043456,
-  "bundle_sha256": "eea99897147ebc36cb9959ca3de68a52f8df9eae5e9d6f4368bb16c4094047ce",
+  "bundle_sha256": "c278a66b2dcb9d49025ffaca9e261db9eff8a8747b90860fce3f8d516d6119ba",
   "artifacts": {
     "dcore.sqlite": {
       "sha256": "455a0c6af102fb8352fb3a092cf49224ff41d5e3fd4706fc6ab78d4aba177e08",
       "size": 17043456
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "65784b176a96f4571d5521c1af31991c21fd86d44260d75c2d97e19bd4d6073f",
-      "size": 7989
+      "sha256": "c178387fd99b7be9581133fbcc071843cec3998268bf1004939dbb9291004bcd",
+      "size": 7934
     },
     "lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
@@ -24,8 +24,8 @@
       "size": 52563
     },
     "dcore_design.py": {
-      "sha256": "676b50ab52c95731dfe989ce071c1c1f019c5d60f09256edfa8c366e9136a990",
-      "size": 39682
+      "sha256": "34c389fc514b202437a080440a097cecf3e246f58e5eb8f71e2c66f9e2958b95",
+      "size": 38763
     },
     "dcore_rp_lint.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
