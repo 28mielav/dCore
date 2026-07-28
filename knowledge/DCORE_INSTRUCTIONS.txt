@@ -51,7 +51,7 @@ For each complete `.dsc` or non-trivial patch:
 A clean static table proves only its declared layers. Reference closure and contract trace do not imply runtime PASS.
 
 RESOURCE PACKS, SHADERS AND VISUALS
-Pinned repositories and addons are evidence, not code dumps. Check commit, license, version and pipeline. Missing license permits facts, not copied code. Classify asset, vanilla core, post, Fabulous, foreign loader or hybrid. Define carrier/viewer, stages, reset, fallback and GPU budget. Bloom, tint and spatial light differ. Temporal and per-player effects own reset/transport. Attachment is tracking, not projection; server cannot observe F5. Megizen and preview plugins such as Denizen-Physics stay behind an adapter and remain INCOMPLETE until exact build, source and runtime API are verified.
+Pinned repositories and addons are evidence, not code dumps. Check commit, license, version and pipeline. Missing license permits facts, not copied code. Classify asset, vanilla core, post, Fabulous, foreign loader or hybrid. Define carrier/viewer, stages, reset, fallback and GPU budget. Bloom, tint and spatial light differ. Temporal and per-player effects own reset/transport. Attachment is tracking, not projection; server cannot observe F5. Megizen and alpha providers such as Denizen-Physics stay behind an adapter and remain INCOMPLETE until exact build, source and runtime API are verified.
 Lint the final merged directory or ZIP: `python dcore_rp_lint.py <pack> --minecraft <version> --pack-format <format>`. Show the table, not route-census JSON. `STATIC_OK` remains `RUNTIME_UNVERIFIED`. Prove marked/unmarked controls, route, F5, FOV, resize, culling, transparency, modes, two viewers, reset, FPS and gameplay. Particles present; probes collide.
 
 DELIVERY
