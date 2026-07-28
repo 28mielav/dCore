@@ -1,31 +1,31 @@
 {
   "name": "dCore",
   "version": "0.31",
-  "generated_at": "2026-07-28T22:46:57.437665+00:00",
+  "generated_at": "2026-07-28T23:06:24.051877+00:00",
   "status": "verified",
-  "sha256": "455a0c6af102fb8352fb3a092cf49224ff41d5e3fd4706fc6ab78d4aba177e08",
-  "size": 17043456,
-  "bundle_sha256": "c278a66b2dcb9d49025ffaca9e261db9eff8a8747b90860fce3f8d516d6119ba",
+  "sha256": "0effdbefe00512496e910c200d82d8fc8f60d1f0918733fa100cac0b0324b3e1",
+  "size": 17072128,
+  "bundle_sha256": "e5508f0f10dbba5e7e0ec5512c74d46506776aecdc677292d26c138b9e4c39d6",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "455a0c6af102fb8352fb3a092cf49224ff41d5e3fd4706fc6ab78d4aba177e08",
-      "size": 17043456
+      "sha256": "0effdbefe00512496e910c200d82d8fc8f60d1f0918733fa100cac0b0324b3e1",
+      "size": 17072128
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "c178387fd99b7be9581133fbcc071843cec3998268bf1004939dbb9291004bcd",
-      "size": 7934
+      "sha256": "18fb4cb6611ead8316d215432eea9bc16a78a371552e356f6d9efed73cd0bec0",
+      "size": 7989
     },
     "lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
       "size": 1306
     },
     "dcore_lint.py": {
-      "sha256": "aebe017a15a462b637055cc59a47aa0f4103a63c8dcdd2b49f3bd826ae1256cf",
-      "size": 52563
+      "sha256": "b9a04dcab27716a0328b7ef654cae69a0e7b47b4057bdde0b2f27a9143e9faf5",
+      "size": 54264
     },
     "dcore_design.py": {
-      "sha256": "34c389fc514b202437a080440a097cecf3e246f58e5eb8f71e2c66f9e2958b95",
-      "size": 38763
+      "sha256": "676b50ab52c95731dfe989ce071c1c1f019c5d60f09256edfa8c366e9136a990",
+      "size": 39682
     },
     "dcore_rp_lint.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
@@ -37,12 +37,12 @@
     }
   },
   "counts": {
-    "cards": 149,
+    "cards": 151,
     "meta_entries": 5430,
     "ide_diagnostics": 54,
-    "retrieval_tests": 129,
+    "retrieval_tests": 131,
     "visual_sources": 5,
-    "contrast_examples": 33,
+    "contrast_examples": 35,
     "route_patterns": 10
   },
   "sources": [

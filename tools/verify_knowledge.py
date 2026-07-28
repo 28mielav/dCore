@@ -33,12 +33,12 @@ def main() -> int:
             failures.append(f"foreign_key_errors={foreign_keys}")
 
         required = {
-            "cards": 149,
+            "cards": 151,
             "meta_entries": 4500,
             "ide_diagnostics": 40,
-            "retrieval_tests": 129,
+            "retrieval_tests": 131,
             "visual_sources": 5,
-            "contrast_examples": 33,
+            "contrast_examples": 35,
             "route_patterns": 10,
         }
         counts: dict[str, int] = {}
@@ -65,6 +65,7 @@ def main() -> int:
                 "VIS-040", "PERF-011",
                 "CORE-022", "DEN-027", "DEN-028", "VER-011", "VER-012", "VIS-041",
                 "CORE-023", "CORE-024", "TEACH-004", "TEACH-005", "VER-013", "DEN-029",
+                "ADD-009", "PHYS-001",
             }
             present_cards = {
                 row[0] for row in db.execute(

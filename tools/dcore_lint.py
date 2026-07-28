@@ -282,6 +282,7 @@ class MetaIndex:
         self.available = bool(db_path and db_path.is_file())
         self.profile = profile
         self.addons = set(addons)
+        self.unverified_provider_addons = self.addons.intersection({"megizen", "denizen_physics"})
         self.commands: dict[str, list[MetaEntry]] = defaultdict(list)
         self.mechanisms: dict[str, list[MetaEntry]] = defaultdict(list)
         self.events: list[MetaEntry] = []
@@ -436,6 +437,14 @@ def command_named_arguments(entry: MetaEntry) -> set[str]:
 
 def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
     results: list[dict] = []
+    if meta.unverified_provider_addons:
+        names = ", ".join(sorted(meta.unverified_provider_addons))
+        results.append(issue(
+            "provider_meta_pending", "information", 0,
+            f"Provider addon Meta is not indexed for: {names}.",
+            layer="api", source="dCore addon policy",
+            suggestion="Keep calls behind one adapter and verify the exact jar/docs/runtime before treating them as valid.",
+        ))
     seen_scripts: set[str] = set()
     key_seen: dict[tuple[tuple[str, ...], str], int] = {}
 
@@ -1069,7 +1078,7 @@ def main() -> int:
     parser.add_argument("--decision", type=Path, help="JSON result emitted by dcore_design compare")
     parser.add_argument("--db", type=Path, default=default_db())
     parser.add_argument("--profile", choices=("denizenm", "official"), default="denizenm")
-    parser.add_argument("--addon", action="append", choices=("reflect", "voxizen"), default=[])
+    parser.add_argument("--addon", action="append", choices=("reflect", "voxizen", "megizen", "denizen_physics"), default=[])
     parser.add_argument("--external-script", action="append", default=[], help="Known project script intentionally outside this partial lint artifact")
     parser.add_argument("--closed-world", action="store_true", help="unresolved script references are errors")
     parser.add_argument("--strict-warnings", action="store_true")
