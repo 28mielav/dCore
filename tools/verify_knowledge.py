@@ -36,9 +36,9 @@ def main() -> int:
             "cards": 149,
             "meta_entries": 4500,
             "ide_diagnostics": 40,
-            "retrieval_tests": 128,
+            "retrieval_tests": 129,
             "visual_sources": 5,
-            "contrast_examples": 28,
+            "contrast_examples": 33,
             "route_patterns": 10,
         }
         counts: dict[str, int] = {}
