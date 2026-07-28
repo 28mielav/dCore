@@ -56,6 +56,8 @@ Entry events prove identity and dispatch. Feature tasks own cohesive lifecycle p
 
 `dcore_lint.py` distinguishes errors, warnings, suggestions and provenance, and defaults to a compact human table. It checks terminal-command reachability, event blast radius and ceremonial forwarding tasks. Valid denizen-reflect syntax is not misclassified as unknown core syntax, but exact Java signatures still require installed-version proof.
 
+The response layer is deliberately progressive: a non-trivial request starts with a contract and one bounded learning step. A complete artifact is gated behind a settled route, lint and tests. The anti-vibe policy reviews missing evidence, duplicated responsibility, unbounded work and unexplained APIs; it does not infer authorship from style.
+
 ## Shader workbench boundary
 
 The visual registry stores mechanisms below feature names: route probing, control channels, camera/plane transforms, temporal history, bloom graphs, custom particle encoding and GPU budgets. Public examples do not become production code merely because they render in an older client.

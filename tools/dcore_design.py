@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 
-TOOL_VERSION = "0.30"
+TOOL_VERSION = "0.31"
 SCHEMA_VERSION = 1
 
 DEFAULT_AXES: Dict[str, str] = {

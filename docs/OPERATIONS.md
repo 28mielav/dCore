@@ -12,7 +12,7 @@ Visual repositories are monitored, not blindly ingested. `visual_review_required
 2. If different, download and unpack the latest private dated release.
 3. Remove the old seven Knowledge attachments.
 4. Upload the seven files inside `GPT_Knowledge`.
-5. Replace the GPT Instructions field with `GPT_Instructions/DCORE_INSTRUCTIONS.txt`.
+5. Replace the GPT Instructions field with `GPT_Instructions/DCORE_INSTRUCTIONS.txt`. The 0.31 file is intentionally compact; do not delete SQLite cards to solve an Instructions-size concern.
 6. If `Custom_GPT_Action/openapi.yaml` has a newer schema version than the installed Action, re-import it; keep the existing authentication key.
 7. Save the GPT; test `checkDcoreBridge`, `getLatestDcoreRelease`, one DenizenM Meta query, one route comparison and one lint invocation.
 

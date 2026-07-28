@@ -53,7 +53,7 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> Path:
     action_text = (action / "openapi.yaml").read_text(encoding="utf-8")
     action_version_match = re.search(r"(?m)^\s*version:\s*([^\s#]+)", action_text)
     action_version = action_version_match.group(1) if action_version_match else "unknown"
-    readme = f"""dCore 0.30 - ready Custom GPT bundle
+    readme = f"""dCore 0.31 - ready Custom GPT bundle
 
 1. Delete the previous dCore Knowledge files from the GPT.
 2. Upload only the 7 files inside GPT_Knowledge.

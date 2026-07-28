@@ -33,10 +33,10 @@ def main() -> int:
             failures.append(f"foreign_key_errors={foreign_keys}")
 
         required = {
-            "cards": 145,
+            "cards": 149,
             "meta_entries": 4500,
             "ide_diagnostics": 40,
-            "retrieval_tests": 122,
+            "retrieval_tests": 128,
             "visual_sources": 5,
             "contrast_examples": 28,
             "route_patterns": 10,
@@ -64,6 +64,7 @@ def main() -> int:
                 "VIS-035", "VIS-036", "VIS-037", "VIS-038", "VIS-039",
                 "VIS-040", "PERF-011",
                 "CORE-022", "DEN-027", "DEN-028", "VER-011", "VER-012", "VIS-041",
+                "CORE-023", "CORE-024", "TEACH-004", "TEACH-005", "VER-013", "DEN-029",
             }
             present_cards = {
                 row[0] for row in db.execute(
@@ -121,8 +122,8 @@ def main() -> int:
         metadata_name = db.execute(
             "SELECT value FROM metadata WHERE key='name'"
         ).fetchone() if table_exists(db, "metadata") else None
-        if not metadata_name or metadata_name[0] != "dCore 0.30":
-            failures.append("metadata_name!=dCore 0.30")
+        if not metadata_name or metadata_name[0] != "dCore 0.31":
+            failures.append("metadata_name!=dCore 0.31")
 
         sources = []
         if table_exists(db, "meta_sources"):
@@ -173,7 +174,7 @@ def main() -> int:
     ).encode("utf-8")
     manifest = {
         "name": "dCore",
-        "version": "0.30",
+        "version": "0.31",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "verified" if not failures else "failed",
         "sha256": digest,

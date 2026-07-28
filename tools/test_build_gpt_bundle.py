@@ -11,7 +11,7 @@ class BundleTests(unittest.TestCase):
     def test_ready_bundle_separates_uploads_from_maintenance(self) -> None:
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as temporary:
-            output = build(root, Path(temporary) / "dCore-0.30")
+            output = build(root, Path(temporary) / "dCore-0.31")
             self.assertEqual(set(KNOWLEDGE_FILES), {item.name for item in (output / "GPT_Knowledge").iterdir()})
             self.assertTrue((output / "GPT_Instructions" / "DCORE_INSTRUCTIONS.txt").is_file())
             self.assertTrue((output / "Maintenance" / "update_knowledge.py").is_file())
