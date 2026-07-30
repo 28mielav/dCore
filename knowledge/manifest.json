@@ -1,31 +1,31 @@
 {
   "name": "dCore",
   "version": "0.31",
-  "generated_at": "2026-07-30T11:31:22.094467+00:00",
+  "generated_at": "2026-07-30T11:32:00.800942+00:00",
   "status": "verified",
-  "sha256": "0129dafb020de370a626d185bdcdfe3f74432d872b769fe789d429370cbf61b1",
-  "size": 17084416,
-  "bundle_sha256": "782cc68bbadcb4d4d26724e25bf3aacddfc14d13e0ca58ea946b00a11dee5a1b",
+  "sha256": "edac865db50c93aa5f59af8e7377f6a75a79ff3cbac804d6e93ff0e130a73c1c",
+  "size": 16875520,
+  "bundle_sha256": "407d6dc41c62e84693685828e42bf26bed18f84ef0d61838d4daf4110d3442e9",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "0129dafb020de370a626d185bdcdfe3f74432d872b769fe789d429370cbf61b1",
-      "size": 17084416
+      "sha256": "edac865db50c93aa5f59af8e7377f6a75a79ff3cbac804d6e93ff0e130a73c1c",
+      "size": 16875520
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "91451b7e5bba54f85e1c84e210dbf174a671c01fb4420af3b64bb5b2bad679c1",
-      "size": 7990
+      "sha256": "d56d2c33cec0eac6183c4dfbaf6d5ca05cb705379de3dfe8f17fbd945ed69ebc",
+      "size": 7933
     },
     "lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
       "size": 1306
     },
     "dcore_lint.py": {
-      "sha256": "b9a04dcab27716a0328b7ef654cae69a0e7b47b4057bdde0b2f27a9143e9faf5",
-      "size": 54264
+      "sha256": "9b6818526a41f0f0675fde1b2243ee29de101369688cd44ded55722fcec76366",
+      "size": 53139
     },
     "dcore_design.py": {
-      "sha256": "676b50ab52c95731dfe989ce071c1c1f019c5d60f09256edfa8c366e9136a990",
-      "size": 39682
+      "sha256": "34c389fc514b202437a080440a097cecf3e246f58e5eb8f71e2c66f9e2958b95",
+      "size": 38763
     },
     "dcore_rp_lint.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
@@ -58,7 +58,7 @@
     },
     {
       "product": "DenizenM",
-      "commit_sha": "2b227f4bc06b2a9408edc400db54c5658be085a4",
+      "commit_sha": "478d87785e682f3c4347edd3a3db7c338c606c2b",
       "source_id": "denizenm_public_master"
     },
     {
