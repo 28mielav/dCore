@@ -1,31 +1,31 @@
 {
   "name": "dCore",
   "version": "0.31",
-  "generated_at": "2026-07-30T11:32:00.800942+00:00",
+  "generated_at": "2026-07-30T11:35:18.687640+00:00",
   "status": "verified",
-  "sha256": "edac865db50c93aa5f59af8e7377f6a75a79ff3cbac804d6e93ff0e130a73c1c",
+  "sha256": "bc85fc6352267a5559f7c5e21f0c37f92e136a2cd7a93ddb9a874b91f33551a4",
   "size": 16875520,
-  "bundle_sha256": "407d6dc41c62e84693685828e42bf26bed18f84ef0d61838d4daf4110d3442e9",
+  "bundle_sha256": "74d3a77532d03ec470837f1af7c595861f37ab15035b7a35a7a1ee22c93a6d12",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "edac865db50c93aa5f59af8e7377f6a75a79ff3cbac804d6e93ff0e130a73c1c",
+      "sha256": "bc85fc6352267a5559f7c5e21f0c37f92e136a2cd7a93ddb9a874b91f33551a4",
       "size": 16875520
     },
     "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "d56d2c33cec0eac6183c4dfbaf6d5ca05cb705379de3dfe8f17fbd945ed69ebc",
-      "size": 7933
+      "sha256": "91451b7e5bba54f85e1c84e210dbf174a671c01fb4420af3b64bb5b2bad679c1",
+      "size": 7990
     },
     "lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
       "size": 1306
     },
     "dcore_lint.py": {
-      "sha256": "9b6818526a41f0f0675fde1b2243ee29de101369688cd44ded55722fcec76366",
-      "size": 53139
+      "sha256": "b9a04dcab27716a0328b7ef654cae69a0e7b47b4057bdde0b2f27a9143e9faf5",
+      "size": 54264
     },
     "dcore_design.py": {
-      "sha256": "34c389fc514b202437a080440a097cecf3e246f58e5eb8f71e2c66f9e2958b95",
-      "size": 38763
+      "sha256": "676b50ab52c95731dfe989ce071c1c1f019c5d60f09256edfa8c366e9136a990",
+      "size": 39682
     },
     "dcore_rp_lint.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
@@ -34,6 +34,10 @@
     "retrieval.py": {
       "sha256": "ade2ec04241970685950d021bfc03183327c3fae848e644330d2c0ec4bab5604",
       "size": 20033
+    },
+    "update_knowledge.py": {
+      "sha256": "c35354cddc448db8ab2f8916042b3cbdc97f18ed79fb78e9b1776f24b50db16f",
+      "size": 33908
     }
   },
   "counts": {

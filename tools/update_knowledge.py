@@ -19,6 +19,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sqlite3
 import tempfile
 import urllib.request
@@ -110,11 +111,29 @@ def fetch_json(url: str):
     return json.loads(fetch(url))
 
 
-def branch_head(source: MetaSource) -> str:
-    data = fetch_json(
-        f"{GITHUB_API}/repos/{source.owner}/{source.repo}/commits/{source.branch}"
+def git_head(repository: str, branch: str) -> str:
+    """Use the git transport when GitHub API quota blocks freshness checks."""
+    result = subprocess.run(
+        ["git", "ls-remote", repository, f"refs/heads/{branch}", f"refs/tags/{branch}"],
+        check=True, capture_output=True, text=True, timeout=90,
     )
-    return data["sha"]
+    for line in result.stdout.splitlines():
+        sha, ref = line.split("\t", 1)
+        if ref in {f"refs/heads/{branch}", f"refs/tags/{branch}"}:
+            return sha
+    raise RuntimeError(f"git transport returned no head for {repository}@{branch}")
+
+
+def branch_head(source: MetaSource) -> str:
+    try:
+        data = fetch_json(
+            f"{GITHUB_API}/repos/{source.owner}/{source.repo}/commits/{source.branch}"
+        )
+        return data["sha"]
+    except urllib.error.HTTPError as error:
+        if error.code not in {403, 429}:
+            raise
+        return git_head(source.repo_url + ".git", source.branch)
 
 
 def meta_heads() -> dict[str, str]:
@@ -137,8 +156,13 @@ def visual_heads(registry: list[dict]) -> dict[str, str]:
         source_id = source.get("source_id", "")
         if not all(isinstance(value, str) and value for value in (repository, branch, source_id)):
             raise RuntimeError("visual source registry contains an invalid repository entry")
-        data = fetch_json(f"{GITHUB_API}/repos/{repository}/commits/{branch}")
-        heads[source_id] = data["sha"]
+        try:
+            data = fetch_json(f"{GITHUB_API}/repos/{repository}/commits/{branch}")
+            heads[source_id] = data["sha"]
+        except urllib.error.HTTPError as error:
+            if error.code not in {403, 429}:
+                raise
+            heads[source_id] = git_head(f"https://github.com/{repository}.git", branch)
     return heads
 
 
