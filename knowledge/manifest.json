@@ -1,15 +1,15 @@
 {
   "name": "dCore",
   "version": "0.31",
-  "generated_at": "2026-07-30T11:35:40.747012+00:00",
+  "generated_at": "2026-08-10T09:01:52.466345+00:00",
   "status": "verified",
-  "sha256": "bc85fc6352267a5559f7c5e21f0c37f92e136a2cd7a93ddb9a874b91f33551a4",
-  "size": 16875520,
-  "bundle_sha256": "8b63f310b91fb89b9b7801fd336412fbecb11241552abf4e5324423935342d89",
+  "sha256": "d5dce677fa44f3885c941d02ae18cc3a200ef597fad3c69f0f24247241167430",
+  "size": 17063936,
+  "bundle_sha256": "26f9fa3a24f2908514a81bbf34ca8d542c2e7dcc6535522483377286e5ee3370",
   "artifacts": {
     "dcore.sqlite": {
-      "sha256": "bc85fc6352267a5559f7c5e21f0c37f92e136a2cd7a93ddb9a874b91f33551a4",
-      "size": 16875520
+      "sha256": "d5dce677fa44f3885c941d02ae18cc3a200ef597fad3c69f0f24247241167430",
+      "size": 17063936
     },
     "DCORE_INSTRUCTIONS.txt": {
       "sha256": "d56d2c33cec0eac6183c4dfbaf6d5ca05cb705379de3dfe8f17fbd945ed69ebc",
@@ -38,7 +38,7 @@
   },
   "counts": {
     "cards": 152,
-    "meta_entries": 5430,
+    "meta_entries": 5431,
     "ide_diagnostics": 54,
     "retrieval_tests": 132,
     "visual_sources": 5,
@@ -48,7 +48,7 @@
   "sources": [
     {
       "product": "Denizen",
-      "commit_sha": "ecede59e929a019b96dae975c99ae7ecd8554401",
+      "commit_sha": "234fe8f5dbf2b9f118cfd3b17f2569f4619cc055",
       "source_id": "denizen_official_dev"
     },
     {
