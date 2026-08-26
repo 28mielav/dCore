@@ -79,6 +79,9 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> Path:
     shutil.copy2(sources["knowledge/visual_sources.json"], maintenance / "visual_sources.json")
     shutil.copy2(sources["knowledge/validation_contract.json"], maintenance / "validation_contract.json")
     shutil.copy2(sources["integrations/custom-gpt/openapi.yaml"], action / "openapi.yaml")
+    bundle_license = sources.get("integrations/custom-gpt/BUNDLE_LICENSE.md")
+    if bundle_license is not None and bundle_license.is_file():
+        shutil.copy2(bundle_license, output / "BUNDLE_LICENSE.md")
 
     action_text = (action / "openapi.yaml").read_text(encoding="utf-8")
     action_version_match = re.search(r"(?m)^\s*version:\s*([^\s#]+)", action_text)

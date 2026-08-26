@@ -175,6 +175,10 @@ def lint_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
     return argv
 
 
+def start_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    return database_argv(arguments)
+
+
 def audit_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
     paths = [str(item) for item in (arguments.get("paths") or [])]
     if not paths:
@@ -395,6 +399,15 @@ TOOLS: tuple[Tool, ...] = (
         module="dcore.pack.cli",
         argv=obfuscate_argv,
         tags=("pack", "opt-in"),
+    ),
+    Tool(
+        name="dcore_start",
+        title="Start and inspect dCore",
+        description="Check MCP startup, manifest, database availability and indexed knowledge counts.",
+        schema={"type": "object", "properties": {"db": {"type": "string", "description": "Override the knowledge database path"}}},
+        module="dcore.mcp.start",
+        argv=start_argv,
+        tags=("startup", "health", "knowledge"),
     ),
     Tool(
         name="dcore_project_audit",
