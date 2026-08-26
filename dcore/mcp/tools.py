@@ -175,6 +175,16 @@ def lint_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
     return argv
 
 
+def audit_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    paths = [str(item) for item in (arguments.get("paths") or [])]
+    if not paths:
+        raise ValueError("paths is required")
+    argv = [*paths, "--json"] + target_argv(arguments) + database_argv(arguments)
+    if arguments.get("closed_world"):
+        argv.append("--closed-world")
+    return argv
+
+
 def pack_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
     argv = [str(arguments["input"]), "--json"]
     if arguments.get("minecraft"):
@@ -224,6 +234,34 @@ def versions_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
     # Discovery reaches the network; reading the catalogued registry does not.
     # Only the read path is exposed, so an agent cannot trigger upstream traffic.
     return ["--catalogue", str(arguments["catalogue"])] if arguments.get("catalogue") else []
+
+
+def verify_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    argv: list[str] = []
+    for key in ("root", "knowledge", "db", "output", "contract"):
+        if arguments.get(key):
+            argv += [f"--{key}", str(arguments[key])]
+    if "output" not in arguments:
+        raise ValueError("output is required")
+    return argv
+
+
+def build_gpt_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    argv: list[str] = []
+    for key in ("root", "knowledge", "output"):
+        if arguments.get(key):
+            argv += [f"--{key}", str(arguments[key])]
+    if "output" not in arguments:
+        raise ValueError("output is required")
+    return argv
+
+
+def acceptance_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    return database_argv(arguments)
+
+
+def pool4_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
+    return ["--phase", str(arguments.get("phase") or "post")]
 
 
 def shadow_argv(arguments: dict[str, Any], workspace: Path) -> list[str]:
@@ -359,6 +397,25 @@ TOOLS: tuple[Tool, ...] = (
         tags=("pack", "opt-in"),
     ),
     Tool(
+        name="dcore_project_audit",
+        title="Audit a complete dCore project",
+        description="Run one evidence-first audit over DenizenScript files and resource-pack/shader inputs in a project.",
+        schema={
+            "type": "object",
+            "properties": {
+                "paths": {"type": "array", "items": {"type": "string"}},
+                **TARGET_SCHEMA,
+                "closed_world": {"type": "boolean"},
+                "db": {"type": "string"},
+            },
+            "required": ["paths"],
+        },
+        module="dcore.mcp.audit",
+        argv=audit_argv,
+        exit_is_findings=True,
+        tags=("audit", "lint", "visual", "project"),
+    ),
+    Tool(
         name="dcore_lint_pack",
         title="Lint a resource pack",
         description=(
@@ -378,6 +435,24 @@ TOOLS: tuple[Tool, ...] = (
         argv=pack_argv,
         exit_is_findings=True,
         tags=("lint", "visual"),
+    ),
+    Tool(
+        name="dcore_shader_review",
+        title="Review a shader pipeline",
+        description="Run the resource-pack lint with an explicit shader-review workflow and runtime proof checklist.",
+        schema={
+            "type": "object",
+            "properties": {
+                "input": {"type": "string"},
+                "minecraft": {"type": "string"},
+                "pack_format": {"type": "number"},
+            },
+            "required": ["input"],
+        },
+        module="dcore.lint.resourcepack",
+        argv=pack_argv,
+        exit_is_findings=True,
+        tags=("visual", "shader", "proof"),
     ),
     Tool(
         name="dcore_retrieve",
@@ -463,6 +538,57 @@ TOOLS: tuple[Tool, ...] = (
         module="dcore.gates.shadow",
         argv=shadow_argv,
         tags=("gate", "simulation"),
+    ),
+    Tool(
+        name="dcore_verify",
+        title="Verify the dCore release",
+        description="Validate the knowledge database and write a complete verified release manifest.",
+        schema={
+            "type": "object",
+            "properties": {
+                "root": {"type": "string"}, "knowledge": {"type": "string"},
+                "db": {"type": "string"}, "output": {"type": "string"},
+                "contract": {"type": "string"},
+            },
+            "required": ["output"],
+        },
+        module="dcore.release.verify",
+        argv=verify_argv,
+        tags=("release", "verification"),
+    ),
+    Tool(
+        name="dcore_build_gpt",
+        title="Build the dCore GPT bundle",
+        description="Build the verified human-organized dCore Custom GPT knowledge bundle.",
+        schema={
+            "type": "object",
+            "properties": {
+                "root": {"type": "string"}, "knowledge": {"type": "string"},
+                "output": {"type": "string"},
+            },
+            "required": ["output"],
+        },
+        module="dcore.release.bundle_gpt",
+        argv=build_gpt_argv,
+        tags=("release", "gpt"),
+    ),
+    Tool(
+        name="dcore_accept_agent",
+        title="Run MCP agent acceptance",
+        description="Run deterministic acceptance scenarios over the same MCP tool surface.",
+        schema={"type": "object", "properties": {"db": {"type": "string"}}},
+        module="dcore.acceptance.agent",
+        argv=acceptance_argv,
+        tags=("acceptance", "mcp"),
+    ),
+    Tool(
+        name="dcore_accept_pool4",
+        title="Run Pool 4 acceptance",
+        description="Run the dCore golden acceptance corpus for source and runtime-boundary checks.",
+        schema={"type": "object", "properties": {"phase": {"type": "string", "enum": ["pre", "post"]}}},
+        module="dcore.acceptance.pool4",
+        argv=pool4_argv,
+        tags=("acceptance", "release"),
     ),
     Tool(
         name="dcore_release_gate",
