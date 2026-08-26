@@ -7,7 +7,7 @@
 It combines version-pinned API knowledge, static analysis, bounded semantic execution, resource-pack graph validation, proof-state release gates, and an MCP server that brings the same tooling into Codex, Claude Code, Cursor, Zed, and other MCP clients.
 
 > [!WARNING]
-> dCore is actively under development. Rules, target coverage, lint behavior, and integrations will continue to evolve. Suggestions, bug reports, target data, and proposals for improving any subsystem, including lint, are welcome through [GitHub Issues](https://github.com/28mielav/dCore/issues).
+> dCore is actively under development. Rules, target coverage, lint behavior, and integrations will continue to evolve. Bug reports, target data, and proposals for improving any subsystem, including lint, are welcome. Useful contributions will be reviewed, credited, and considered for future releases through [GitHub Issues](https://github.com/28mielav/dCore/issues).
 
 ## Why dCore
 

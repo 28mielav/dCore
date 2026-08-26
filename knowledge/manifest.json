@@ -1,11 +1,11 @@
 {
   "name": "dCore",
   "version": "0.70",
-  "generated_at": "2026-08-26T12:02:46.006450+00:00",
+  "generated_at": "2026-08-26T13:53:33.566555+00:00",
   "status": "verified",
   "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
   "size": 20422656,
-  "bundle_sha256": "1b4a3bd9c0ba1ccd947e65bd73aac2c6f60621e01759a8e8afdb258b0924335c",
+  "bundle_sha256": "293c861bb525c22254f4d166cc1cbbe02af5ef4b41208f8a94662478d3e9c69b",
   "artifacts": {
     "dcore/__init__.py": {
       "sha256": "6be8d49b97d21fefc7712dba4908f9827f398bce0f44133ddac015cf875e9257",
@@ -67,13 +67,17 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size": 0
     },
+    "dcore/lint/diagnostics.py": {
+      "sha256": "330959dcfb6846e92c4b06918f9b6f8f903b875d948030edc2982e7170b4cc31",
+      "size": 7754
+    },
     "dcore/lint/resourcepack.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
       "size": 26423
     },
     "dcore/lint/script.py": {
-      "sha256": "2d2f9cb9963f98ec2cd5b03aae59ebf20a6af8ce53a271493cc37bde7b702166",
-      "size": 115865
+      "sha256": "eaf3a203aebd63e0562488dd66f5ed9c32d182149208d4b20d7da3ef7e528195",
+      "size": 109452
     },
     "dcore/lint/tagtypes.py": {
       "sha256": "909a26ef432bc30751630e9a7a6ee4fede90124deb31d2d3d740e8d765fd871b",
