@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dcore"
+dynamic = ["version"]
+description = "Version-aware engineering tools for DenizenScript, DenizenM, addons, and Minecraft visual systems"
+license = { text = "MIT" }
+keywords = ["denizenscript", "denizen", "denizenm", "minecraft", "mcp", "static-analysis"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+obfuscation = ["cryptography>=42"]
+mcp = ["mcp>=1.2"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.dynamic]
+version = { attr = "dcore.__version__" }
+
+[project.scripts]
+dcore = "dcore.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["dcore*"]
+
+[tool.setuptools.package-data]
+"dcore.semantics.core" = ["NOTICE.md", "LICENSE.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[project.urls]
+Homepage = "https://github.com/28mielav/dcore"
+Repository = "https://github.com/28mielav/dcore"
+Issues = "https://github.com/28mielav/dcore/issues"

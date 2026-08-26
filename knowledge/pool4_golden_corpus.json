@@ -1,0 +1,48 @@
+{
+  "version": "pool4-1",
+  "purpose": "source-backed golden scenarios for static evidence and runtime boundaries",
+  "sources": [
+    {
+      "id": "gravity",
+      "source_ref": "Denizen/items/gravity_gun.dsc",
+      "sha256": "da7d124ab3cc8cd6300d6c16936cd91a7d81397abb462143d1abc31d79af2e13",
+      "expected_static": ["semantic_execution_limit", "broad_cancel_without_identity_guard", "unknown_event"]
+    },
+    {
+      "id": "treasures",
+      "source_ref": "Denizen/other/treasures.dsc",
+      "sha256": "992546757f13f64ba3288c3ca414ff8f4f228cc422f48fa9038a7af7f8fcb24a",
+      "expected_static": ["generated_architecture_risk", "shared_state_multi_writer", "queue_fanout", "unreachable_after_terminal_command"]
+    },
+    {
+      "id": "smiler",
+      "source_ref": "Denizen/other/smiler.dsc",
+      "sha256": "a53416d4d7a722bf0f766ebc0ff8aac15e01eda5279e1fc8d604d490aa03929b",
+      "expected_static": ["generated_architecture_risk", "phase_mixed_container", "queue_fanout"]
+    },
+    {
+      "id": "skill_use",
+      "source_ref": "skill-use.txt",
+      "sha256": "4b252c9b5bdb89aba41e255e99ed07a372e2d8b7774332fb36bb9d33b2479163",
+      "expected_evidence": ["STATIC_OK", "Runtime", "--db", "closed-world"]
+    },
+    {
+      "id": "gravity_pasted",
+      "source_ref": "attachments/8365c764-9a2b-40b2-b139-94447d26d55d/pasted-text.txt",
+      "sha256": "2132b12717acfa948deac36e3de8be8e590c6d271e3aad0ede869a47e3c2ec9a",
+      "expected_evidence": ["gravity_gun", "flagged", "cleanup"]
+    }
+  ],
+  "scenarios": [
+    {"id": "G01", "source": "gravity", "focus": "matcher and identity boundary", "runtime": ["capture", "hold", "release", "cleanup"]},
+    {"id": "G02", "source": "gravity", "focus": "drop/quit/world-change cleanup", "runtime": ["drop", "world_change", "quit", "death"]},
+    {"id": "G03", "source": "gravity", "focus": "queue fanout and execution budget", "runtime": ["repeat_capture", "two_targets"]},
+    {"id": "T01", "source": "treasures", "focus": "four-player session reservation", "runtime": ["group_size_4", "session_isolation", "join_idempotency"]},
+    {"id": "T02", "source": "treasures", "focus": "session cleanup and worker loss", "runtime": ["worker_loss", "cleanup", "repeat_input"]},
+    {"id": "T03", "source": "treasures", "focus": "treasure lifecycle and race boundaries", "runtime": ["register", "discover", "open", "expire"]},
+    {"id": "T04", "source": "treasures", "focus": "offline inventory compatibility", "runtime": ["online_inventory", "offline_inventory", "duplicate_guard"]},
+    {"id": "S01", "source": "smiler", "focus": "oversized lifecycle and cleanup", "runtime": ["reload", "quit", "death", "cleanup"]},
+    {"id": "S02", "source": "skill_use", "focus": "static/runtime honesty", "runtime": []},
+    {"id": "S03", "source": "gravity_pasted", "focus": "source provenance and anti-vibe evidence", "runtime": []}
+  ]
+}

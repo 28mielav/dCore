@@ -45,9 +45,10 @@ Cloudflare Worker and Custom GPT Action share only the Bearer value `DCORE_ACTIO
 Use the bundled/current Python runtime:
 
 ```text
-python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py tools/test_build_gpt_bundle.py
-python tools/test_retrieval.py --db knowledge/dcore.sqlite
-python tools/verify_knowledge.py --db knowledge/dcore.sqlite --output knowledge/manifest.json [all seven artifact arguments]
+python -m pip install -e .
+python -m unittest discover -s tests -t . -p "test_*.py"
+python -m tests.test_retrieval --db knowledge/dcore.sqlite
+python -m dcore.release.verify --root . --output knowledge/manifest.json
 ```
 
 Static success is not server/client runtime proof. Preserve the runtime checklist produced by the relevant tool.

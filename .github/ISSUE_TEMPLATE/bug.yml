@@ -1,0 +1,23 @@
+name: Bug report
+description: Report reproducible incorrect behavior in dCore.
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Expected and actual behavior
+      description: Include the exact dCore command or MCP tool call and its output.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Target and evidence
+      description: Include Minecraft, Paper, Denizen, DenizenM, addon, and resource-pack versions where relevant.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Provide the smallest script, pack, or request that reproduces the result.
+    validations:
+      required: true

@@ -6,7 +6,14 @@ on:
     paths:
       - ".github/workflows/update.yml"
       - "knowledge/**"
-      - "tools/**"
+      - "dcore/**"
+      - "services/update-bridge/**"
+      - "integrations/custom-gpt/**"
+  pull_request:
+    paths:
+      - ".github/workflows/update.yml"
+      - "knowledge/**"
+      - "dcore/**"
       - "services/update-bridge/**"
       - "integrations/custom-gpt/**"
   workflow_dispatch:
@@ -19,131 +26,109 @@ on:
   schedule:
     - cron: "23 4 * * 1"
 
-permissions:
-  contents: write
-
 concurrency:
-  group: dcore-maintenance
+  group: dcore-maintenance-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  maintain:
+  quality:
+    name: Verify source, package and bridge
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
+    permissions:
+      contents: read
     steps:
-      - name: Check out private repository
-        uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: services/update-bridge/pnpm-lock.yaml
+      - name: Run Python unit and retrieval tests
+        run: |
+          python -m pip install -e .
+          python -m unittest discover -s tests -t . -p "test_*.py"
+          python -m tests.test_retrieval --db knowledge/dcore.sqlite
+      - name: Verify canonical manifest and build the GPT product
+        run: |
+          python -m dcore.release.verify --root . --output temp/quality-manifest.json
+          python -c "import json; a=json.load(open('knowledge/manifest.json')); b=json.load(open('temp/quality-manifest.json')); assert a['status']=='verified' and a['bundle_sha256']==b['bundle_sha256'], 'manifest is stale: run the verified update workflow'"
+          python -m dcore.release.bundle_gpt --root . --output dist/quality-gpt
+      - name: Check the MCP surface and run agent acceptance
+        run: |
+          python -m dcore.mcp.server --describe > temp/mcp-surface.json
+          python -m dcore.acceptance.agent --db knowledge/dcore.sqlite
+      - name: Test bridge without deploying it
+        working-directory: services/update-bridge
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
+          node --test test/*.test.mjs
 
+  maintain:
+    name: Update, publish, then deploy
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
       - name: Prepare isolated candidate
         run: |
           mkdir -p build/knowledge
-          cp knowledge/dcore.sqlite build/knowledge/dcore.sqlite
-          cp knowledge/DCORE_INSTRUCTIONS.txt build/knowledge/DCORE_INSTRUCTIONS.txt
-          cp knowledge/lint_contract.example.json build/knowledge/lint_contract.example.json
-          cp tools/dcore_lint.py build/knowledge/dcore_lint.py
-          cp tools/dcore_design.py build/knowledge/dcore_design.py
-          cp tools/dcore_rp_lint.py build/knowledge/dcore_rp_lint.py
-          cp tools/retrieval.py build/knowledge/retrieval.py
-          cp knowledge/manifest.json build/knowledge/manifest.json
-
-      - name: Check upstream revisions
+          cp knowledge/dcore.sqlite knowledge/DCORE_INSTRUCTIONS.txt knowledge/lint_contract.example.json knowledge/manifest.json build/knowledge/
+      - name: Check and refresh upstream sources
         id: upstream
         run: |
-          python tools/update_knowledge.py --db build/knowledge/dcore.sqlite --check > build/check.json
-          cat build/check.json
-          network=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['network_available'])).lower())")
-          test "$network" = true
+          python -m pip install -e .
+          python -m dcore.release.update --db build/knowledge/dcore.sqlite --check > build/check.json
+          test "$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['network_available'])).lower())")" = true
           required=$(python -c "import json; print(str(bool(json.load(open('build/check.json'))['update_required'])).lower())")
           echo "required=$required" >> "$GITHUB_OUTPUT"
-
-      - name: Refresh upstream sources
-        if: steps.upstream.outputs.required == 'true'
-        run: python tools/update_knowledge.py --db build/knowledge/dcore.sqlite
-
-      - name: Apply curated migrations
-        run: python tools/apply_migrations.py --db build/knowledge/dcore.sqlite
-
-      - name: Remove updater backup from candidate
-        run: rm -f build/knowledge/*.pre_update_*.sqlite
-
-      - name: Validate candidate
+          if [[ "$required" == true ]]; then python -m dcore.release.update --db build/knowledge/dcore.sqlite; fi
+          python -m dcore.release.migrate --db build/knowledge/dcore.sqlite
+          git clone --filter=blob:none https://github.com/Energobro/DenizenM-Tjtoxshpilivili1.git build/denizenm-history
+          python -m dcore.knowledge.version_registry --db build/knowledge/dcore.sqlite --local-denizenm-history build/denizenm-history
+          python -m dcore.release.import_meta --db build/knowledge/dcore.sqlite --repo build/denizenm-history --product DenizenM --source-kind denizenm --channels tag,commit
+          python -m dcore.release.compact --db build/knowledge/dcore.sqlite --vacuum
+          rm -f build/knowledge/*.pre_update_*.sqlite
+      - name: Validate candidate and write its complete manifest
         run: |
-          python -m unittest tools/test_dcore_lint.py tools/test_dcore_design.py tools/test_dcore_rp_lint.py tools/test_update_knowledge.py tools/test_build_gpt_bundle.py
-          python tools/test_retrieval.py --db build/knowledge/dcore.sqlite
-          python tools/verify_knowledge.py \
-            --db build/knowledge/dcore.sqlite \
-            --output build/knowledge/manifest.json \
-            --artifact build/knowledge/DCORE_INSTRUCTIONS.txt \
-            --artifact build/knowledge/lint_contract.example.json \
-            --artifact build/knowledge/dcore_lint.py \
-            --artifact build/knowledge/dcore_design.py \
-            --artifact build/knowledge/dcore_rp_lint.py \
-            --artifact build/knowledge/retrieval.py
-
+          python -m tests.test_retrieval --db build/knowledge/dcore.sqlite
+          python -m dcore.release.verify --root . --knowledge build/knowledge --output build/knowledge/manifest.json
       - name: Detect knowledge change
         id: changed
         run: |
-          old_bundle=$(python -c "import json; print(json.load(open('knowledge/manifest.json')).get('bundle_sha256',''))")
-          new_bundle=$(python -c "import json; print(json.load(open('build/knowledge/manifest.json')).get('bundle_sha256',''))")
-          if [[ "$old_bundle" == "$new_bundle" ]]; then
-            echo "value=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Install verified knowledge
+          old_bundle=$(python -c "import json; print(json.load(open('knowledge/manifest.json'))['bundle_sha256'])")
+          new_bundle=$(python -c "import json; print(json.load(open('build/knowledge/manifest.json'))['bundle_sha256'])")
+          echo "value=$([[ \"$old_bundle\" == \"$new_bundle\" ]] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+      - name: Install and commit verified knowledge
         if: steps.changed.outputs.value == 'true'
         run: |
-          cp build/knowledge/dcore.sqlite knowledge/dcore.sqlite
-          cp build/knowledge/manifest.json knowledge/manifest.json
-
-      - name: Commit verified knowledge
-        if: steps.changed.outputs.value == 'true'
-        run: |
+          cp build/knowledge/dcore.sqlite build/knowledge/manifest.json knowledge/
           git config user.name "dCore maintenance"
           git config user.email "dcore-maintenance@users.noreply.github.com"
           git add knowledge/dcore.sqlite knowledge/manifest.json
           git commit -m "knowledge: update verified upstream data"
           git push
-
-      - name: Set up Node for bridge deploy
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-
-      - name: Deploy freshness bridge
-        working-directory: services/update-bridge
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx --yes wrangler@4 deploy
-
       - name: Decide whether to publish
         id: publish
         run: |
-          if [[ "${{ github.event_name }}" == "push" || "${{ steps.changed.outputs.value }}" == "true" || "${{ inputs.publish_release || false }}" == "true" ]]; then
-            echo "value=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Build dated private release
+          if [[ "${{ github.event_name }}" == "push" || "${{ steps.changed.outputs.value }}" == "true" || "${{ inputs.publish_release || false }}" == "true" ]]; then echo "value=true" >> "$GITHUB_OUTPUT"; else echo "value=false" >> "$GITHUB_OUTPUT"; fi
+      - name: Build verified dated release
         if: steps.publish.outputs.value == 'true'
         run: |
           date_utc=$(date -u +%Y-%m-%d)
-          python tools/build_gpt_bundle.py \
-            --root . \
-            --knowledge build/knowledge \
-            --output "dist/dCore-$date_utc"
-          cd dist
-          zip -9 -r "dCore-$date_utc.zip" "dCore-$date_utc"
-          sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256"
-
+          python -m dcore.release.bundle_gpt --root . --knowledge build/knowledge --output "dist/dCore-GPT-$date_utc"
+          (cd dist && zip -9 -r "dCore-$date_utc.zip" "dCore-GPT-$date_utc" && sha256sum "dCore-$date_utc.zip" > "dCore-$date_utc.zip.sha256")
       - name: Replace today's private release
         if: steps.publish.outputs.value == 'true'
         env:
@@ -151,24 +136,27 @@ jobs:
         run: |
           date_utc=$(date -u +%Y-%m-%d)
           gh release delete "$date_utc" --yes --cleanup-tag 2>/dev/null || true
-          gh release create "$date_utc" \
-            "dist/dCore-$date_utc.zip" \
-            "dist/dCore-$date_utc.zip.sha256" \
-            "build/knowledge/manifest.json" \
-            --title "$date_utc" \
-            --notes "Verified private dCore Knowledge bundle for $date_utc. Replace the Custom GPT Knowledge files only when the manifest SHA-256 differs from the attached version."
-
-      - name: Remove legacy timestamp releases
+          gh release create "$date_utc" "dist/dCore-$date_utc.zip" "dist/dCore-$date_utc.zip.sha256" "build/knowledge/manifest.json" --title "$date_utc" --notes "Verified private dCore knowledge bundle for $date_utc. Contains the Custom GPT product; MCP agents install the package from source."
+          gh release view "$date_utc" --json assets --jq '.assets[].name' | grep -qx "dCore-$date_utc.zip"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        if: steps.publish.outputs.value == 'true'
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: services/update-bridge/pnpm-lock.yaml
+      - name: Deploy bridge only after release is available
+        if: steps.publish.outputs.value == 'true'
+        working-directory: services/update-bridge
         env:
-          GH_TOKEN: ${{ github.token }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          gh release list --limit 100 --json tagName --jq '.[].tagName' \
-            | grep '^dcore-auto-' \
-            | while read -r tag; do gh release delete "$tag" --yes --cleanup-tag; done || true
-
-      - name: Upload maintenance diagnostics
+          corepack enable
+          pnpm install --frozen-lockfile
+          node --test test/*.test.mjs
+          pnpm run deploy
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
-        uses: actions/upload-artifact@v7
         with:
           name: dcore-maintenance-diagnostics
           path: |

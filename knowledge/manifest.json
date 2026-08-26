@@ -1,55 +1,454 @@
 {
   "name": "dCore",
-  "version": "0.31",
-  "generated_at": "2026-08-24T06:06:34.700842+00:00",
+  "version": "0.70",
+  "generated_at": "2026-08-26T12:02:46.006450+00:00",
   "status": "verified",
-  "sha256": "2a88299475d0f8e0ee3e9e3811a6c7d219d89d88d772bb3ed1a6b430e0d2044e",
-  "size": 16879616,
-  "bundle_sha256": "cfc8cfddd0d763d72392319bc2fcdb46d9b838bc264e5421a36f871a44b312f4",
+  "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
+  "size": 20422656,
+  "bundle_sha256": "1b4a3bd9c0ba1ccd947e65bd73aac2c6f60621e01759a8e8afdb258b0924335c",
   "artifacts": {
-    "dcore.sqlite": {
-      "sha256": "2a88299475d0f8e0ee3e9e3811a6c7d219d89d88d772bb3ed1a6b430e0d2044e",
-      "size": 16879616
+    "dcore/__init__.py": {
+      "sha256": "6be8d49b97d21fefc7712dba4908f9827f398bce0f44133ddac015cf875e9257",
+      "size": 773
     },
-    "DCORE_INSTRUCTIONS.txt": {
-      "sha256": "d56d2c33cec0eac6183c4dfbaf6d5ca05cb705379de3dfe8f17fbd945ed69ebc",
-      "size": 7933
+    "dcore/acceptance/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
     },
-    "lint_contract.example.json": {
-      "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
-      "size": 1306
+    "dcore/acceptance/agent.py": {
+      "sha256": "67228f7640f08505a05076ca1cf715d6bf7f1943003361c230626d08057cea8e",
+      "size": 5285
     },
-    "dcore_lint.py": {
-      "sha256": "9b6818526a41f0f0675fde1b2243ee29de101369688cd44ded55722fcec76366",
-      "size": 53139
+    "dcore/acceptance/pool4.py": {
+      "sha256": "7fa670f771f238ef85ce1d3427a1bfbfece4e8d1f997d81bf165d91f4312d8b0",
+      "size": 6704
     },
-    "dcore_design.py": {
+    "dcore/cli.py": {
+      "sha256": "8558fbad6f9268e8a106590bf0cee00a4460827d85bbb5d417d73e6e28bd15a4",
+      "size": 2842
+    },
+    "dcore/design/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/design/routes.py": {
       "sha256": "34c389fc514b202437a080440a097cecf3e246f58e5eb8f71e2c66f9e2958b95",
       "size": 38763
     },
-    "dcore_rp_lint.py": {
+    "dcore/gates/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/gates/release.py": {
+      "sha256": "ce4e7191ccf2b4352af82509fa6fb5a8639ab782abcf3da28ee1cc69c0866a12",
+      "size": 10513
+    },
+    "dcore/gates/shadow.py": {
+      "sha256": "f4cc6b884785e0fdfee1d4fa25b7b8be74ae4f15bb2d5c25ac2c393ce9333c73",
+      "size": 7076
+    },
+    "dcore/knowledge/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/knowledge/meta_resolution.py": {
+      "sha256": "1b805a7f0b30852608782c61fd5ce6ce6cc00621d1fc7e77828b1fb448e53090",
+      "size": 2584
+    },
+    "dcore/knowledge/retrieval.py": {
+      "sha256": "2edfa2981fe507779da3cfc881a77eb883ec88583857373800efb0d86deff6b2",
+      "size": 37188
+    },
+    "dcore/knowledge/version_registry.py": {
+      "sha256": "bf1569d100f0323077f4335c14d4a7527ccdcbf721ab57dbf40c804288adeb5c",
+      "size": 9731
+    },
+    "dcore/lint/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/lint/resourcepack.py": {
       "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
       "size": 26423
     },
-    "retrieval.py": {
-      "sha256": "ade2ec04241970685950d021bfc03183327c3fae848e644330d2c0ec4bab5604",
-      "size": 20033
+    "dcore/lint/script.py": {
+      "sha256": "2d2f9cb9963f98ec2cd5b03aae59ebf20a6af8ce53a271493cc37bde7b702166",
+      "size": 115865
+    },
+    "dcore/lint/tagtypes.py": {
+      "sha256": "909a26ef432bc30751630e9a7a6ee4fede90124deb31d2d3d740e8d765fd871b",
+      "size": 14823
+    },
+    "dcore/mcp/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/mcp/prompts.py": {
+      "sha256": "144abf9ddd8992b0dfe2d5f7c666b71cdfd7a609d0b87435fef444d025d0c18a",
+      "size": 4815
+    },
+    "dcore/mcp/protocol.py": {
+      "sha256": "b1adba14657481dfbc9516c8a39f2d52b7e1f239fc7f339083cd08f153b5936e",
+      "size": 5030
+    },
+    "dcore/mcp/resources.py": {
+      "sha256": "1b47970bcc36b26c4660f3e403e425c6dddfa6665c2e7caace70ce84cfa90170",
+      "size": 3535
+    },
+    "dcore/mcp/server.py": {
+      "sha256": "6ba75090e1b6f156d7ea4d0ea1b71e124c084aaa28d6d0d577a33c6623c8ce95",
+      "size": 6159
+    },
+    "dcore/mcp/tools.py": {
+      "sha256": "52fcd673b2c343982858d0b941ed3d106d5634dab2d3f78167fd57c7fcbc19a3",
+      "size": 22312
+    },
+    "dcore/pack/__init__.py": {
+      "sha256": "29705d7bb59807faf14885ed0ce5108c057e15d927c7f70d182eec635bb18a09",
+      "size": 698
+    },
+    "dcore/pack/cli.py": {
+      "sha256": "9b6c282c6fd5809559160bf7a6ef5ff27939c693c9a5a20a726327f5d0605593",
+      "size": 3604
+    },
+    "dcore/pack/direct.py": {
+      "sha256": "d16b7382cabc4384d7e7d580932fd77afb5f14042cee19a87742ab39ffe6a063",
+      "size": 8276
+    },
+    "dcore/pack/keys.py": {
+      "sha256": "eb6510f70935de2807cc143a98ef1e07f1b9a8d32ea07a28eea4d9f8fd4f2b44",
+      "size": 2332
+    },
+    "dcore/pack/release.py": {
+      "sha256": "b525356716dbb45f5ab659a7bbfe96696243f948ad1a4ca198728781b4955e2a",
+      "size": 6841
+    },
+    "dcore/pack/semantic.py": {
+      "sha256": "7555349d05e01e4978a29d63666d3d69cd6ea546105992f2c71fc3cd4698d884",
+      "size": 4640
+    },
+    "dcore/paths.py": {
+      "sha256": "fb29d4a4e6fb35794bde649a12b13156e53bdab7e2c5d57f746d13abb22cf8f9",
+      "size": 630
+    },
+    "dcore/release/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/release/artifacts.py": {
+      "sha256": "cd0018bdccff6e4054678db569ea1e3071bfb2452dbe312032c8b1d0c5e868f2",
+      "size": 3525
+    },
+    "dcore/release/bundle.py": {
+      "sha256": "127f4275410e6343180b4966ef59b127c6b9f203f47f569c3192fc7c47f4a852",
+      "size": 2572
+    },
+    "dcore/release/bundle_gpt.py": {
+      "sha256": "eb1f036912aa878280cdfc431816c389847c34316f6adeef147e00ed005b8128",
+      "size": 4683
+    },
+    "dcore/release/compact.py": {
+      "sha256": "09a75f04af0bacbb8c9a0bea4e96d57a068e3b9ae509de914e6684fddd917c97",
+      "size": 5881
+    },
+    "dcore/release/import_meta.py": {
+      "sha256": "34522cc36c57f2bbd4be88379891339543b5591cd32e37ff974339eb3d8031db",
+      "size": 3823
+    },
+    "dcore/release/migrate.py": {
+      "sha256": "51a3a41a04ecb32fb5f133941e4ef13f4c5b71beb124fdea37bac52efcdbcc92",
+      "size": 2279
+    },
+    "dcore/release/migrations/001_generalized_visual_primitives.py": {
+      "sha256": "ed8b870d2b83df4aba3de2bf1e214a442a3034077b3749e7bfd8c7839b24203a",
+      "size": 18701
+    },
+    "dcore/release/migrations/002_repair_russian_routing_and_proof_gates.py": {
+      "sha256": "9296a420a50ac7f46547536d115454a233730cf428f03f582339e438ad36ab69",
+      "size": 11260
+    },
+    "dcore/release/migrations/003_multiversion_identity.py": {
+      "sha256": "2cb22c4bb8534366093dceabc9a18a825289b778882c29b6e24236b2e180f47f",
+      "size": 704
+    },
+    "dcore/release/migrations/004_runtime_router_and_lint_evidence.py": {
+      "sha256": "1ca4404b7bcc48fd22769fd57ba159c4959fc4cfe8c6203de553505a6f3ad65d",
+      "size": 19652
+    },
+    "dcore/release/migrations/005_precode_design_and_clean_code_gate.py": {
+      "sha256": "d36e2bfe4f2ed95c48447d2c9b1c03184d873aeba443d7caa3271f6491dbafd1",
+      "size": 12651
+    },
+    "dcore/release/migrations/006_evidence_routes_and_shader_workbench.py": {
+      "sha256": "a7bdd8d2d69d3760678cda50cc4b215e645659f44c31fa7ccb4f478ef9eaa8cb",
+      "size": 40983
+    },
+    "dcore/release/migrations/007_human_delivery_and_reference_integrity.py": {
+      "sha256": "9aab33b26a64f5cc2c78ffbb16fc3bc103774a2da6e9de0344b48977aae1d4a4",
+      "size": 11898
+    },
+    "dcore/release/migrations/008_teaching_progression_and_response_gate.py": {
+      "sha256": "adb1978849697f550258a5c69aa800fc35d37ba9e2cb494b7a58067bb64d3784",
+      "size": 13263
+    },
+    "dcore/release/migrations/009_retrieval_activation_repair.py": {
+      "sha256": "01b92c34c55cb750fe15e4a2c27269cd83a80086133851d5439a9518f5b40fd2",
+      "size": 2298
+    },
+    "dcore/release/migrations/010_router_teaching_intent_repair.py": {
+      "sha256": "b94574937ba3d0ff8d38e8b466c354c2f3d88225a49bdb255a350b72ae093b1c",
+      "size": 2140
+    },
+    "dcore/release/migrations/011_tone_route_activation.py": {
+      "sha256": "9b39d90d8ff4ce2085c99191e9840819d3b9bc7fa20de1a61eb3361a9d7d5050",
+      "size": 1140
+    },
+    "dcore/release/migrations/012_hard_human_review_tone.py": {
+      "sha256": "09b344e353f45c275ce1a316e8890cd2c07df37703a68384c7ff0ff5949307c3",
+      "size": 3757
+    },
+    "dcore/release/migrations/013_hard_tone_activation.py": {
+      "sha256": "4d28787961c02f06097be5836038e2c32c5fb8bf627f3560b947505ae63f76ae",
+      "size": 1317
+    },
+    "dcore/release/migrations/014_tone_test_scope.py": {
+      "sha256": "7ed831369a22a65bc81512adf8be0411fb712a29c0b5babebbe22f8517d81c9b",
+      "size": 481
+    },
+    "dcore/release/migrations/015_megizen_physics_and_hard_tone.py": {
+      "sha256": "1a2c2ff69eef9f5119599cbeb67dd4da5861f48cb0620d4add11619b94e1ad78",
+      "size": 8085
+    },
+    "dcore/release/migrations/016_physics_alpha_public_surface.py": {
+      "sha256": "0762e30262df76ee55751a8d2bf1f492c0521a81655828858cb67ca300beb8d4",
+      "size": 2943
+    },
+    "dcore/release/migrations/017_denizenm_7299m_release.py": {
+      "sha256": "0a1948163be644be2a28b50ff29c0ec6d2bb30296cc4c2e2ac9594e6d6edd1a5",
+      "size": 5163
+    },
+    "dcore/release/migrations/018_skill_execution_and_project_lint.py": {
+      "sha256": "bd47a0c526594d090fb9290d0cab9c6574f8722fa167ca3ceeb2e19b28636a59",
+      "size": 10807
+    },
+    "dcore/release/migrations/019_dcore_050_target_aware_lint.py": {
+      "sha256": "a2901aa5cf2b14429fb304b6fdf32581304d6e5aa09b2d5c0da8a185c0fad33d",
+      "size": 6819
+    },
+    "dcore/release/migrations/020_repair_050_retrieval_and_metadata.py": {
+      "sha256": "3495ac9a561ea6802dbf76052925479bea7e6af15a37a073e232d71c1ddbf2ea",
+      "size": 1462
+    },
+    "dcore/release/migrations/021_pin_reflect_diagnosis.py": {
+      "sha256": "2152b912e2e53e9a576d8c49fa357b33799780a30a03a1e80092285bb0fd8950",
+      "size": 512
+    },
+    "dcore/release/migrations/022_version_artifact_registry.py": {
+      "sha256": "5e687c4acf87c85411f9166f891a254dd14d90beace5e9e1eefb69f507bace94",
+      "size": 1669
+    },
+    "dcore/release/migrations/023_version_registry_ref_channels.py": {
+      "sha256": "411d39a93866570ffce473219db6854ef5d90bb356747f6317e5af0a1ded86f9",
+      "size": 829
+    },
+    "dcore/release/migrations/024_multiversion_meta_and_compatibility.py": {
+      "sha256": "b3e664e5509e7afcda50b9bfd5c540af5d06c0a16847ebb6d4e064246fe5faf8",
+      "size": 4705
+    },
+    "dcore/release/migrations/025_seed_verified_compatibility_rules.py": {
+      "sha256": "df34620cf0aeb9600a4e5f754903cf70709f4f410ca0a745fd6ff7b839df1928",
+      "size": 1592
+    },
+    "dcore/release/migrations/026_repair_historical_meta_foreign_keys.py": {
+      "sha256": "f8ab776ee98d6748c924bfea3a0210a648ce42f2e9f6a21d7c37eaecbc55e2cc",
+      "size": 890
+    },
+    "dcore/release/migrations/027_structured_card_version_scopes.py": {
+      "sha256": "ae391d6a2686180eeea6c61980099699eece3d064e6456d02ca14a4e88636ccd",
+      "size": 4713
+    },
+    "dcore/release/migrations/028_meta_overlay_storage.py": {
+      "sha256": "7e0429a0d2022f4f376fd0e6aedc4a67e81aa5c4bb46c3b4b829e7eb66439206",
+      "size": 1153
+    },
+    "dcore/release/migrations/029_meta_overlay_card.py": {
+      "sha256": "9dd991bb1c028f3b87c342eaa46a8e8db9b575e14c76e6bebf028a4e070f1b3b",
+      "size": 2791
+    },
+    "dcore/release/migrations/030_dog_navigation_lint.py": {
+      "sha256": "fd462cc819f2d83596b7b51af2456f0daa25222e6e9014eb5e380d82d169b85c",
+      "size": 7172
+    },
+    "dcore/release/migrations/031_skill_acceptance_release.py": {
+      "sha256": "7017021a090162d37267812842a17cf8c500893488e98646fffc3d8c71b8c725",
+      "size": 3224
+    },
+    "dcore/release/migrations/032_proof_pipeline_and_event_sharding.py": {
+      "sha256": "9062c75fea03e153a57ca18c4adfe9ee9d2ac026f507675bfa973e7295b2247e",
+      "size": 6142
+    },
+    "dcore/release/migrations/033_shadow_runtime_proof.py": {
+      "sha256": "9438f14242c96089da79d1b0097b53af384255ffa95e3158edd461714fad36b6",
+      "size": 3688
+    },
+    "dcore/release/migrations/034_denizencore_semantic_lint.py": {
+      "sha256": "5c8aa63eb218cae937e58e766da3c6decfabc89e252a90a9938689b58466bcee",
+      "size": 3484
+    },
+    "dcore/release/migrations/035_queue_callgraph_and_loop_scope.py": {
+      "sha256": "81538251c0a7b8db4472acd1a33c42117c97d51737d37adcfd5c4225a5c8e977",
+      "size": 3540
+    },
+    "dcore/release/migrations/036_project_queue_lifetime.py": {
+      "sha256": "0b2f2eea8f4723b4fdffd13ecb503d9be52fcc9339dc00145997766c9a972bba",
+      "size": 3408
+    },
+    "dcore/release/migrations/037_queue_proof_report.py": {
+      "sha256": "8be98528c4499965b8647ba9c71b5a7b83dbc6933b46e4d571c03707b028c654",
+      "size": 3397
+    },
+    "dcore/release/migrations/038_repair_queue_report_retrieval.py": {
+      "sha256": "e391123531685c883d7c45cd7a2a1ba83be001823d5654ec5458a78edc57c53f",
+      "size": 432
+    },
+    "dcore/release/migrations/039_fixture_confidence_policy.py": {
+      "sha256": "0adaa412749df97d43329c859b6c8701451be0a1cdb8f39b7788432d6585d526",
+      "size": 3218
+    },
+    "dcore/release/migrations/040_repair_fixture_retrieval.py": {
+      "sha256": "cb0cd4c57afab1376bb8f057939a5089cb072fad1667b4e629c029c582e5e77a",
+      "size": 430
+    },
+    "dcore/release/migrations/041_card_contract_repair.py": {
+      "sha256": "2bbec11a82c588ae66fdaf41657f0990ecba0aa7c8f21beee9167f43d8dc4864",
+      "size": 5219
+    },
+    "dcore/release/migrations/042_repair_card_contract_routes.py": {
+      "sha256": "0d2ef0289a29da1ce2e294771ccf29490d0be631741e7713ecd3a7ed263bc061",
+      "size": 975
+    },
+    "dcore/release/migrations/043_release_identity_070.py": {
+      "sha256": "714bc9651c50b771070ba6184cf8b677ece7904fb689e260957d5289fa5f0a5b",
+      "size": 1180
+    },
+    "dcore/release/update.py": {
+      "sha256": "3e5c046bd3046e24dc097b75be77a9dc97c99852f190385abd25b4a554dd7f90",
+      "size": 35909
+    },
+    "dcore/release/verify.py": {
+      "sha256": "eac98b15d3fe89ae3a51e3fefbc47d2954b93804df2571f236fbd53a03938adc",
+      "size": 9211
+    },
+    "dcore/semantics/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "dcore/semantics/core/LICENSE.md": {
+      "sha256": "aa22c3475d106ab952e0a973d1be10e4623b1be288242333d9ce66714207aac2",
+      "size": 1095
+    },
+    "dcore/semantics/core/NOTICE.md": {
+      "sha256": "ada9ba6f02a8cdf6111cf1db4f94e4ed31e319fc7d6f6e46f02bf66580e5b774",
+      "size": 768
+    },
+    "dcore/semantics/core/__init__.py": {
+      "sha256": "f345d3d7c052bf9d4bc63dfbb97a758b9a6b674f40fc7511f6728f13d5adafa7",
+      "size": 405
+    },
+    "dcore/semantics/core/engine.py": {
+      "sha256": "82900cc494e0ed5d6440e1667be9a711d51d231a3354b066aac41d13f6f12b1d",
+      "size": 34641
+    },
+    "dcore/semantics/graph.py": {
+      "sha256": "d22e9ba4be8cbf50a012dca36d08098f86b8f171c00600421613ed6f221c217d",
+      "size": 11392
+    },
+    "dcore/semantics/ir.py": {
+      "sha256": "cdb3354f5c95e94d64dd6909359be74f90724ce0aa56fcb8e74b4f03e70ae2bc",
+      "size": 16433
+    },
+    "dcore/semantics/proof.py": {
+      "sha256": "09a417c8717e7c93ebc6510f3d2436992b1190d89e3848f4b7b814ff0e18d776",
+      "size": 15580
+    },
+    "dcore/semantics/surface.py": {
+      "sha256": "03f4b2b1d9f52bdbfb62bbc48dfabdbc24109274e17dc635e39f00ff673c871c",
+      "size": 8379
+    },
+    "dcore/semantics/transform.py": {
+      "sha256": "58a8b8c9af6a7f9154983c67bd323cde6f3f228430639d6a644f946eefaa9f46",
+      "size": 14683
+    },
+    "docs/ARCHITECTURE.md": {
+      "sha256": "5d0400ffb296c421ed16b488d35c7bead75320e153b0dceff9292bcaced39f81",
+      "size": 4261
+    },
+    "docs/OPERATIONS.md": {
+      "sha256": "b05c646dd6d36101f043991026a49b2ce17ebfb70281923ab6f2c387f3325ab6",
+      "size": 2961
+    },
+    "integrations/custom-gpt/openapi.yaml": {
+      "sha256": "3c02664f4fad8e950c57eb214536cbceddc092153fe813140fe767ebcd0d9866",
+      "size": 4094
+    },
+    "knowledge/AGENT_INSTRUCTIONS.md": {
+      "sha256": "827f66307f80315ba02450e3217040a8abfc593095cdbc302bad5968cf81c217",
+      "size": 8524
+    },
+    "knowledge/DCORE_INSTRUCTIONS.txt": {
+      "sha256": "2c7666630203ae1897728da048dd66340eb000f34906a5d0cfb753ccb5d2ca10",
+      "size": 11944
+    },
+    "knowledge/dcore.sqlite": {
+      "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
+      "size": 20422656
+    },
+    "knowledge/lint_contract.example.json": {
+      "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
+      "size": 1306
+    },
+    "knowledge/pool4_golden_corpus.json": {
+      "sha256": "694224e862269f90342f276f193eb2cd618df0ec06cdc80c0fa0a7ed7da3426e",
+      "size": 2883
+    },
+    "knowledge/validation_contract.json": {
+      "sha256": "1ae62b024c763d6c00f3b3f6d06f73302bb07c2b882758eb624ecfd118c0389d",
+      "size": 1154
+    },
+    "knowledge/visual_sources.json": {
+      "sha256": "d3ea9828be0e0fb3c841c9b8b5368837eded05a2d81b1212a80376575f1e179c",
+      "size": 4469
     }
   },
   "counts": {
-    "cards": 152,
-    "meta_entries": 5431,
+    "cards": 176,
+    "meta_entries": 6387,
     "ide_diagnostics": 54,
-    "retrieval_tests": 132,
+    "retrieval_tests": 193,
     "visual_sources": 5,
-    "contrast_examples": 36,
-    "route_patterns": 10
+    "contrast_examples": 39,
+    "route_patterns": 10,
+    "version_artifacts": 41,
+    "compatibility_rules": 2,
+    "card_version_scopes": 176,
+    "meta_delta_sources": 39,
+    "meta_version_tombstones": 683
   },
   "sources": [
     {
       "product": "Denizen",
-      "commit_sha": "ec61942095eaec10660b31fba079096e6a04c86b",
+      "commit_sha": "ecede59e929a019b96dae975c99ae7ecd8554401",
       "source_id": "denizen_official_dev"
+    },
+    {
+      "product": "Denizen",
+      "commit_sha": "ecede59e929a019b96dae975c99ae7ecd8554401",
+      "source_id": "meta_denizen_branch_dev"
+    },
+    {
+      "product": "Denizen",
+      "commit_sha": "a063ef49c9261eb30ad3304359fb93c6fdd0cb3e",
+      "source_id": "meta_denizen_branch_release"
     },
     {
       "product": "Denizen-Core",
@@ -58,8 +457,193 @@
     },
     {
       "product": "DenizenM",
-      "commit_sha": "8403397d2ac01526876d6440a164dbff8738511c",
+      "commit_sha": "478d87785e682f3c4347edd3a3db7c338c606c2b",
       "source_id": "denizenm_public_master"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "7e0bf43ab2da3f91b7c0f37da3362282a6887f19",
+      "source_id": "meta_denizenm_tag_7268m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "925096f7c36115e2427a979403fd79bc5a828595",
+      "source_id": "meta_denizenm_tag_7269m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "4d6eb16fc0aab74a7b84343dce2c698d20a0eaf3",
+      "source_id": "meta_denizenm_tag_7269m2"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "2a56480569136f9dcb529ccf2c871fc093126d6c",
+      "source_id": "meta_denizenm_tag_7269m3"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "1ab62da3c084ef5214ab708c3ac98a46d9cc7cd3",
+      "source_id": "meta_denizenm_tag_7269m4"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "467d6239d6828568a6acf1562787e442fa70d68c",
+      "source_id": "meta_denizenm_tag_7271m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "088b027acd1d8364941e2be951873aa8344b7322",
+      "source_id": "meta_denizenm_tag_7271m2"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "194128ea6f604501001f2e09de2b6ff646241224",
+      "source_id": "meta_denizenm_tag_7275m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "1961a5405f5ebd0e6bdc14cc7397c55fc80126a6",
+      "source_id": "meta_denizenm_tag_7276m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "b75d7cb9ce8b65725bff1e5515f951a9edb46d2f",
+      "source_id": "meta_denizenm_tag_7282m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "b46eb217051168980b26bcebe65343f50460f44d",
+      "source_id": "meta_denizenm_tag_7282m3"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "cadd918729d910a5eeb907ef670cf6c51916daaf",
+      "source_id": "meta_denizenm_tag_7282m4"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "13f9558bacc19ba690cd7e672f6b1ea763f352b4",
+      "source_id": "meta_denizenm_tag_7282m5"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "9766892d892b0b7339a737d6c59e350da8a2f472",
+      "source_id": "meta_denizenm_tag_7286m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "ff2d08bdb2dcbb82bf47b5d948c5a950b97abb11",
+      "source_id": "meta_denizenm_tag_7290m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "5cb3f36660fad85fc9af52f09feaf0652ec5971c",
+      "source_id": "meta_denizenm_tag_7290m2"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "04b35a12d877eda903576c9074f067b70ac48573",
+      "source_id": "meta_denizenm_tag_7290m3"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "33349072abacec6416ddd7a5a890bd22f02b0d5c",
+      "source_id": "meta_denizenm_tag_7290m4"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "01b1293bd441b1aa0a512d076ef18ccb3718927c",
+      "source_id": "meta_denizenm_tag_7290m5"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "3e2f7558cd91e0e72705ccb2b9eeeead074d1606",
+      "source_id": "meta_denizenm_tag_7290m6"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "e0d285baeca261c9087d5569bb4aff19dafef8f7",
+      "source_id": "meta_denizenm_tag_7294m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "478d87785e682f3c4347edd3a3db7c338c606c2b",
+      "source_id": "meta_denizenm_tag_7299m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "0451abe025e34f3cf51598bfd62618cff086f52d",
+      "source_id": "meta_denizenm_tag_denizen"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "b718ba9c344c1d1626372e903541bde135275165",
+      "source_id": "meta_denizenm_commit_7277m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "cc3b135111333ad0a3aead3b3d5eb9d25ff04553",
+      "source_id": "meta_denizenm_commit_7278m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "be1de21200178d8e5e1bce0850ac46c5518971df",
+      "source_id": "meta_denizenm_commit_7280m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "15dd3e31a872757afa36da0bc813774a778f060d",
+      "source_id": "meta_denizenm_commit_7281m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "1b5e1e76c86a96a3025c7ae79b9ae34952fabff9",
+      "source_id": "meta_denizenm_commit_7283m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "f3925e7180a422ec6b0017259de18e71bdcfa6c8",
+      "source_id": "meta_denizenm_commit_7284m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "b355d1ae347213cd0e9dba7c8ba0cc161cc9d357",
+      "source_id": "meta_denizenm_commit_7285m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "90f253f123b55a53425cd66e7aaf8f1bddad28b3",
+      "source_id": "meta_denizenm_commit_7291m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "a7a729ba950ace16188bbc709107573074b04dd6",
+      "source_id": "meta_denizenm_commit_7292m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "61cbd9f49417bde3c8852a163317101242acb9c1",
+      "source_id": "meta_denizenm_commit_7293m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "6a4a8865204468495ead01a66c72bbec744c2201",
+      "source_id": "meta_denizenm_commit_7295m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "16ba928daa0fbfb90c7db33c4d86db008263d7ed",
+      "source_id": "meta_denizenm_commit_7296m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "aeae8c8f51741a7132f4b097e9d61a63e082f26e",
+      "source_id": "meta_denizenm_commit_7297m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "17d8e79b11a71cbf39b88b84666f7480ae49d3aa",
+      "source_id": "meta_denizenm_commit_7298m"
     },
     {
       "product": "Voxizen",

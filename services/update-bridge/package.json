@@ -1,0 +1,12 @@
+{
+  "name": "dcore-update-bridge",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "wrangler": "4.116.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "deploy": "wrangler deploy"
+  }
+}

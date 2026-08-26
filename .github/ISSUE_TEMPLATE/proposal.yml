@@ -1,0 +1,22 @@
+name: Feature or rule proposal
+description: Propose a version-scoped engineering capability.
+title: "proposal: "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Problem and ecosystem value
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Target versions and source evidence
+      description: Link primary sources and specify exact versions or commits.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed proof boundary
+      description: State what can be statically checked and what still requires runtime verification.
+    validations:
+      required: true

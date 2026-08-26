@@ -1,0 +1,29 @@
+{
+  "release_version": "0.70",
+  "metadata_name": "dCore 0.70",
+  "minimum_counts": {
+    "cards": 176,
+    "meta_entries": 6000,
+    "ide_diagnostics": 40,
+    "retrieval_tests": 146,
+    "visual_sources": 5,
+    "contrast_examples": 39,
+    "route_patterns": 10,
+    "version_artifacts": 41,
+    "compatibility_rules": 2,
+    "card_version_scopes": 171,
+    "meta_delta_sources": 39,
+    "meta_version_tombstones": 600
+  },
+  "minimum_auto_intent_tests": 56,
+  "required_cards": [
+    "CORE-019", "CORE-020", "CORE-021", "VER-009", "VER-010",
+    "DEN-025", "DEN-026", "VER-008", "VIS-033", "VIS-034",
+    "VIS-035", "VIS-036", "VIS-037", "VIS-038", "VIS-039",
+    "VIS-040", "PERF-011", "CORE-022", "DEN-027", "DEN-028",
+    "VER-011", "VER-012", "VIS-041", "CORE-023", "CORE-024", "VER-023", "DEN-032", "DEN-033", "VER-024", "VER-025",
+    "TEACH-004", "TEACH-005", "VER-013", "DEN-029", "ADD-009",
+    "PHYS-001", "DEN-030", "CORE-025", "CORE-026", "DEN-031",
+    "VER-014", "CORE-027", "VER-015", "ADD-010", "VER-016", "CORE-028", "VER-017", "ADD-011", "VER-018", "VER-019", "DOG-001", "PERF-012", "VER-020", "VER-021", "PERF-013", "VER-022"
+  ]
+}

@@ -1,108 +1,213 @@
 # dCore
 
-dCore is a version-aware engineering system for DenizenScript and Minecraft visual engineering, designed to turn GPT into a specialized engineering assistant for the Denizen ecosystem.
+> Version-aware engineering tools for DenizenScript, Denizen, DenizenM, addons, and Minecraft visual systems.
 
-dCore is built for serious Denizen development rather than generic Minecraft scripting. Denizen is a mature scripting engine used by established Minecraft server projects for gameplay systems, automation, NPCs, effects, interfaces and complex server-side behavior.
+**dCore is development support infrastructure.** It gives people and coding agents a verifiable workflow for designing, reviewing, linting, and releasing DenizenScript projects across exact Minecraft, Paper, Denizen, DenizenM, addon, and resource-pack versions.
 
-The problem is that Denizen development is highly version-sensitive. Minecraft/Paper, Denizen, DenizenM, addons, Java APIs and client-side resource-pack/rendering capabilities can all differ between builds. A generic LLM can produce plausible-looking code while silently mixing APIs, inventing mechanisms or applying techniques from the wrong version.
+It combines version-pinned API knowledge, static analysis, bounded semantic execution, resource-pack graph validation, proof-state release gates, and an MCP server that brings the same tooling into Codex, Claude Code, Cursor, Zed, and other MCP clients.
 
-dCore solves this by resolving the target environment first and grounding engineering decisions in version-pinned evidence, structured knowledge, retrieval tests, static analysis and explicit proof states.
+## Why dCore
 
-The goal is simple: make GPT substantially better at producing, reviewing, debugging and explaining real Denizen code and complex visual/resource-pack systems.
+Denizen projects fail at boundaries that plain text search and generic coding advice cannot prove:
 
-> **Current development status**
->
-> The public `main` branch currently contains an older public snapshot.
->
-> **dCore 0.62 is the current development release.**
->
-> 0.62 was developed and refined through a closed beta period focused on finding implementation, retrieval, compatibility, linting and workflow issues before the next public release.
->
-> The public repository will be updated to 0.62 after the final cleanup and validation pass.
+- a tag exists in one target build but not another;
+- a script is syntactically plausible but has unreachable commands, unsafe queue ownership, or an unbounded lifecycle;
+- a resource pack links JSON, shaders, programs, and post-processing stages incorrectly;
+- a route looks attractive but has no evidence for its runtime assumptions;
+- an agent produces code without distinguishing static evidence from an in-game proof.
 
-## What 0.62 adds
+ dCore turns those boundaries into explicit checks and proof states.
 
-0.55 established the frozen baseline.
+## Engineering model
 
-0.56 added a hard proof-state release gate: a static result can no longer quietly be promoted to a runtime claim.
+```mermaid
+flowchart LR
+    A[Request and exact target] --> B[Version resolver]
+    B --> C[Knowledge and Meta retrieval]
+    C --> D[Design and ownership checks]
+    D --> E[Script and pack analysis]
+    E --> F{Proof gate}
+    F -->|static evidence only| G[Runtime verification required]
+    F -->|all required evidence| H[Release-ready result]
+```
 
-0.58 introduced **DenizenCore-lite**, a source-derived and MIT-attributed Python semantic layer under dCore-lint. It builds command entries, scopes container definitions, fills portable queue/context tags and evaluates `if`, `choose`, `repeat`, `while` and `stop` without pretending to execute Bukkit or Minecraft.
+The output is intentionally evidence-first. A successful static result is not presented as a successful Minecraft runtime result.
 
-0.61 introduced **project-wide queue proof**:
+## Core systems
 
-- cross-file `run` traversal;
-- shared-queue `inject`;
-- static/dynamic `wait` boundaries;
-- MapTag foreach fixtures;
-- classified lifetime reports for semantic execution limits.
+| System | What it does |
+|---|---|
+| **Version registry and Meta overlays** | Resolves exact Denizen, DenizenM, Minecraft, Paper, Java, and addon targets without borrowing current API facts for historical builds. |
+| **DenizenScript lint** | Finds terminal-command reachability problems, event blast radius, ceremonial forwarding tasks, type and tag mistakes, deprecated mechanisms, and Reflect proof boundaries. |
+| **Semantic-lite executor** | Builds a source-derived model of containers, scopes, queues, contexts, `if`, `choose`, `repeat`, `while`, `stop`, `run`, `inject`, and wait boundaries without claiming to run Bukkit. |
+| **Resource-pack lint** | Validates a merged directory or ZIP across JSON, `#moj_import`, namespaces, program and stage linkage, paths, channels, post targets, and shader ownership. |
+| **Design and release gates** | Compares genuinely different routes, records ownership and cost assumptions, and prevents static confidence from being promoted to runtime proof. |
+| **MCP server** | Exposes the exact CLI behavior over stdio JSON-RPC for coding agents and IDEs. |
 
-0.62 adds **explicit queue fixtures and confidence policy**:
+## Analysis pipeline
 
-- input/platform gaps are not treated as errors;
-- dynamic wait limitations become P1 warnings;
-- only a fixture identifying the exact source path can lower such a finding to an informational runtime-boundary state.
+```mermaid
+flowchart TB
+    S[DenizenScript or resource pack] --> L[Static lint]
+    S --> Q[Semantic queue analysis]
+    V[Version-scoped API and addon evidence] --> L
+    V --> Q
+    L --> R[Findings with severity, code, location, fix]
+    Q --> R
+    R --> P[Proof-state classifier]
+    P -->|STATIC_OK| U[Runtime still unverified]
+    P -->|evidence complete| X[Release decision]
+```
 
-The 0.62 development line also includes:
+### Proof states
 
-- human-first delivery: retrieval, route dossiers and machine lint stay backstage;
-- stable Markdown lint tables with severity, code, location, problem and fix;
-- control-flow detection after terminal `determine`/`stop`;
-- flexible container indentation and ceremonial-task review;
-- namespace-aware legacy post-program reference validation;
-- explicit `DECISION_REPRODUCED` instead of a misleading generic verification `PASS`;
-- proportional design gates: complex choices compare routes while exact local fixes remain local;
-- two independent generated products: a local Codex Skill and a Custom GPT bundle;
-- one canonical knowledge database and one updater, with no hand-maintained copies;
-- a hard teaching gate with bounded fragments/exercises instead of automatically dumping complete scripts;
-- worked-example fading, user attempts, feedback and transfer checks;
-- anti-vibe review based on observable engineering risk rather than alleged authorship;
-- consistent lint policy for DenizenM and documented Reflect boundaries;
-- target-aware linting for Minecraft, Paper, Java, DenizenM, addons and exact JAR evidence;
-- a version-artifact registry for Denizen, Denizen-Core and DenizenM tags/branches;
-- separate Meta and runtime proof states;
-- structural Reflect invocation checks without confusing syntax validity with Java signature proof;
-- release-policy cards for target resolution, Reflect boundaries and verified manifests;
-- target-pinned historical Meta snapshots so old targets cannot borrow current syntax;
-- evidence-backed addon compatibility records instead of guessed major-version ranges;
-- structured version scopes enforced by retrieval as applicable, deferred or not-applicable advice;
-- overlay-based historical Meta, storing identical API rows once while preserving exact old-build differences;
-- dog-search session architecture with explicit phases, one state owner and idempotent cleanup;
-- dog-navigation lint gates for `walk` ownership conflicts, path replacement without `stop` and `on tick` repathing;
-- a deterministic acceptance suite of representative Denizen scenarios;
-- `dcore_run.py`, exposing target, retrieval, route, addon/JAR, static and runtime proof states with `RELEASE_BLOCKED` until required evidence passes;
-- bounded four-player event-session architecture using queue tickets, worker reservations, capacity telemetry and idempotent cleanup instead of an unbounded global event loop.
+| State | Meaning |
+|---|---|
+| `STATIC_OK` | Static structure and configured checks passed. Runtime behavior is still unverified. |
+| `RUNTIME_UNVERIFIED` | The exact client, server, addon JAR, graphics mode, or fixture is needed before a runtime claim. |
+| `DECISION_REPRODUCED` | A route decision was recomputed from the supplied evidence. It is not a runtime success claim. |
+| `RELEASE_BLOCKED` | Required target, retrieval, static, addon/JAR, or runtime evidence is missing or failing. |
 
-## Why version awareness matters
+## Install
 
-dCore does not assume that the newest API is automatically correct.
+Requires Python 3.12 or newer.
 
-For every request, the system can resolve:
+```bash
+python -m pip install -e .
+```
 
-- Minecraft version;
-- Paper version;
-- Denizen version;
-- DenizenM version;
-- addon versions;
-- exact JAR evidence;
-- resource-pack/client target;
-- historical API differences.
+For development and the full test suite:
 
-Version-neutral engineering principles remain reusable, but syntax, plugin bindings, Java/Reflect behavior and rendering capabilities remain pinned to evidence for the selected build.
+```bash
+python -m pip install -e ".[dev,mcp]"
+python -m pytest -q
+```
 
-This allows the same system to reason about both current and historical Denizen environments without silently borrowing modern syntax for an older target.
+## CLI
+
+```bash
+# Discover available commands
+dcore --help
+
+# Lint a script against an exact target
+dcore lint --help
+
+# Lint a merged resource pack or shader pipeline
+dcore lint-pack --help
+
+# Retrieve version-scoped engineering guidance
+dcore retrieve --help
+
+# Compare meaningful implementation routes
+dcore design --help
+
+# Run target, static, addon, and runtime proof gates
+dcore run --help
+
+# Inspect available version artifacts
+dcore versions --help
+```
+
+Every command exposes its own `--help`, so flags remain local to the subsystem that owns them.
+
+## MCP for coding agents
+
+dCore is usable as a local stdio MCP server with no runtime dependency beyond Python and the package itself.
+
+```bash
+python -m dcore.mcp.server --describe
+python -m dcore.mcp.server
+```
+
+Example client configuration:
+
+```json
+{
+  "mcpServers": {
+    "dcore": {
+      "command": "python",
+      "args": ["-m", "dcore.mcp.server"],
+      "cwd": "/absolute/path/to/dcore/repository"
+    }
+  }
+}
+```
+
+The server exposes lint, resource-pack lint, retrieval, route comparison, version discovery, bounded session simulation, and release-gate tools. See [docs/MCP.md](docs/MCP.md) for the complete tool surface and client notes.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    U[Pinned public sources and authored rules] --> C[Isolated SQLite candidate]
+    C --> T[Migrations, integrity checks, and tests]
+    T -->|pass| R[Verified repository state]
+    R --> G[Custom GPT bundle]
+    R --> M[Release manifest]
+    M --> B[Read-only freshness bridge]
+```
+
+The database is the canonical retrieval index. GitHub Actions refreshes a build copy, applies deterministic migrations, validates the candidate, and only then promotes a passing result. A failed import or test never replaces the last known-good database.
+
+## Repository layout
+
 ```text
-pinned public sources + authored rules
-                |
-                v
-       isolated SQLite candidate
-                |
-     migrations + executable tests
-                |
-                v
- private last-known-good repository
-       |                    |
-       v                    v
- dated owner bundles   freshness API
+dcore/                      Installable package and CLI
+  knowledge/                Retrieval, target registry, SQLite access
+  lint/                     DenizenScript and resource-pack analysis
+  semantics/                Source-derived bounded semantic execution
+  design/                   Route comparison and decision evidence
+  gates/                    Proof-state and release gates
+  mcp/                      Stdio MCP server and tool surface
+  release/                  Manifest, bundle, update, and verification flows
+knowledge/                  Canonical database, manifest, and source registry
+tests/                      Unit, retrieval, MCP, and acceptance coverage
+docs/                       Architecture, MCP, and operating procedures
+services/update-bridge/     Read-only manifest freshness API
+integrations/custom-gpt/    Custom GPT OpenAPI schema
+```
+
+## Verification and release work
+
+```bash
+# Exercise the MCP acceptance scenarios
+python -m dcore.acceptance.agent --db knowledge/dcore.sqlite
+
+# Build the standalone Custom GPT bundle
+dcore build-gpt --output dist/dCore-GPT-0.70
+
+# Validate release identity and manifest
+dcore verify --help
+```
+
+The Custom GPT bundle and MCP server are independent delivery paths that share the same verified knowledge source.
+
+## Scope and boundaries
+
+- dCore supports engineering work around DenizenScript, Denizen, DenizenM, registered addons, and Minecraft visual systems.
+- Exact compatibility claims require the relevant version and, where applicable, the installed addon JAR or real client runtime.
+- Reflect syntax validity does not prove a Java signature exists for a selected build.
+- Resource-pack static validity does not prove performance, F5 behavior, graphics-mode behavior, or rendering output.
+- Public source material is tracked by exact commit and license policy. Reference-only sources inform facts and architecture but are not redistributed as code.
+
+## Current release line
+
+`0.70` introduces an MCP server for any MCP-speaking client and surfaces deprecated tags and mechanisms recorded by Meta. The Custom GPT delivery path remains available as a separately generated bundle.
+
+## Project status
+
+dCore is under active engineering and release maintenance. The repository includes a public OSS contract, contribution workflow, security reporting policy, changelog, and issue and pull request templates.
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [MCP server and tools](docs/MCP.md)
+- [Operations](docs/OPERATIONS.md)
+
+## Contributing and security
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing rules, sources, targets, or behavior changes. Use GitHub private vulnerability reporting as described in [SECURITY.md](SECURITY.md) for security issues. Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+dCore is licensed under the [MIT License](LICENSE). Third-party notices bundled with the semantic core remain in `dcore/semantics/core/`.

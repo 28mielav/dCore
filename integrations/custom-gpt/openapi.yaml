@@ -5,11 +5,19 @@ info:
   description: Read-only access to the latest verified private dCore knowledge release.
 servers:
   - url: https://dcore-update-bridge.ru-tonystark.workers.dev
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
 paths:
   /v1/health:
     get:
       operationId: checkDcoreBridge
       summary: Verify that the private dCore update bridge is available.
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Bridge status.
@@ -27,6 +35,8 @@ paths:
       operationId: getLatestDcoreRelease
       summary: Get the version, validation status, source commits, counts, and SHA-256 of the latest verified dCore release.
       description: Call this before claiming that the attached dCore Knowledge is current. This endpoint reports freshness but does not replace Custom GPT Knowledge files.
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Latest verified private dCore release manifest.
