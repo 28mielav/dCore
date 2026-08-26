@@ -114,7 +114,7 @@ def fixture_path_matches(fixture: dict[str, Any], source_path: str, line: int) -
     paths = fixture.get("known_lifetime_paths", [])
     if not isinstance(paths, list):
         return False
-    normalized = source_path.replace("\\\\", "/").rsplit("/", 1)[-1].casefold() + f":{line}"
+    normalized = source_path.replace("\\", "/").rsplit("/", 1)[-1].casefold() + f":{line}"
     return any(
         str(item).casefold() in {
             normalized,
