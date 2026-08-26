@@ -37,10 +37,14 @@ SHARP_ZIP = "https://github.com/DenizenScript/SharpDenizenTools/archive/{commit}
 
 
 def bundled_path(name: str) -> Path:
-    """Resolve both repository layout and the flattened private release."""
-    beside_tool = Path(__file__).resolve().with_name(name)
-    repository_copy = Path(__file__).resolve().parents[1] / "knowledge" / name
-    return beside_tool if beside_tool.exists() else repository_copy
+    """Resolve repository, package, and flattened-release knowledge layouts."""
+    tool_path = Path(__file__).resolve()
+    candidates = (
+        tool_path.with_name(name),
+        tool_path.parents[1] / "knowledge" / name,
+        tool_path.parents[2] / "knowledge" / name,
+    )
+    return next((candidate for candidate in candidates if candidate.exists()), candidates[-1])
 
 
 @dataclass(frozen=True)
