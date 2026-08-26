@@ -557,22 +557,6 @@ TOOLS: tuple[Tool, ...] = (
         tags=("release", "verification"),
     ),
     Tool(
-        name="dcore_build_gpt",
-        title="Build the dCore GPT bundle",
-        description="Build the verified human-organized dCore Custom GPT knowledge bundle.",
-        schema={
-            "type": "object",
-            "properties": {
-                "root": {"type": "string"}, "knowledge": {"type": "string"},
-                "output": {"type": "string"},
-            },
-            "required": ["output"],
-        },
-        module="dcore.release.bundle_gpt",
-        argv=build_gpt_argv,
-        tags=("release", "gpt"),
-    ),
-    Tool(
         name="dcore_accept_agent",
         title="Run MCP agent acceptance",
         description="Run deterministic acceptance scenarios over the same MCP tool surface.",
