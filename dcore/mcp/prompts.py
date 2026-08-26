@@ -108,6 +108,56 @@ Review observable code risk only. Never infer authorship or effort from style.
 Report a table of severity, code, location, problem and fix, then the risks that
 need runtime proof rather than static argument.""",
     ),
+    Prompt(
+        name="dcore_project_audit",
+        title="Audit a complete dCore project",
+        description="Run the unified script, visual, evidence and proof audit over a project.",
+        arguments=(
+            Argument("paths", "Project files or directories", required=True),
+            Argument("target", "Exact Minecraft, Paper, Denizen or DenizenM target"),
+        ),
+        template="""Read dcore://instructions, dcore://architecture and dcore://manifest first.
+
+Project: {paths}
+Target: {target}
+
+Call dcore_project_audit over the supplied project. Then use dcore_retrieve for any
+version-sensitive claim, dcore_shader_review for resource-pack inputs, and
+dcore_release_gate when the project is intended for release. Separate static
+findings, semantic findings and runtime proof requirements. Do not call
+maintenance or obfuscation operations unless explicitly requested.""",
+    ),
+    Prompt(
+        name="dcore_shader_review",
+        title="Review a Minecraft shader pipeline",
+        description="Review a resource-pack shader pipeline and produce a runtime proof checklist.",
+        arguments=(
+            Argument("input", "Resource-pack directory or ZIP", required=True),
+            Argument("target", "Minecraft version and pack format"),
+        ),
+        template="""Read dcore://instructions and dcore://manifest first.
+
+Shader input: {input}
+Target: {target}
+
+Call dcore_shader_review. Report stage linkage, imports, uniforms, samplers,
+attributes, varyings, post-processing routes, static verdict and every runtime
+check still required in Minecraft. Never convert STATIC_OK into runtime success.""",
+    ),
+    Prompt(
+        name="dcore_release_review",
+        title="Review dCore release readiness",
+        description="Run the complete release and OSS verification workflow.",
+        arguments=(Argument("paths", "Project paths", required=True),),
+        template="""Read dcore://instructions, dcore://operations and dcore://manifest.
+
+Project: {paths}
+
+Run dcore_project_audit, dcore_verify, dcore_accept_agent and the relevant
+release gate. Check CLI/MCP parity, GPT bundle inputs, documentation, manifests,
+fixtures and runtime proof boundaries. Return a release checklist with exact
+blocking items and verified results.""",
+    ),
 )
 
 BY_NAME = {prompt.name: prompt for prompt in PROMPTS}

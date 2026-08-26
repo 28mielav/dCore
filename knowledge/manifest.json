@@ -1,11 +1,11 @@
 {
   "name": "dCore",
   "version": "0.70",
-  "generated_at": "2026-08-26T20:39:32.565439+00:00",
+  "generated_at": "2026-08-26T20:55:23.456833+00:00",
   "status": "verified",
   "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
   "size": 20422656,
-  "bundle_sha256": "729f975a65165aa70f69f24b57f34b96c61da00624ebc2d62454e76c2f69c355",
+  "bundle_sha256": "e4c1c3254fb4921c436851add468dcc61f6e5d5e6103c9f794ae6c8ecf2a55c2",
   "artifacts": {
     "dcore/__init__.py": {
       "sha256": "6be8d49b97d21fefc7712dba4908f9827f398bce0f44133ddac015cf875e9257",
@@ -100,8 +100,8 @@
       "size": 2428
     },
     "dcore/mcp/prompts.py": {
-      "sha256": "144abf9ddd8992b0dfe2d5f7c666b71cdfd7a609d0b87435fef444d025d0c18a",
-      "size": 4815
+      "sha256": "0d77e0d7f2c1327ff214b94798bd968346aa224e97b6b4bcbad5a4462757d441",
+      "size": 7100
     },
     "dcore/mcp/protocol.py": {
       "sha256": "b1adba14657481dfbc9516c8a39f2d52b7e1f239fc7f339083cd08f153b5936e",
