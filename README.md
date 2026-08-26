@@ -6,6 +6,9 @@
 
 It combines version-pinned API knowledge, static analysis, bounded semantic execution, resource-pack graph validation, proof-state release gates, and an MCP server that brings the same tooling into Codex, Claude Code, Cursor, Zed, and other MCP clients.
 
+> [!WARNING]
+> dCore is actively under development. Rules, target coverage, lint behavior, and integrations will continue to evolve. Suggestions, bug reports, target data, and proposals for improving any subsystem, including lint, are welcome through [GitHub Issues](https://github.com/28mielav/dCore/issues).
+
 ## Why dCore
 
 Denizen projects fail at boundaries that plain text search and generic coding advice cannot prove:
@@ -16,7 +19,7 @@ Denizen projects fail at boundaries that plain text search and generic coding ad
 - a route looks attractive but has no evidence for its runtime assumptions;
 - an agent produces code without distinguishing static evidence from an in-game proof.
 
- dCore turns those boundaries into explicit checks and proof states.
+dCore turns those boundaries into explicit checks and proof states.
 
 ## Engineering model
 
@@ -35,14 +38,23 @@ The output is intentionally evidence-first. A successful static result is not pr
 
 ## Core systems
 
-| System | What it does |
-|---|---|
-| **Version registry and Meta overlays** | Resolves exact Denizen, DenizenM, Minecraft, Paper, Java, and addon targets without borrowing current API facts for historical builds. |
-| **DenizenScript lint** | Finds terminal-command reachability problems, event blast radius, ceremonial forwarding tasks, type and tag mistakes, deprecated mechanisms, and Reflect proof boundaries. |
-| **Semantic-lite executor** | Builds a source-derived model of containers, scopes, queues, contexts, `if`, `choose`, `repeat`, `while`, `stop`, `run`, `inject`, and wait boundaries without claiming to run Bukkit. |
-| **Resource-pack lint** | Validates a merged directory or ZIP across JSON, `#moj_import`, namespaces, program and stage linkage, paths, channels, post targets, and shader ownership. |
-| **Design and release gates** | Compares genuinely different routes, records ownership and cost assumptions, and prevents static confidence from being promoted to runtime proof. |
-| **MCP server** | Exposes the exact CLI behavior over stdio JSON-RPC for coding agents and IDEs. |
+### Version registry and Meta overlays
+Resolves exact Denizen, DenizenM, Minecraft, Paper, Java, and addon targets without borrowing current API facts for historical builds.
+
+### DenizenScript lint
+Finds terminal-command reachability problems, event blast radius, ceremonial forwarding tasks, type and tag mistakes, deprecated mechanisms, and Reflect proof boundaries.
+
+### Semantic-lite executor
+Builds a source-derived model of containers, scopes, queues, contexts, `if`, `choose`, `repeat`, `while`, `stop`, `run`, `inject`, and wait boundaries without claiming to run Bukkit.
+
+### Resource-pack lint
+Validates a merged directory or ZIP across JSON, `#moj_import`, namespaces, program and stage linkage, paths, channels, post targets, and shader ownership.
+
+### Design and release gates
+Compares genuinely different routes, records ownership and cost assumptions, and prevents static confidence from being promoted to runtime proof.
+
+### MCP server
+Exposes the exact CLI behavior over stdio JSON-RPC for coding agents and IDEs.
 
 ## Analysis pipeline
 
