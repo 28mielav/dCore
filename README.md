@@ -1,6 +1,6 @@
 # dCore
 
-> Version-aware engineering tools for DenizenScript, Denizen, DenizenM, addons, and Minecraft visual systems.
+> DenizenScript and Minecraft visual engineering tools.
 
 **dCore is development support infrastructure.** It gives people and coding agents a verifiable workflow for designing, reviewing, linting, and releasing DenizenScript projects across exact Minecraft, Paper, Denizen, DenizenM, addon, and resource-pack versions.
 
