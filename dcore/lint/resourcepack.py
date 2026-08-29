@@ -212,8 +212,18 @@ def lint_pack(pack: Pack, minecraft: str | None = None, pack_format: float | Non
             if len(unique) > 1:
                 issues.append(issue(code, severity, unique[0], f"{label} '{name}' is claimed more than once; verify that this is one owner spanning stages, not two providers.", paths=unique, name=name))
 
-    legacy_post = sorted(path for path in pack.files if "/shaders/post/" in f"/{path}")
-    modern_post = sorted(path for path in pack.files if "/post_effect/" in f"/{path}")
+    # Since 1.21.2, post-effect *programs* legitimately live under
+    # shaders/post while effect graphs live under post_effect. Only graph JSON
+    # at the legacy path is evidence of a mixed schema; counting every modern
+    # stage/source there produced a warning for every valid modern pack.
+    legacy_post = sorted(
+        path for path, value in parsed.items()
+        if "/shaders/post/" in f"/{path}" and path.endswith(".json")
+        and isinstance(value, dict) and ("passes" in value or "targets" in value)
+    )
+    modern_post = sorted(
+        path for path in parsed if "/post_effect/" in f"/{path}" and path.endswith(".json")
+    )
     if legacy_post and modern_post:
         issues.append(issue(
             "mixed_post_schema_paths", "warning", legacy_post[0],

@@ -1,54 +1,39 @@
 # Operations
 
-## Routine maintenance
+## Local setup
 
-The private workflow runs Monday at 04:23 UTC and on manual dispatch. A green run either confirms the current bundle or publishes/replaces the private release named `YYYY-MM-DD`.
-
-Visual repositories are monitored, not blindly ingested. `visual_review_required=true` means a registered repository moved beyond its curated commit. Existing knowledge remains usable and pinned; review the upstream diff before advancing its indexed SHA or copying code.
-
-## Install or update the Custom GPT
-
-1. Call `getLatestDcoreRelease` and compare `bundle_sha256` with the attached `manifest.json`.
-2. If different, download and unpack the latest private dated release.
-3. Remove the old seven Knowledge attachments.
-4. Upload the seven files inside `GPT_Knowledge`.
-5. Replace the GPT Instructions field with `GPT_Instructions/DCORE_INSTRUCTIONS.txt`. The 0.31 file is intentionally compact; do not delete SQLite cards to solve an Instructions-size concern.
-6. If `Custom_GPT_Action/openapi.yaml` has a newer schema version than the installed Action, re-import it; keep the existing authentication key.
-7. Save the GPT; test `checkDcoreBridge`, `getLatestDcoreRelease`, one DenizenM Meta query, one route comparison and one lint invocation.
-
-Do not upload `update_knowledge.py`, source clones, secrets or local work directories as GPT Knowledge.
-
-## Force a release
-
-Open **Actions -> Maintain dCore knowledge -> Run workflow**, enable **Publish today's verified bundle**, and run it. A second run on the same UTC date replaces that date's release.
-
-## Required secrets
-
-GitHub repository secrets:
-
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
-
-Cloudflare Worker and Custom GPT Action share only the Bearer value `DCORE_ACTION_KEY`. Never commit it or put it in a release/Knowledge file.
-
-## Failure recovery
-
-- **Before validation:** rerun later; canonical Knowledge was not touched.
-- **Validation failure:** download the diagnostic artifact, fix the failing invariant/test, and rerun. Do not force-install the candidate.
-- **Worker deploy failure:** database/release may be valid, but Action freshness stays on the previous deployed manifest until a successful deploy.
-- **Action 401:** rotate `DCORE_ACTION_KEY` in the Worker and GPT Action authentication.
-- **Manifest mismatch:** rerun maintenance; never claim current Knowledge from bridge health alone.
-- **Database corruption:** restore `knowledge/dcore.sqlite` and `manifest.json` from the latest verified private release, then run all validation before pushing.
-
-## Local release check
-
-Use the bundled/current Python runtime:
-
-```text
+```bash
 python -m pip install -e .
-python -m unittest discover -s tests -t . -p "test_*.py"
-python -m tests.test_retrieval --db knowledge/dcore.sqlite
-python -m dcore.release.verify --root . --output knowledge/manifest.json
+python -m pytest -q
 ```
 
-Static success is not server/client runtime proof. Preserve the runtime checklist produced by the relevant tool.
+## Verify the portable build
+
+```bash
+dcore verify-skill --root . --json
+dcore validate-shader path/to/merged-pack --minecraft <client-version> --pack-format <format> --json
+dcore verify --root . --output temp/manifest.verify.json
+```
+
+The shader command proves static structure only. Keep a runtime matrix for the exact Minecraft client and manual test session.
+
+## Build and install
+
+```bash
+dcore build-skill --root . --output build/dcore-skill.zip
+```
+
+Install `skill/dcore/` directly for Codex, expose the same `SKILL.md` to Claude Code, copy it under `.agents/skills/dcore/` for Antigravity, or use the Cursor routing adapter. Do not duplicate references into adapters.
+
+## Update knowledge
+
+Run source refresh and migrations against an isolated database copy, validate retrieval/integrity, then replace `knowledge/dcore.sqlite` and regenerate `knowledge/manifest.json`. A failed candidate never replaces the current database.
+
+## Build checklist
+
+- tests pass;
+- `verify-skill` returns `BUILD_OK` and `runtime=RUNTIME_UNVERIFIED` or a separately evidenced runtime state;
+- each included visual fixture passes static validation;
+- two bundle builds have the same SHA-256;
+- manifest is regenerated from the final tree;
+- changelog matches the build.

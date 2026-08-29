@@ -1,4 +1,4 @@
-"""The single declaration of what a dCore release contains.
+"""The single declaration of what a dCore build contains.
 
 Before 0.70 this list lived four times over: in the workflow's `--artifact`
 flags, in the manifest writer, and in both bundle builders. They drifted, and
@@ -32,7 +32,11 @@ KNOWLEDGE_DATA = (
 )
 
 PROJECT_DATA = (
-    "integrations/custom-gpt/openapi.yaml",
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".agents/rules/dcore.md",
+    ".cursor/rules/dcore.mdc",
     "docs/ARCHITECTURE.md",
     "docs/OPERATIONS.md",
 )
@@ -50,7 +54,7 @@ MANIFEST = "knowledge/manifest.json"
 #: Measurement lives here because both halves of the release need the identical
 #: answer: the verifier writes these hashes into the manifest and the bundlers
 #: check artifacts against it. When the two disagreed, every bundle build failed.
-TEXT_SUFFIXES = frozenset({".txt", ".md", ".json", ".yaml", ".yml", ".py"})
+TEXT_SUFFIXES = frozenset({".txt", ".md", ".mdc", ".json", ".yaml", ".yml", ".py", ".vsh", ".fsh", ".dsc"})
 
 
 def artifact_bytes(path: Path) -> bytes:
@@ -77,8 +81,13 @@ def package_sources(root: Path) -> tuple[str, ...]:
 
 
 def release_names(root: Path) -> tuple[str, ...]:
-    """Artifact names covered by the manifest, excluding the manifest itself."""
-    return tuple(sorted({*package_sources(root), *KNOWLEDGE_DATA, *PROJECT_DATA}))
+    """Artifact names covered by the build manifest, excluding the manifest itself."""
+    portable = tuple(
+        path.relative_to(root).as_posix()
+        for base in (root / "skill" / "dcore",)
+        for path in base.rglob("*") if path.is_file()
+    )
+    return tuple(sorted({*package_sources(root), *KNOWLEDGE_DATA, *PROJECT_DATA, *portable}))
 
 
 def resolve(name: str, root: Path, knowledge: Path | None = None) -> Path:

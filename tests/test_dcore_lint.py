@@ -4,7 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from dcore.lint.script import MetaIndex, expand_input_paths, lint_contract, lint_text, render_table
+from dcore.lint.parser import parse_file
+from dcore.lint.script import MetaIndex, expand_input_paths, lint_contract, lint_parsed, lint_text, render_table
 
 
 class DcoreLintTests(unittest.TestCase):
@@ -625,6 +626,19 @@ real_owner:
     def test_refined_parity_reports_pointless_plain_data_quotes(self) -> None:
         text = "demo:\n  type: data\n  value: \"plain\"\n"
         self.assertIn("pointless_data_quotes", {item["code"] for item in lint_text(text)})
+
+    def test_denizenm_async_block_reports_live_mutation_crossing(self) -> None:
+        text = (
+            "demo:\n  type: task\n  script:\n  - async:\n"
+            "    - foreach <list[a|b]>:\n      - teleport <player> <player.location>\n"
+        )
+        meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
+        codes = {item["code"] for item in lint_parsed(parse_file(text), meta)}
+        self.assertIn("async_crossing_in_loop", codes)
+
+    def test_latest_denizenm_target_has_an_exact_meta_snapshot(self) -> None:
+        meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
+        self.assertEqual([], meta.version_meta_missing)
 
     def test_human_table_hides_information_by_default(self) -> None:
         report = render_table([

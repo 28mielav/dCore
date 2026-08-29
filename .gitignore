@@ -2,14 +2,11 @@ build/
 dist/
 builds/
 temp/
+.dcore-work/
+.pytest_cache/
 *.pre_update_*.sqlite
 __pycache__/
 *.pyc
-services/update-bridge/.wrangler/
-services/update-bridge/node_modules/
-services/update-bridge/.dev.vars
-# Pre-restructure local Wrangler cache; safe to ignore until manually removed.
-cloudflare/.wrangler/
 *.secret
 *_PRIVATE.txt
 work/

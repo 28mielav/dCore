@@ -6,7 +6,7 @@ visual/shader repositories. A new visual commit is recorded as review_pending;
 curated cards are never silently rewritten from upstream code.
 
 The updater works on an isolated copy and atomically installs a candidate only
-after validation. It cannot replace a Custom GPT Knowledge attachment; that
+after validation. It cannot replace an installed Agent Skill; that
 final platform-controlled step remains manual.
 """
 

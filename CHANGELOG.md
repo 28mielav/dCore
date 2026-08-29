@@ -2,20 +2,33 @@
 
 All notable changes to dCore are documented here.
 
-## 0.70
+## 0.76
 
 ### Added
 
-- Version-aware deprecated tag and mechanism findings sourced from Meta.
-- Target-pinned Meta overlays and compatibility records.
-- Bounded DenizenCore-lite semantic execution and project-wide queue proof.
-- Resource-pack graph validation for JSON, shader, program, stage, channel, and post-processing linkage.
+- Exact DenizenM 7302M Meta from commit 25d5164a4fbf396868345d12d0bc76a65b5548e6.
+- Target-pinned DenizenM async-boundary diagnostics for live server mutations, including loop crossings.
 
 ### Changed
 
-- Release gates now keep static, addon/JAR, and runtime proof states explicit.
-- The public project documentation now describes dCore as development support infrastructure for DenizenScript engineering.
+- Refined DenizenScript remains a versioned diagnostic source, not a replacement for dCore lifecycle analysis.
 
-## Earlier releases
+## 0.75
 
-Historical migrations and release behavior are retained in `dcore/release/migrations/` and the canonical knowledge database.
+### Added
+
+- Canonical portable Agent Skill under `skill/dcore/` with versioned references.
+- Thin Codex, Claude Code, Antigravity, and Cursor adapters.
+- Deterministic `build-skill` and portable `verify-skill` commands; `validate-shader` CLI alias.
+- Explicit 1.21.x compatibility and target-pinned evidence guidance.
+
+### Changed
+
+- Build delivery is skill-first; Python remains the local deterministic CLI.
+- Shader claims distinguish source, static, compile, client-log, and gameplay evidence.
+- Repository and CI no longer include MCP, Cloudflare bridge, or vendor-specific runtime surfaces.
+
+## 0.70
+
+- Added target-pinned Meta overlays, semantic queue proof, and resource-pack graph validation.
+- Made static and runtime proof states explicit.

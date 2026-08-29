@@ -137,6 +137,7 @@ class ResourcePackLintTests(unittest.TestCase):
             report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=34)
         self.assertEqual("STATIC_OK", report["static_verdict"])
         self.assertIn("assets/minecraft/post_effect/demo.json", report["route_census"]["modern_post_json"])
+        self.assertNotIn("mixed_post_schema_paths", self.codes(report))
 
     def test_default_human_report_is_compact_table(self) -> None:
         report = {

@@ -89,6 +89,10 @@ MUTATION_COMMANDS = {
     "flag", "inventory", "modifyblock", "push", "remove", "spawn", "take",
     "teleport", "walk",
 }
+ASYNC_CROSSING_COMMANDS = {
+    "adjust", "adjustblock", "animate", "create", "equip", "inventory",
+    "modifyblock", "push", "remove", "spawn", "take", "teleport", "walk",
+}
 
 # High-signal rules distilled from the official Denizen Beginner's Guide.
 # Keep this list small: the guide is teaching material and a work in progress,
@@ -1086,9 +1090,49 @@ def lint_tag_types(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
     return results
 
 
+def lint_denizenm_async_boundaries(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
+    """Report expensive main-thread crossings inside an explicit async block."""
+    if meta.profile != "denizenm" or not meta.target.get("denizenm"):
+        return []
+    results: list[dict] = []
+    async_indents: list[int] = []
+    loop_indents: list[int] = []
+    for number, raw in enumerate(parsed.lines, 1):
+        content = strip_comment(raw).strip()
+        if not content:
+            continue
+        indent = len(raw) - len(raw.lstrip(" "))
+        while async_indents and indent <= async_indents[-1]:
+            async_indents.pop()
+        while loop_indents and indent <= loop_indents[-1]:
+            loop_indents.pop()
+        if not content.startswith("- "):
+            continue
+        command = content[2:].strip()
+        token = COMMAND_TOKEN.match(command)
+        name = token.group(1).casefold() if token else ""
+        in_async = bool(async_indents)
+        if in_async and name in ASYNC_CROSSING_COMMANDS:
+            code = "async_crossing_in_loop" if loop_indents else "async_main_thread_crossing"
+            results.append(issue(
+                code, "warning", number,
+                f"`{name}` runs from an async block and crosses to live server state.",
+                layer="threading", source="DenizenM-Core source model",
+                confidence="target_pinned_static_boundary",
+                suggestion=("Move pure list/map/text work into async, then batch the live mutation "
+                            "in one main-thread phase. Do not claim async removes world-access cost."),
+            ))
+        if name in {"foreach", "while", "repeat"} and in_async:
+            loop_indents.append(indent)
+        if name == "async" and command.rstrip().endswith(":"):
+            async_indents.append(indent)
+    return results
+
+
 def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
     results: list[dict] = []
     results.extend(lint_tag_types(parsed, meta))
+    results.extend(lint_denizenm_async_boundaries(parsed, meta))
     if meta.unverified_provider_addons:
         names = ", ".join(sorted(meta.unverified_provider_addons))
         results.append(issue(
@@ -1901,6 +1945,11 @@ def main() -> int:
     parser.add_argument("--jar", action="append", default=[], help="Exact artifact as name=path; repeatable")
     parser.add_argument("--require-jar-evidence", action="store_true", help="Fail when a declared addon has no exact JAR path")
     parser.add_argument("--target-name", help="Human label for the selected target")
+    parser.add_argument(
+        "--allow-unpinned",
+        action="store_true",
+        help="Permit structure-only lint without a Minecraft and Denizen-family target",
+    )
     parser.add_argument("--external-script", action="append", default=[], help="Known project script intentionally outside this partial lint artifact")
     parser.add_argument("--closed-world", action="store_true", help="unresolved script references are errors")
     parser.add_argument("--strict-warnings", action="store_true")
@@ -1937,6 +1986,13 @@ def main() -> int:
             "denizenm": args.denizenm,
         }.items() if value
     }
+    if not args.allow_unpinned and not (
+        target.get("minecraft") and (target.get("denizenm") or target.get("denizen"))
+    ):
+        parser.error(
+            "DC_TARGET_REQUIRED: pass --minecraft plus --denizenm or --denizen-version; "
+            "use --allow-unpinned only for structure-only review"
+        )
     meta = MetaIndex(
         args.db, args.profile, set(args.addon), target=target, jars=jars,
         require_jar_evidence=args.require_jar_evidence,

@@ -1,6 +1,6 @@
 {
-  "release_version": "0.70",
-  "metadata_name": "dCore 0.70",
+  "release_version": "0.76",
+  "metadata_name": "dCore 0.76",
   "minimum_counts": {
     "cards": 176,
     "meta_entries": 6000,
@@ -9,7 +9,7 @@
     "visual_sources": 5,
     "contrast_examples": 39,
     "route_patterns": 10,
-    "version_artifacts": 41,
+    "version_artifacts": 42,
     "compatibility_rules": 2,
     "card_version_scopes": 171,
     "meta_delta_sources": 39,

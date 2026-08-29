@@ -9,7 +9,7 @@ four of them behind. Everything that needs the version now derives it from
 
 from __future__ import annotations
 
-__version__ = "0.70"
+__version__ = "0.76"
 
 #: The exact string the database `metadata.name` row and the release contract
 #: must carry. The verify gate compares against this, so it is not cosmetic.

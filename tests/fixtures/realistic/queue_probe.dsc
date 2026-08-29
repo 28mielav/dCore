@@ -4,4 +4,4 @@ queue_probe:
   - run missing_transition
   - while true:
     - wait 1t
-    - narrate "heartbeat"
+    - narrate "pulse"

@@ -1,14 +1,34 @@
 {
   "name": "dCore",
-  "version": "0.70",
-  "generated_at": "2026-08-29T08:23:48.356229+00:00",
+  "version": "0.76",
+  "generated_at": "2026-08-29T15:37:10.827737+00:00",
   "status": "verified",
-  "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
-  "size": 20422656,
-  "bundle_sha256": "8d435abbe85ab2162733f8e0f51a72ab7f8b7ca039beb64c863de3523eb2a2b2",
+  "sha256": "a6b2bd91bc4706dea0059fd9c682c9a2b81be0d962f05226e793e5cfdcb57c5a",
+  "size": 20537344,
+  "bundle_sha256": "f2d74f443dff4072998f23d947283072b164d568dfa90c0f0335c2f1f7d5123e",
   "artifacts": {
+    ".agents/rules/dcore.md": {
+      "sha256": "ece12b44da34fb663706d7da0882b2bfd9335e31d1f127ab25c8d6cae6c583dc",
+      "size": 206
+    },
+    ".cursor/rules/dcore.mdc": {
+      "sha256": "56b8d37188528a58b57302d7ef5a01d4629d589ba2585b17597570776cc53321",
+      "size": 410
+    },
+    "AGENTS.md": {
+      "sha256": "5c148bab0a8e8c300d420e51a8ad39c3d032e648224fe49da2db57228a77c983",
+      "size": 326
+    },
+    "CLAUDE.md": {
+      "sha256": "4421d612f76fed1bf9777116ba47b9d5ff3669c42dedc174e7683080fe8c2ef0",
+      "size": 245
+    },
+    "README.md": {
+      "sha256": "90cf7594063a516227cc4fbf1ba253313a6dcecefd013c9f06030daf723fb0dc",
+      "size": 2619
+    },
     "dcore/__init__.py": {
-      "sha256": "6be8d49b97d21fefc7712dba4908f9827f398bce0f44133ddac015cf875e9257",
+      "sha256": "cc3d36707aa5a5f49901f3f33ef7d8582fe2e675eb8578ab4729bb40540dee62",
       "size": 773
     },
     "dcore/acceptance/__init__.py": {
@@ -20,8 +40,8 @@
       "size": 6704
     },
     "dcore/cli.py": {
-      "sha256": "63bec87c0e134f4b9105f3c88405635f2be7911d867e25406c00473c9ab7181d",
-      "size": 2649
+      "sha256": "b3100b249762a0a9c7be236953553f8ccea4cc1c53c1007d71238c21de645bce",
+      "size": 3053
     },
     "dcore/design/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -72,12 +92,12 @@
       "size": 3580
     },
     "dcore/lint/resourcepack.py": {
-      "sha256": "5dec13d009e0080c6f187c2d7891fcbda1978882251d15f8b9114d290dab026a",
-      "size": 26423
+      "sha256": "92dd540e2cb550efa018791649182dc43235ea738e10badb345db1793b980dd0",
+      "size": 26899
     },
     "dcore/lint/script.py": {
-      "sha256": "fda8fbb5f07fb90a1335c22a9b8781c9e597ed2c3f1145ca2a2f67c7d01fbe03",
-      "size": 100899
+      "sha256": "48c25680aad50352204ddaff81222c8520a1384e1f3fba5aab65373f55ae6ae2",
+      "size": 103501
     },
     "dcore/lint/syntax.py": {
       "sha256": "b61e4d15f7756edb8997df09783bdf5ecc54e586bc5ce1d7f4ad4d90f2c10434",
@@ -120,16 +140,24 @@
       "size": 0
     },
     "dcore/release/artifacts.py": {
-      "sha256": "cd0018bdccff6e4054678db569ea1e3071bfb2452dbe312032c8b1d0c5e868f2",
-      "size": 3525
+      "sha256": "5b32fd5e853d6786ad91cec149c994ff4c0904e34778467e078152869d9663b5",
+      "size": 3812
     },
     "dcore/release/bundle.py": {
-      "sha256": "127f4275410e6343180b4966ef59b127c6b9f203f47f569c3192fc7c47f4a852",
-      "size": 2572
+      "sha256": "55b8ac0dc0f98f72b2c6e519c7ad55f3a90284cbff54e37aecee20111cfb76ce",
+      "size": 2588
+    },
+    "dcore/release/bundle_cli.py": {
+      "sha256": "2976918ec1a29cdc5fd1715022623cf1f2e3c2e9923f758404503be808ed0684",
+      "size": 2080
     },
     "dcore/release/bundle_gpt.py": {
-      "sha256": "eb1f036912aa878280cdfc431816c389847c34316f6adeef147e00ed005b8128",
-      "size": 4683
+      "sha256": "e8eb52c1790f8e70a2b4f947eb7ea372c207faed6fc6e6f8e3993853be8b1155",
+      "size": 2945
+    },
+    "dcore/release/bundle_skill.py": {
+      "sha256": "5ea80fc9e3769c417350bc91712a59cd286328e92d5c871417006e2417ab2823",
+      "size": 3459
     },
     "dcore/release/compact.py": {
       "sha256": "09a75f04af0bacbb8c9a0bea4e96d57a068e3b9ae509de914e6684fddd917c97",
@@ -315,13 +343,25 @@
       "sha256": "c444fc4c05e8a092fb060a226080fb99bd60f097adce0364315589eb06ecadf9",
       "size": 1134
     },
+    "dcore/release/migrations/044_release_identity_075.py": {
+      "sha256": "f05054ddf01e793cb53e1a6a06869b3d50836db27e5015e1bf5567f29472be4a",
+      "size": 577
+    },
+    "dcore/release/migrations/045_denizenm_7302_and_async_lint.py": {
+      "sha256": "2eb5c549aa8cba977f0390865661c1cb0b2829271161b150d2bd862e3e9e4045",
+      "size": 1488
+    },
     "dcore/release/update.py": {
-      "sha256": "27c64c27953df9a2623c922c41cb991a115e0d3a69b7f7e741c56b8ba4a540e0",
-      "size": 36005
+      "sha256": "ae623aff7cf1a3ab469fec7f2964f58df77e23773186bf4c166d27180d8e8359",
+      "size": 35996
     },
     "dcore/release/verify.py": {
       "sha256": "eac98b15d3fe89ae3a51e3fefbc47d2954b93804df2571f236fbd53a03938adc",
       "size": 9211
+    },
+    "dcore/release/verify_skill.py": {
+      "sha256": "d201db8c14941a69c70e035f16520c86da58afb9db26cf6a19c850068e2ec9f0",
+      "size": 2724
     },
     "dcore/semantics/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -364,28 +404,24 @@
       "size": 14683
     },
     "docs/ARCHITECTURE.md": {
-      "sha256": "5d0400ffb296c421ed16b488d35c7bead75320e153b0dceff9292bcaced39f81",
-      "size": 4261
+      "sha256": "a46e3590e419677ba6904ddb5c974357bf38e106c7d1ab1b837513237772784e",
+      "size": 3256
     },
     "docs/OPERATIONS.md": {
-      "sha256": "b05c646dd6d36101f043991026a49b2ce17ebfb70281923ab6f2c387f3325ab6",
-      "size": 2961
-    },
-    "integrations/custom-gpt/openapi.yaml": {
-      "sha256": "3c02664f4fad8e950c57eb214536cbceddc092153fe813140fe767ebcd0d9866",
-      "size": 4094
+      "sha256": "fdee8bc04485d99e4ec38e43b28aba3bb9f3118da80fbb85b6c6c4e87cda0e42",
+      "size": 1346
     },
     "knowledge/AGENT_INSTRUCTIONS.md": {
       "sha256": "df789fb56a1ba18930feeddf056a0968376c2c915226e9e4911d41b7e5194402",
       "size": 8445
     },
     "knowledge/DCORE_INSTRUCTIONS.txt": {
-      "sha256": "5a7add4c2f9f66fff4d540420622ef57cb0534c2d7f42e7f38863be1f3285900",
-      "size": 11566
+      "sha256": "e8a5332b8e5f4afe677d1879ae5116f00f130c3828b82543b48aa553419d3c46",
+      "size": 11529
     },
     "knowledge/dcore.sqlite": {
-      "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
-      "size": 20422656
+      "sha256": "a6b2bd91bc4706dea0059fd9c682c9a2b81be0d962f05226e793e5cfdcb57c5a",
+      "size": 20537344
     },
     "knowledge/lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
@@ -396,27 +432,59 @@
       "size": 2883
     },
     "knowledge/validation_contract.json": {
-      "sha256": "1ae62b024c763d6c00f3b3f6d06f73302bb07c2b882758eb624ecfd118c0389d",
+      "sha256": "4f72bd99056e0353a4c4966a6e58669b5a0d52abec581cfc8443be8831b44618",
       "size": 1154
     },
     "knowledge/visual_sources.json": {
       "sha256": "d3ea9828be0e0fb3c841c9b8b5368837eded05a2d81b1212a80376575f1e179c",
       "size": 4469
+    },
+    "skill/dcore/SKILL.md": {
+      "sha256": "aa93ff06a7d9713130cd4379858fd6bbf54e2da6c3dd0d6a5738b437f355698c",
+      "size": 3692
+    },
+    "skill/dcore/references/0.75/core-shader-pipeline.md": {
+      "sha256": "2d85966bf95fa31471bef289e99c73bdb4beade224bce57dc5eb8ef22bc22592",
+      "size": 3367
+    },
+    "skill/dcore/references/0.75/denizen-engineering.md": {
+      "sha256": "4cc0b31ea754f0140c06a086f5542448627d43408540ccbeec5bf502612b5baa",
+      "size": 3605
+    },
+    "skill/dcore/references/0.75/evidence-and-versions.md": {
+      "sha256": "bdb59fe21290d38fb48c155cedcc54a79fba77843c28eefa2ae13e1aa28a4c38",
+      "size": 2465
+    },
+    "skill/dcore/references/0.75/minecraft-1.21.md": {
+      "sha256": "b4e371a27bf2b7a1d49bd748d06b2c4754f5aaa9825e4216aec3b88138781c91",
+      "size": 2235
+    },
+    "skill/dcore/references/0.75/post-effects.md": {
+      "sha256": "c5b076a670f98c50cebb64808f4ed62ec720770a34e4191e84871e5a6ef09224",
+      "size": 3883
+    },
+    "skill/dcore/references/0.75/sources.md": {
+      "sha256": "c5a842d7606ac7b7fd720d7c27d0c3664006f7418f9dd9999a56715e8adf8693",
+      "size": 2142
+    },
+    "skill/dcore/references/0.75/verification.md": {
+      "sha256": "040de63c1074d26ecfc787acdede5da53181c54a91baa4acf5a899148c24f1d5",
+      "size": 2078
     }
   },
   "counts": {
     "cards": 176,
-    "meta_entries": 6387,
+    "meta_entries": 6402,
     "ide_diagnostics": 54,
     "retrieval_tests": 193,
     "visual_sources": 5,
     "contrast_examples": 39,
     "route_patterns": 10,
-    "version_artifacts": 41,
+    "version_artifacts": 42,
     "compatibility_rules": 2,
     "card_version_scopes": 176,
-    "meta_delta_sources": 39,
-    "meta_version_tombstones": 683
+    "meta_delta_sources": 40,
+    "meta_version_tombstones": 684
   },
   "sources": [
     {
@@ -628,6 +696,11 @@
       "product": "DenizenM",
       "commit_sha": "17d8e79b11a71cbf39b88b84666f7480ae49d3aa",
       "source_id": "meta_denizenm_commit_7298m"
+    },
+    {
+      "product": "DenizenM",
+      "commit_sha": "25d5164a4fbf396868345d12d0bc76a65b5548e6",
+      "source_id": "meta_denizenm_tag_7302m"
     },
     {
       "product": "Voxizen",

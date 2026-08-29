@@ -1,0 +1,11 @@
+---
+description: Route DenizenScript, DenizenM, Minecraft visual, shader, and dCore release work to the portable dCore skill.
+globs:
+  - "**/*.dsc"
+  - "**/pack.mcmeta"
+  - "**/assets/**/shaders/**/*"
+  - "**/assets/**/post_effect/**/*"
+alwaysApply: false
+---
+
+Read `skill/dcore/SKILL.md` and only its task-relevant versioned references. Pin exact targets and keep static evidence distinct from runtime proof.

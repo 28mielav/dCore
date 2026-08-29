@@ -6,7 +6,7 @@ body:
   - type: textarea
     attributes:
       label: Expected and actual behavior
-      description: Include the exact dCore command or MCP tool call and its output.
+      description: Include the exact dCore command, target matrix, artifact hash, output, and proof state.
     validations:
       required: true
   - type: textarea
