@@ -4,7 +4,6 @@
 
 **dCore is development support infrastructure.** It gives people and coding agents a verifiable workflow for designing, reviewing, linting, and releasing DenizenScript projects across exact Minecraft, Paper, Denizen, DenizenM, addon, and resource-pack versions.
 
-It combines version-pinned API knowledge, static analysis, bounded semantic execution, resource-pack graph validation, proof-state release gates, and an MCP server that brings the same tooling into Codex, Claude Code, Cursor, Zed, and other MCP clients.
 
 > [!WARNING]
 > dCore is actively under development. Rules, target coverage, lint behavior, and integrations will continue to evolve. Bug reports, target data, and proposals for improving any subsystem, including lint, are welcome. Useful contributions will be reviewed, credited, and considered for future releases through [GitHub Issues](https://github.com/28mielav/dCore/issues).
@@ -53,7 +52,6 @@ Validates a merged directory or ZIP across JSON, `#moj_import`, namespaces, prog
 ### Design and release gates
 Compares genuinely different routes, records ownership and cost assumptions, and prevents static confidence from being promoted to runtime proof.
 
-### MCP server
 Exposes the exact CLI behavior over stdio JSON-RPC for coding agents and IDEs.
 
 ## Analysis pipeline
@@ -91,7 +89,6 @@ python -m pip install -e .
 For development and the full test suite:
 
 ```bash
-python -m pip install -e ".[dev,mcp]"
 python -m pytest -q
 ```
 
@@ -122,30 +119,23 @@ dcore versions --help
 
 Every command exposes its own `--help`, so flags remain local to the subsystem that owns them.
 
-## MCP for coding agents
 
-dCore is usable as a local stdio MCP server with no runtime dependency beyond Python and the package itself.
 
 ```bash
-python -m dcore.mcp.server --describe
-python -m dcore.mcp.server
 ```
 
 Example client configuration:
 
 ```json
 {
-  "mcpServers": {
     "dcore": {
       "command": "python",
-      "args": ["-m", "dcore.mcp.server"],
       "cwd": "/absolute/path/to/dcore/repository"
     }
   }
 }
 ```
 
-The server exposes lint, resource-pack lint, retrieval, route comparison, version discovery, bounded session simulation, and release-gate tools. See [docs/MCP.md](docs/MCP.md) for the complete tool surface and client notes.
 
 ## Architecture
 
@@ -170,11 +160,8 @@ dcore/                      Installable package and CLI
   semantics/                Source-derived bounded semantic execution
   design/                   Route comparison and decision evidence
   gates/                    Proof-state and release gates
-  mcp/                      Stdio MCP server and tool surface
   release/                  Manifest, bundle, update, and verification flows
 knowledge/                  Canonical database, manifest, and source registry
-tests/                      Unit, retrieval, MCP, and acceptance coverage
-docs/                       Architecture, MCP, and operating procedures
 services/update-bridge/     Read-only manifest freshness API
 integrations/custom-gpt/    Custom GPT OpenAPI schema
 ```
@@ -182,9 +169,6 @@ integrations/custom-gpt/    Custom GPT OpenAPI schema
 ## Verification and release work
 
 ```bash
-# Exercise the MCP acceptance scenarios
-python -m dcore.acceptance.agent --db knowledge/dcore.sqlite
-
 # Build the standalone Custom GPT bundle
 dcore build-gpt --output dist/dCore-GPT-0.70
 
@@ -192,7 +176,6 @@ dcore build-gpt --output dist/dCore-GPT-0.70
 dcore verify --help
 ```
 
-The Custom GPT bundle and MCP server are independent delivery paths that share the same verified knowledge source.
 
 ## Scope and boundaries
 
@@ -204,7 +187,6 @@ The Custom GPT bundle and MCP server are independent delivery paths that share t
 
 ## Current release line
 
-`0.70` introduces an MCP server for any MCP-speaking client and surfaces deprecated tags and mechanisms recorded by Meta. The Custom GPT delivery path remains available as a separately generated bundle.
 
 ## Project status
 
@@ -213,7 +195,6 @@ dCore is under active engineering and release maintenance. The repository includ
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
-- [MCP server and tools](docs/MCP.md)
 - [Operations](docs/OPERATIONS.md)
 
 ## Contributing and security

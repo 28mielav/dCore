@@ -1,7 +1,6 @@
 # dCore agent instructions
 
 Served as `dcore://instructions`. This is the operating contract for any agent
-connected to the dCore MCP server. It replaces the former SKILL.md, which only
 one client could read.
 
 Use the repository as the source of truth. Never paste the SQLite database or raw

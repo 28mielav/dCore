@@ -6,7 +6,6 @@ All notable changes to dCore are documented here.
 
 ### Added
 
-- Stdio MCP server for MCP-speaking coding clients.
 - Version-aware deprecated tag and mechanism findings sourced from Meta.
 - Target-pinned Meta overlays and compatibility records.
 - Bounded DenizenCore-lite semantic execution and project-wide queue proof.

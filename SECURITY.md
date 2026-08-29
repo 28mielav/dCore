@@ -8,6 +8,5 @@ Use GitHub private vulnerability reporting for this repository. Include affected
 
 ## Scope
 
-Reports are especially useful for path traversal, unsafe archive handling, unintended writes or deletion, MCP protocol and input-boundary issues, release verification bypasses, and dependency or supply-chain problems.
 
 dCore analysis findings are engineering guidance. They do not replace security testing of a Minecraft server, plugin, addon, client, or resource pack.

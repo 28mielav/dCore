@@ -23,10 +23,8 @@ COMMANDS: dict[str, tuple[str, str]] = {
     "compact": ("dcore.release.compact", "Compact Meta overlays and merge search segments"),
     "import-meta": ("dcore.release.import_meta", "Import target-pinned historical Meta snapshots"),
     "migrate": ("dcore.release.migrate", "Apply curated database migrations"),
-    "accept-agent": ("dcore.acceptance.agent", "Run the agent acceptance scenarios over the MCP surface"),
     "pack": ("dcore.pack.cli", "Reversible obfuscation for Denizen .dsc projects"),
     "accept-pool4": ("dcore.acceptance.pool4", "Run the Pool 4 golden acceptance corpus"),
-    "mcp": ("dcore.mcp.server", "Serve dCore tools over the Model Context Protocol"),
 }
 
 

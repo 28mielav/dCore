@@ -11,7 +11,6 @@
 
 ```bash
 python -m unittest discover -s tests -v
-python -m dcore.mcp.server --describe
 python -m dcore.release.verify --db knowledge/dcore.sqlite --output temp/manifest.verify.json
 ```
 

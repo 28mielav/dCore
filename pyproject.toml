@@ -7,7 +7,7 @@ name = "dcore"
 dynamic = ["version"]
 description = "Version-aware engineering tools for DenizenScript, DenizenM, addons, and Minecraft visual systems"
 license = { text = "MIT" }
-keywords = ["denizenscript", "denizen", "denizenm", "minecraft", "mcp", "static-analysis"]
+keywords = ["denizenscript", "denizen", "denizenm", "minecraft", "static-analysis"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: MIT License",
@@ -19,7 +19,6 @@ dependencies = ["cryptography>=42"]
 
 [project.optional-dependencies]
 obfuscation = ["cryptography>=42"]
-mcp = ["mcp>=1.2"]
 dev = ["pytest>=8"]
 
 [tool.setuptools.dynamic]

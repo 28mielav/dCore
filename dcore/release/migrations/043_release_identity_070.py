@@ -21,7 +21,7 @@ from pathlib import Path
 ROWS = (
     ("name", "dCore 0.70"),
     ("release.version", "0.70"),
-    ("release.status", "mcp_first_agent_surface"),
+    
 )
 
 

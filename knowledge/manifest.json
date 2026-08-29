@@ -1,11 +1,11 @@
 {
   "name": "dCore",
   "version": "0.70",
-  "generated_at": "2026-08-26T15:44:45.539833+00:00",
+  "generated_at": "2026-08-29T08:23:48.356229+00:00",
   "status": "verified",
   "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
   "size": 20422656,
-  "bundle_sha256": "d9a36f2bd00599179288a446342df00dca3521e8443df1455d12aede8ed22ea2",
+  "bundle_sha256": "8d435abbe85ab2162733f8e0f51a72ab7f8b7ca039beb64c863de3523eb2a2b2",
   "artifacts": {
     "dcore/__init__.py": {
       "sha256": "6be8d49b97d21fefc7712dba4908f9827f398bce0f44133ddac015cf875e9257",
@@ -15,17 +15,13 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size": 0
     },
-    "dcore/acceptance/agent.py": {
-      "sha256": "67228f7640f08505a05076ca1cf715d6bf7f1943003361c230626d08057cea8e",
-      "size": 5285
-    },
     "dcore/acceptance/pool4.py": {
       "sha256": "7fa670f771f238ef85ce1d3427a1bfbfece4e8d1f997d81bf165d91f4312d8b0",
       "size": 6704
     },
     "dcore/cli.py": {
-      "sha256": "8558fbad6f9268e8a106590bf0cee00a4460827d85bbb5d417d73e6e28bd15a4",
-      "size": 2842
+      "sha256": "63bec87c0e134f4b9105f3c88405635f2be7911d867e25406c00473c9ab7181d",
+      "size": 2649
     },
     "dcore/design/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -90,30 +86,6 @@
     "dcore/lint/tagtypes.py": {
       "sha256": "909a26ef432bc30751630e9a7a6ee4fede90124deb31d2d3d740e8d765fd871b",
       "size": 14823
-    },
-    "dcore/mcp/__init__.py": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "size": 0
-    },
-    "dcore/mcp/prompts.py": {
-      "sha256": "144abf9ddd8992b0dfe2d5f7c666b71cdfd7a609d0b87435fef444d025d0c18a",
-      "size": 4815
-    },
-    "dcore/mcp/protocol.py": {
-      "sha256": "b1adba14657481dfbc9516c8a39f2d52b7e1f239fc7f339083cd08f153b5936e",
-      "size": 5030
-    },
-    "dcore/mcp/resources.py": {
-      "sha256": "1b47970bcc36b26c4660f3e403e425c6dddfa6665c2e7caace70ce84cfa90170",
-      "size": 3535
-    },
-    "dcore/mcp/server.py": {
-      "sha256": "6ba75090e1b6f156d7ea4d0ea1b71e124c084aaa28d6d0d577a33c6623c8ce95",
-      "size": 6159
-    },
-    "dcore/mcp/tools.py": {
-      "sha256": "52fcd673b2c343982858d0b941ed3d106d5634dab2d3f78167fd57c7fcbc19a3",
-      "size": 22312
     },
     "dcore/pack/__init__.py": {
       "sha256": "29705d7bb59807faf14885ed0ce5108c057e15d927c7f70d182eec635bb18a09",
@@ -340,8 +312,8 @@
       "size": 975
     },
     "dcore/release/migrations/043_release_identity_070.py": {
-      "sha256": "714bc9651c50b771070ba6184cf8b677ece7904fb689e260957d5289fa5f0a5b",
-      "size": 1180
+      "sha256": "c444fc4c05e8a092fb060a226080fb99bd60f097adce0364315589eb06ecadf9",
+      "size": 1134
     },
     "dcore/release/update.py": {
       "sha256": "27c64c27953df9a2623c922c41cb991a115e0d3a69b7f7e741c56b8ba4a540e0",
@@ -404,12 +376,12 @@
       "size": 4094
     },
     "knowledge/AGENT_INSTRUCTIONS.md": {
-      "sha256": "827f66307f80315ba02450e3217040a8abfc593095cdbc302bad5968cf81c217",
-      "size": 8524
+      "sha256": "df789fb56a1ba18930feeddf056a0968376c2c915226e9e4911d41b7e5194402",
+      "size": 8445
     },
     "knowledge/DCORE_INSTRUCTIONS.txt": {
-      "sha256": "2c7666630203ae1897728da048dd66340eb000f34906a5d0cfb753ccb5d2ca10",
-      "size": 11944
+      "sha256": "5a7add4c2f9f66fff4d540420622ef57cb0534c2d7f42e7f38863be1f3285900",
+      "size": 11566
     },
     "knowledge/dcore.sqlite": {
       "sha256": "a2114bea3be4e4943507b18de199f299adcff4452690be0fef650a5540da4b4b",
