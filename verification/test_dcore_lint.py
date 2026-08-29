@@ -11,7 +11,7 @@ from dcore.lint.script import MetaIndex, expand_input_paths, lint_contract, lint
 class DcoreLintTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", {"reflect"})
+        cls.meta = MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", {"reflect"})
 
     def test_project_directory_expands_all_dsc_files(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -166,7 +166,7 @@ example:
         self.assertIn("reflect_boundary", codes)
         self.assertNotIn("missing_container_type", codes)
         self.assertNotIn("unknown_command", codes)
-        without_addon = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set())
+        without_addon = MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", set())
         self.assertIn(
             "reflect_addon_not_enabled",
             {item["code"] for item in lint_text(text, without_addon)},
@@ -174,7 +174,7 @@ example:
 
     def test_provider_resolver_marks_disabled_capability(self) -> None:
         text = "example:\n  type: task\n  script:\n  - invoke player.getName()\n"
-        rows = lint_text(text, MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set()))
+        rows = lint_text(text, MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", set()))
         invoke_rows = [item for item in rows if item["line"] == 4 and item["code"] in {"addon_required", "version_api_unverified"}]
         self.assertEqual(1, len(invoke_rows))
         self.assertEqual("addon_required", invoke_rows[0]["code"])
@@ -197,13 +197,13 @@ example:
         self.assertIn("reflect_boundary", codes)
 
     def test_versioned_addon_spec_is_normalized(self) -> None:
-        meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", {"reflect@2.4.2"})
+        meta = MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", {"reflect@2.4.2"})
         self.assertIn("reflect", meta.addons)
         self.assertEqual("2.4.2", meta.addon_versions["reflect"])
 
     def test_b_prefixed_denizenm_target_is_canonicalized(self) -> None:
         meta = MetaIndex(
-            Path("knowledge/dcore.sqlite"), "denizenm", set(),
+            Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", set(),
             target={"minecraft": "1.21.11", "denizenm": "b7299M"},
         )
         self.assertEqual("7299M", meta.target["denizenm"])
@@ -212,7 +212,7 @@ example:
     def test_required_jar_evidence_is_a_real_gate(self) -> None:
         text = "example:\n  type: task\n  script:\n  - define value <invoke[player.getName()]>\n"
         meta = MetaIndex(
-            Path("knowledge/dcore.sqlite"), "denizenm", {"reflect@2.4.2"},
+            Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", {"reflect@2.4.2"},
             target={"minecraft": "1.21.11", "denizenm": "b7299M"},
             require_jar_evidence=True,
         )
@@ -632,12 +632,12 @@ real_owner:
             "demo:\n  type: task\n  script:\n  - async:\n"
             "    - foreach <list[a|b]>:\n      - teleport <player> <player.location>\n"
         )
-        meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
+        meta = MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
         codes = {item["code"] for item in lint_parsed(parse_file(text), meta)}
         self.assertIn("async_crossing_in_loop", codes)
 
     def test_latest_denizenm_target_has_an_exact_meta_snapshot(self) -> None:
-        meta = MetaIndex(Path("knowledge/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
+        meta = MetaIndex(Path("dcore/knowledge/data/dcore.sqlite"), "denizenm", set(), target={"denizenm": "7302M"})
         self.assertEqual([], meta.version_meta_missing)
 
     def test_human_table_hides_information_by_default(self) -> None:

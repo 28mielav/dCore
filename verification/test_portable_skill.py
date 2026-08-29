@@ -19,9 +19,9 @@ class PortableSkillTests(unittest.TestCase):
 
     def test_bundle_is_deterministic_and_rooted_at_dcore(self) -> None:
         # The builder deliberately restricts outputs to one direct build directory.
-        (REPOSITORY_ROOT / "temp").mkdir(exist_ok=True)
-        first = REPOSITORY_ROOT / "temp" / "skill-a.zip"
-        second = REPOSITORY_ROOT / "temp" / "skill-b.zip"
+        (REPOSITORY_ROOT / "build").mkdir(exist_ok=True)
+        first = REPOSITORY_ROOT / "build" / "verification-skill-a.zip"
+        second = REPOSITORY_ROOT / "build" / "verification-skill-b.zip"
         try:
             build(REPOSITORY_ROOT, first)
             build(REPOSITORY_ROOT, second)
@@ -31,7 +31,7 @@ class PortableSkillTests(unittest.TestCase):
             self.assertIn("dcore/SKILL.md", names)
             self.assertTrue(any(name.startswith("dcore/references/0.75/") for name in names))
             self.assertIn("runtime/dcore/cli.py", names)
-            self.assertIn("runtime/knowledge/dcore.sqlite", names)
+            self.assertIn("runtime/dcore/knowledge/data/dcore.sqlite", names)
         finally:
             first.unlink(missing_ok=True)
             second.unlink(missing_ok=True)

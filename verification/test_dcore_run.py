@@ -14,11 +14,13 @@ from dcore.gates.release import execute
 class DcoreRunTests(unittest.TestCase):
     def run_project(self, script: str, **overrides: object) -> dict:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory(dir=root / "temp") as temporary:
+        workspace = root / "build" / "verification"
+        workspace.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=workspace) as temporary:
             path = Path(temporary) / "case.dsc"
             path.write_text(script, encoding="utf-8")
             defaults = {
-                "paths": [path], "db": root / "knowledge" / "dcore.sqlite", "profile": "denizenm",
+                "paths": [path], "db": root / "dcore" / "knowledge" / "data" / "dcore.sqlite", "profile": "denizenm",
                 "minecraft": "1.21.10", "paper": "1.21.10", "java": "21", "denizen_version": None,
                 "denizenm": "7299M", "addon": [], "jar": [], "require_jar_evidence": False,
                 "intent": "auto", "query": "narrate", "require_route": False,
@@ -46,13 +48,15 @@ class DcoreRunTests(unittest.TestCase):
 
     def test_cli_json_is_utf8_on_windows_console(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory(dir=root / "temp") as temporary:
+        workspace = root / "build" / "verification"
+        workspace.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=workspace) as temporary:
             path = Path(temporary) / "case.dsc"
             path.write_text("demo:\n  type: task\n  script:\n  - run missing_task\n", encoding="utf-8")
             process = subprocess.run(
                 [
                     sys.executable, "-m", "dcore.gates.release", str(path),
-                    "--db", str(root / "knowledge" / "dcore.sqlite"), "--minecraft", "1.21.10", "--denizenm", "7299M",
+                    "--db", str(root / "dcore" / "knowledge" / "data" / "dcore.sqlite"), "--minecraft", "1.21.10", "--denizenm", "7299M",
                 ],
                 capture_output=True,
                 cwd=root,
@@ -63,7 +67,9 @@ class DcoreRunTests(unittest.TestCase):
 
     def test_runtime_report_unlocks_simple_project(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory(dir=root / "temp") as temporary:
+        workspace = root / "build" / "verification"
+        workspace.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=workspace) as temporary:
             report = Path(temporary) / "runtime.json"
             report.write_text(json.dumps({"status": "PASS", "cases": {case: "PASS" for case in ("reload", "quit", "death", "repeat_input", "cleanup")}}), encoding="utf-8")
             result = self.run_project("demo:\n  type: task\n  script:\n  - narrate ok\n", runtime_report=report)
@@ -94,7 +100,9 @@ class DcoreRunTests(unittest.TestCase):
 
     def test_complex_provider_rejects_fake_route_artifact(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory(dir=root / "temp") as temporary:
+        workspace = root / "build" / "verification"
+        workspace.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=workspace) as temporary:
             decision = Path(temporary) / "decision.json"
             decision.write_text(json.dumps({"tool": "dcore_design", "status": "READY_FOR_PROOF"}), encoding="utf-8")
             result = self.run_project(
@@ -105,7 +113,9 @@ class DcoreRunTests(unittest.TestCase):
 
     def test_shadow_failure_blocks_even_before_minecraft_runtime(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory(dir=root / "temp") as temporary:
+        workspace = root / "build" / "verification"
+        workspace.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=workspace) as temporary:
             plan = Path(temporary) / "plan.json"
             plan.write_text(json.dumps({"group_size": 1, "workers": [{"id": "a", "max_sessions": 1}], "operations": []}), encoding="utf-8")
             result = self.run_project("demo:\n  type: task\n  script:\n  - narrate ok\n", shadow_plan=plan)

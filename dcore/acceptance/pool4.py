@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from dcore.gates.release import execute
-from dcore.paths import DATABASE_PATH, KNOWLEDGE_DIRECTORY, TEMP_DIRECTORY
+from dcore.paths import DATABASE_PATH, KNOWLEDGE_DIRECTORY, VERIFICATION_DIRECTORY
 
 CORPUS_PATH = KNOWLEDGE_DIRECTORY / "pool4_golden_corpus.json"
 
@@ -53,8 +53,8 @@ def lint_source(path: Path) -> tuple[list[dict[str, Any]], str]:
 
 
 def runtime_result(name: str, text: str, filename: str) -> dict[str, Any]:
-    TEMP_DIRECTORY.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=TEMP_DIRECTORY, prefix="pool4-") as temporary:
+    VERIFICATION_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=VERIFICATION_DIRECTORY, prefix="pool4-") as temporary:
         path = Path(temporary) / filename
         path.write_text(text, encoding="utf-8")
         namespace = argparse.Namespace(

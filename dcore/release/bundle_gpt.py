@@ -36,7 +36,7 @@ def write_runtime(root: Path, destination: Path) -> None:
 
 def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, object]:
     root = root.resolve()
-    knowledge = (knowledge or root / "knowledge").resolve()
+    knowledge = (knowledge or root / "dcore/knowledge/data").resolve()
     output = ensure_safe_output(root, output)
     manifest = read_manifest(knowledge / "manifest.json")
     verify_artifacts(manifest, release_sources(root, knowledge))
@@ -45,16 +45,17 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, 
     upload = output / "Knowledge"
     upload.mkdir()
     write_runtime(root, upload / PACKAGE_ARCHIVE)
-    for name in (DATABASE, "knowledge/manifest.json", "knowledge/lint_contract.example.json",
-                 "knowledge/DCORE_INSTRUCTIONS.txt", "knowledge/AGENT_INSTRUCTIONS.md"):
+    for name in (DATABASE, "dcore/knowledge/data/manifest.json", "dcore/knowledge/data/lint_contract.example.json",
+                 "dcore/knowledge/data/AGENT_INSTRUCTIONS.md"):
         shutil.copy2(root / name if name != DATABASE else knowledge / "dcore.sqlite", upload / Path(name).name)
+    shutil.copy2(root / "gpt/INSTRUCTIONS.txt", output / "INSTRUCTIONS.txt")
     (upload / "dcore_bootstrap.py").write_text(BOOTSTRAP, encoding="utf-8")
     (output / "START_HERE.txt").write_text(
         """dCore Custom GPT build
 
 Keep this directory private. In the GPT editor enable Code Interpreter & Data Analysis,
-upload every file from Knowledge, and use DCORE_INSTRUCTIONS.txt as the starting
-instruction set. dCore analyses uploaded files with the same Python core used by the CLI.
+upload every file from Knowledge, paste INSTRUCTIONS.txt into the GPT instruction field,
+and enable Code Interpreter & Data Analysis. dCore analyses uploaded files with the same Python core used by the CLI.
 It has no Action, hosted bridge, API key, or network dependency.
 """, encoding="utf-8")
     return {"name": "dcore-gpt", "output": str(output), "files": len(list(upload.iterdir()))}

@@ -22,25 +22,23 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pytest -q
-      - name: Verify skill and experimental shader candidate
+      - name: Verify portable skill
         run: |
           dcore verify-skill --root . --json
-          dcore validate-shader skill/dcore/assets/heartbeat-26.3 --minecraft 26.3-snapshot-3 --pack-format 91 --json > temp-shader-report.json
-          python -c "import json; r=json.load(open('temp-shader-report.json')); assert r['static_verdict']=='STATIC_OK', r"
       - name: Verify manifest
         run: |
-          dcore verify --root . --output temp-manifest.json
-          python -c "import json; r=json.load(open('temp-manifest.json')); assert r['status']=='verified', r['validation']['failures']"
+          mkdir -p build
+          dcore verify --root . --output build/manifest.verify.json
+          python -c "import json; r=json.load(open('build/manifest.verify.json')); assert r['status']=='verified', r['validation']['failures']"
       - name: Prove deterministic bundle
         run: |
-          dcore build-skill --root . --output temp/dcore-skill-a.zip > temp/bundle-a.json
-          cp temp/dcore-skill-a.zip /tmp/dcore-skill-a.zip
-          dcore build-skill --root . --output temp/dcore-skill-b.zip > temp/bundle-b.json
-          python -c "import hashlib; a=hashlib.sha256(open('/tmp/dcore-skill-a.zip','rb').read()).hexdigest(); b=hashlib.sha256(open('temp/dcore-skill-b.zip','rb').read()).hexdigest(); assert a==b, (a,b)"
+          dcore build-skill --root . --output build/dcore-skill-a.zip > build/bundle-a.json
+          cp build/dcore-skill-a.zip /tmp/dcore-skill-a.zip
+          dcore build-skill --root . --output build/dcore-skill-b.zip > build/bundle-b.json
+          python -c "import hashlib; a=hashlib.sha256(open('/tmp/dcore-skill-a.zip','rb').read()).hexdigest(); b=hashlib.sha256(open('build/dcore-skill-b.zip','rb').read()).hexdigest(); assert a==b, (a,b)"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: dcore-portable-skill
           path: |
-            temp/dcore-skill-b.zip
-            temp-shader-report.json
-            temp-manifest.json
+            build/dcore-skill-b.zip
+            build/manifest.verify.json

@@ -22,27 +22,24 @@ PACKAGE_DATA = (
 )
 
 KNOWLEDGE_DATA = (
-    "knowledge/dcore.sqlite",
-    "knowledge/DCORE_INSTRUCTIONS.txt",
-    "knowledge/AGENT_INSTRUCTIONS.md",
-    "knowledge/lint_contract.example.json",
-    "knowledge/pool4_golden_corpus.json",
-    "knowledge/visual_sources.json",
-    "knowledge/validation_contract.json",
+    "dcore/knowledge/data/dcore.sqlite",
+    "dcore/knowledge/data/AGENT_INSTRUCTIONS.md",
+    "dcore/knowledge/data/lint_contract.example.json",
+    "dcore/knowledge/data/pool4_golden_corpus.json",
+    "dcore/knowledge/data/visual_sources.json",
+    "dcore/knowledge/data/validation_contract.json",
 )
 
 PROJECT_DATA = (
     "README.md",
-    "AGENTS.md",
-    "CLAUDE.md",
-    ".agents/rules/dcore.md",
-    ".cursor/rules/dcore.mdc",
     "docs/ARCHITECTURE.md",
     "docs/OPERATIONS.md",
+    "gpt/INSTRUCTIONS.txt",
+    "gpt/BUILD.md",
 )
 
-DATABASE = "knowledge/dcore.sqlite"
-MANIFEST = "knowledge/manifest.json"
+DATABASE = "dcore/knowledge/data/dcore.sqlite"
+MANIFEST = "dcore/knowledge/data/manifest.json"
 
 #: Artifacts Git stores with LF and a Windows checkout materialises with CRLF.
 #: Measuring the working-tree bytes made the release identity depend on the
@@ -92,7 +89,7 @@ def release_names(root: Path) -> tuple[str, ...]:
 
 def resolve(name: str, root: Path, knowledge: Path | None = None) -> Path:
     """Map an artifact name onto disk, preferring a CI candidate knowledge directory."""
-    if knowledge is not None and name.startswith("knowledge/"):
+    if knowledge is not None and name.startswith("dcore/knowledge/data/"):
         candidate = knowledge / Path(name).name
         if candidate.is_file():
             return candidate

@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, object]:
     root = root.resolve()
-    knowledge = (knowledge or root / "knowledge").resolve()
+    knowledge = (knowledge or root / "dcore/knowledge/data").resolve()
     output = ensure_safe_output(root, output)
     manifest = read_manifest(knowledge / "manifest.json")
     verify_artifacts(manifest, release_sources(root, knowledge))
@@ -27,8 +27,9 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, 
         destination = runtime / name
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(root / name, destination)
-    (output / "knowledge").mkdir()
-    shutil.copy2(knowledge / "dcore.sqlite", output / "knowledge" / "dcore.sqlite")
+    database = runtime / "dcore" / "knowledge" / "data" / "dcore.sqlite"
+    database.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(knowledge / "dcore.sqlite", database)
     (output / "dcore.py").write_text(
         """from pathlib import Path
 import sys
@@ -38,7 +39,8 @@ raise SystemExit(main())
 """, encoding="utf-8")
     (output / "README.txt").write_text(
         """Run: python dcore.py <command>
-The target database is runtime/dcore.sqlite. Python 3.12+ is required.
+The canonical database is bundled at runtime/dcore/knowledge/data/dcore.sqlite.
+Python 3.12+ is required.
 """, encoding="utf-8")
     return {"name": "dcore-cli", "output": str(output), "files": len(list(runtime.rglob('*')))}
 

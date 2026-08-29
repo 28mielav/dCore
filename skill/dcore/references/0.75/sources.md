@@ -15,4 +15,4 @@ Prefer target-pinned Denizen Meta exports, official Denizen documentation, exact
 
 ## Third-party shader material
 
-The local research catalog records exact upstream commit and license policy in `knowledge/visual_sources.json` and the database. Reuse architectural facts only where licenses or project policy permit. Do not copy unlicensed/reference-only source code into examples.
+The local research catalog records exact upstream commit and license policy in `dcore/knowledge/data/visual_sources.json` and the database. Reuse architectural facts only where licenses or project policy permit. Do not copy unlicensed/reference-only source code into examples.

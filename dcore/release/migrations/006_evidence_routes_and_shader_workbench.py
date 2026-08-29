@@ -86,7 +86,7 @@ CARDS = [
         "Reject raw repository dumps into GPT Knowledge, unpinned snippets, missing-license copying, or combining foreign shader-loader syntax with vanilla core/post code.",
         "Source-registry validation, commit reachability, license gate and version-mismatch retrieval tests.",
         "Per-source version scope", "high", 100, 1,
-        "Pinned public repository registry in knowledge/visual_sources.json",
+        "Pinned public repository registry in dcore/knowledge/data/visual_sources.json",
     ),
     (
         "VIS-040", "visual", "custom_particle", "Custom particle atlases share one core-shader boundary",
@@ -201,13 +201,13 @@ def seed_sources(db: sqlite3.Connection, registry_path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--db", type=Path, default=Path("knowledge/dcore.sqlite"))
+    parser.add_argument("--db", type=Path, default=Path("dcore/knowledge/data/dcore.sqlite"))
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     with sqlite3.connect(args.db) as db:
         db.execute("PRAGMA foreign_keys=ON")
         ensure_schema(db)
-        seed_sources(db, root / "knowledge" / "visual_sources.json")
+        seed_sources(db, root / "dcore" / "knowledge" / "data" / "visual_sources.json")
         for card in CARDS:
             db.execute(
                 "INSERT OR REPLACE INTO cards(id,domain,kind,title,summary,guidance,reject_when,verification,version_scope,confidence,priority,token_weight,source_basis) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",

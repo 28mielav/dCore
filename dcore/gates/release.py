@@ -28,7 +28,7 @@ COMPLEX_TERMS = ("reflect", "shader", "resource pack", "modelengine", "itemsadde
 
 
 def default_db() -> Path | None:
-    candidates = (Path(__file__).with_name("dcore.sqlite"), Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite")
+    candidates = (Path(__file__).with_name("dcore.sqlite"), Path(__file__).resolve().parents[1] / "knowledge" / "data" / "dcore.sqlite")
     return next((path for path in candidates if path.is_file()), None)
 
 
@@ -86,7 +86,7 @@ def read_route_decision(path: Path | None, required: bool) -> str:
 def execute(args: argparse.Namespace) -> dict[str, Any]:
     database = args.db or default_db()
     if not database or not database.is_file():
-        raise ValueError("dCore database not found. Expected <skill-root>/knowledge/dcore.sqlite; pass --db explicitly.")
+        raise ValueError("dCore database not found. Expected <skill-root>/dcore/knowledge/data/dcore.sqlite; pass --db explicitly.")
     paths = expand_input_paths(args.paths)
     scripts = {path: parse_file(path.read_text(encoding="utf-8")) for path in paths}
     source_text = "\n".join(parsed.text for parsed in scripts.values())

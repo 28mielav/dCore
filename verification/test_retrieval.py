@@ -18,7 +18,7 @@ from dcore.knowledge.retrieval import (
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run dCore retrieval routing tests.")
-    parser.add_argument("--db", type=Path, default=Path("knowledge/dcore.sqlite"))
+    parser.add_argument("--db", type=Path, default=Path("dcore/knowledge/data/dcore.sqlite"))
     parser.add_argument("--ids", nargs="*", help="Run only these retrieval test IDs.")
     args = parser.parse_args()
     if hasattr(sys.stdout, "reconfigure"):

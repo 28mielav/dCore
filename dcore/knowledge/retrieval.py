@@ -795,7 +795,7 @@ def target_context(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="dCore intent classifier and dependency-aware card router")
-    parser.add_argument("--db", type=Path, default=Path("knowledge/dcore.sqlite"))
+    parser.add_argument("--db", type=Path, default=Path("dcore/knowledge/data/dcore.sqlite"))
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--query")
     mode.add_argument("--meta-query")

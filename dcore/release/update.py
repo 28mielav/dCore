@@ -41,8 +41,8 @@ def bundled_path(name: str) -> Path:
     tool_path = Path(__file__).resolve()
     candidates = (
         tool_path.with_name(name),
-        tool_path.parents[1] / "knowledge" / name,
-        tool_path.parents[2] / "knowledge" / name,
+        tool_path.parents[1] / "knowledge" / "data" / name,
+        tool_path.parents[2] / "dcore" / "knowledge" / "data" / name,
     )
     return next((candidate for candidate in candidates if candidate.exists()), candidates[-1])
 

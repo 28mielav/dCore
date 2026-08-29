@@ -9,7 +9,7 @@ from dcore.knowledge.retrieval import compatibility_advice, resolve_meta
 
 class MultiVersionMetaTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.db = sqlite3.connect(Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite")
+        self.db = sqlite3.connect(Path(__file__).resolve().parents[1] / "dcore" / "knowledge" / "data" / "dcore.sqlite")
 
     def tearDown(self) -> None:
         self.db.close()

@@ -9,7 +9,7 @@ from dcore.knowledge.retrieval import card_contract, card_contract_audit, resolv
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATABASE = ROOT / "knowledge" / "dcore.sqlite"
+DATABASE = ROOT / "dcore" / "knowledge" / "data" / "dcore.sqlite"
 
 
 class SkillScenarioTests(unittest.TestCase):

@@ -1,32 +1,28 @@
 # dCore
 
-**dCore is an evidence-first engineering tool for DenizenScript and DenizenM.**
+**dCore is a target-pinned engineering tool for building, reviewing, and verifying DenizenScript systems.**
 
-It gives server developers and coding agents a deterministic workflow for designing, reviewing, linting, testing, and maintaining Minecraft mechanics against exact Minecraft, Paper, Java, Denizen, DenizenM, addon, and resource-pack targets.
+It gives developers and coding agents one evidence-first workflow across exact Minecraft, Paper, Java, Denizen, DenizenM, addon, resource-pack, and shader targets.
 
-## Builds
+## Deliveries
 
-| Build | Purpose | Runs the dCore core |
-|---|---|---:|
-| CLI | Local deterministic tooling | Yes |
-| Skill | Codex, Claude Code, Antigravity, and Cursor workflow | Yes |
-| GPT | Code Interpreter analysis of uploaded projects | Yes |
+| Delivery | Where it runs | What it contains |
+|---|---|---|
+| CLI | Local Python | Full dCore engine and canonical knowledge database |
+| Skill | Codex, Claude Code, Cursor, Antigravity | Full engine, database, workflow and platform adapters |
+| Custom GPT | ChatGPT Code Interpreter | Full engine and database for uploaded-project analysis |
 
-All builds are generated from the same Python core and target-pinned knowledge database. A build must pass parity verification before it is usable.
+All deliveries are built from the same `dcore/` source and one canonical SQLite database at `dcore/knowledge/data/dcore.sqlite`.
 
 ## Core capabilities
 
-- exact-target Meta and knowledge retrieval;
-- DenizenScript syntax, lifecycle, queue, event-scope, and ownership lint;
+- exact-target retrieval and version compatibility checks;
+- DenizenScript syntax, lifecycle, queue, event-scope, ownership, and DenizenM lint;
 - resource-pack and shader graph validation;
 - architecture-route comparison before non-trivial implementation;
-- explicit separation of source, static, compile, client-log, and runtime evidence.
+- explicit separation of source, static, API/JAR, server, and client evidence.
 
-Resource-pack and shader work is an optional dCore route. It never overrides the Denizen/DenizenM engineering core.
-
-## Install and run
-
-Python 3.12+:
+## Run locally
 
 ```bash
 python -m pip install -e .
@@ -37,26 +33,15 @@ dcore design --help
 dcore versions --help
 ```
 
-Install the canonical Skill directory directly:
-
-```bash
-# Codex
-cp -R skill/dcore "$CODEX_HOME/skills/dcore"
-
-# Antigravity
-mkdir -p .agents/skills
-cp -R skill/dcore .agents/skills/dcore
-```
-
-`AGENTS.md`, `CLAUDE.md`, and `.cursor/rules/dcore.mdc` are thin routers to the same canonical Skill.
+The canonical Skill is `skill/dcore/`. Its optional deployment shims live in `skill/dcore/adapters/`; the repository deliberately has no root editor adapters.
 
 ## Evidence boundary
 
-`STATIC_OK` means configured static checks passed. It does not prove that a server accepted a command, an addon API exists in an installed JAR, or a client rendered a resource pack correctly.
+`STATIC_OK` means configured static checks passed. It does not prove a server accepted a command, an addon API exists in an installed JAR, or a client rendered a resource pack correctly.
 
-Version-sensitive implementation requires an explicit target matrix. When it is absent, dCore returns a target requirement or a version-neutral architecture/probe instead of invented syntax.
+Version-sensitive implementation requires an explicit target matrix. Without one, dCore returns a target requirement or a version-neutral probe rather than invented syntax.
 
-## Development
+## Verification and builds
 
 ```bash
 python -m pytest -q

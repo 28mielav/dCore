@@ -34,7 +34,7 @@ include = ["dcore*"]
 "dcore.semantics.core" = ["NOTICE.md", "LICENSE.md"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["verification"]
 
 [project.urls]
 Homepage = "https://github.com/28mielav/dcore"

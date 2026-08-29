@@ -1856,7 +1856,7 @@ def lint_contract(text: str, contract: dict, decision: object = None) -> list[di
 def default_db() -> Path | None:
     candidates = (
         Path(__file__).with_name("dcore.sqlite"),
-        Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite",
+        Path(__file__).resolve().parents[1] / "knowledge" / "data" / "dcore.sqlite",
     )
     return next((path for path in candidates if path.is_file()), None)
 

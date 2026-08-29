@@ -8,7 +8,7 @@ The strings below are deliberately frozen literals rather than an import of
 version, rebuilding a database from scratch after the next bump would write that
 newer name here and make the following migration's intent ambiguous. Drift
 between this row and the running package is caught by
-`tests/test_release_identity.py`, which is the right place for a live check.
+`verification/test_release_identity.py`, which is the right place for a live check.
 """
 
 from __future__ import annotations

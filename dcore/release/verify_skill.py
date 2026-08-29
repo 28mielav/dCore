@@ -1,4 +1,4 @@
-"""Verify the portable skill and its thin editor adapters."""
+"""Verify the portable Skill, including its bundled platform adapters."""
 
 from __future__ import annotations
 
@@ -13,9 +13,13 @@ REQUIRED = (
     "skill/dcore/references/0.75/denizen-engineering.md", "skill/dcore/references/0.75/core-shader-pipeline.md",
     "skill/dcore/references/0.75/post-effects.md", "skill/dcore/references/0.75/minecraft-1.21.md",
     "skill/dcore/references/0.75/verification.md", "skill/dcore/references/0.75/sources.md",
-    "AGENTS.md", "CLAUDE.md", ".agents/rules/dcore.md", ".cursor/rules/dcore.mdc",
+    "skill/dcore/adapters/codex.md", "skill/dcore/adapters/claude.md",
+    "skill/dcore/adapters/antigravity.md", "skill/dcore/adapters/cursor.mdc",
 )
-ADAPTERS = ("AGENTS.md", "CLAUDE.md", ".agents/rules/dcore.md", ".cursor/rules/dcore.mdc")
+ADAPTERS = (
+    "skill/dcore/adapters/codex.md", "skill/dcore/adapters/claude.md",
+    "skill/dcore/adapters/antigravity.md", "skill/dcore/adapters/cursor.mdc",
+)
 
 
 def verify(root: Path) -> dict[str, object]:

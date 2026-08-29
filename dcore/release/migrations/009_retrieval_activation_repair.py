@@ -17,7 +17,7 @@ TERMS = {
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--db", type=Path, default=Path("knowledge/dcore.sqlite"))
+    parser.add_argument("--db", type=Path, default=Path("dcore/knowledge/data/dcore.sqlite"))
     args = parser.parse_args()
     with sqlite3.connect(args.db) as db:
         for card_id, terms in TERMS.items():

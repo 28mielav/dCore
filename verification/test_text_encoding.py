@@ -13,7 +13,7 @@ MOJIBAKE_RUN = re.compile(r"(?:(?:Ð.|Р.|С.|вЂ)){3,}")
 class TextEncodingTests(unittest.TestCase):
     def test_release_text_is_utf8_and_has_no_common_mojibake_runs(self) -> None:
         paths = [ROOT / "README.md"]
-        for directory in (ROOT / "knowledge", ROOT / "skill", ROOT / "docs", ROOT / "tools"):
+        for directory in (ROOT / "dcore" / "knowledge" / "data", ROOT / "skill", ROOT / "gpt", ROOT / "docs"):
             paths.extend(path for path in directory.rglob("*") if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES)
         failures = []
         for path in paths:

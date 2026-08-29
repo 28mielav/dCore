@@ -36,19 +36,19 @@ class ReleaseIdentityTest(unittest.TestCase):
         self.assertEqual(contract["metadata_name"], dcore.RELEASE_NAME)
 
     def test_instructions_header_matches_the_package(self) -> None:
-        instructions = KNOWLEDGE_DIRECTORY / "DCORE_INSTRUCTIONS.txt"
+        instructions = REPOSITORY_ROOT / "gpt" / "INSTRUCTIONS.txt"
         first_line = instructions.read_text(encoding="utf-8").splitlines()[0]
-        self.assertIn(f"$dCore {dcore.__version__},", first_line)
+        self.assertIn(f"dCore {dcore.__version__}", first_line)
 
     def test_instructions_stay_inside_the_verify_size_gate(self) -> None:
-        # dcore.release.verify fails the release above 12000 bytes, measured on the
+        # dcore.release.verify fails the GPT build above 8000 bytes, measured on the
         # normalised (LF) content so the gate agrees across checkout platforms.
         # The file sits close to that ceiling, so an edit that pushes it over
         # should fail here rather than at release time.
         from dcore.release.artifacts import artifact_bytes
 
-        size = len(artifact_bytes(KNOWLEDGE_DIRECTORY / "DCORE_INSTRUCTIONS.txt"))
-        self.assertLessEqual(size, 12000, f"instructions are {size} bytes")
+        size = len(artifact_bytes(REPOSITORY_ROOT / "gpt" / "INSTRUCTIONS.txt"))
+        self.assertLessEqual(size, 8000, f"instructions are {size} bytes")
 
     def test_database_identity_matches_the_package(self) -> None:
         if not DATABASE_PATH.is_file():

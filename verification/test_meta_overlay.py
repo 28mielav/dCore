@@ -10,7 +10,7 @@ from dcore.knowledge.retrieval import resolve_meta
 
 class MetaOverlayTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.db = sqlite3.connect(Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite")
+        self.db = sqlite3.connect(Path(__file__).resolve().parents[1] / "dcore" / "knowledge" / "data" / "dcore.sqlite")
         self.db.row_factory = sqlite3.Row
 
     def tearDown(self) -> None:

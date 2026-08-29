@@ -96,7 +96,7 @@ def sorted_unique(values: Iterable[str]) -> List[str]:
 
 
 def default_db() -> Optional[Path]:
-    candidate = Path(__file__).resolve().parents[1] / "knowledge" / "dcore.sqlite"
+    candidate = Path(__file__).resolve().parents[1] / "knowledge" / "data" / "dcore.sqlite"
     return candidate if candidate.is_file() else None
 
 

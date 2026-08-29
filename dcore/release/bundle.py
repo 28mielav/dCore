@@ -16,10 +16,10 @@ def sha256(path: Path) -> str:
 
 
 def ensure_safe_output(root: Path, output: Path) -> Path:
-    """Allow replacement only of one named bundle under builds/ or dist/."""
+    """Allow replacement only of one named generated bundle under build/."""
     root = root.resolve()
     output = output.resolve()
-    allowed_roots = (root / "build", root / "builds", root / "dist", root / "temp")
+    allowed_roots = (root / "build",)
     if not any(output.parent == allowed for allowed in allowed_roots):
         allowed_text = ", ".join(str(item) for item in allowed_roots)
         raise ValueError(f"output must be a direct child of: {allowed_text}")

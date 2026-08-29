@@ -1,7 +1,4 @@
 build/
-dist/
-builds/
-temp/
 .dcore-work/
 .pytest_cache/
 *.pre_update_*.sqlite
@@ -10,4 +7,3 @@ __pycache__/
 *.secret
 *_PRIVATE.txt
 work/
-dcore.egg-info/

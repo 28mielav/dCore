@@ -31,7 +31,7 @@ def main() -> int:
     root = args.root.resolve()
     knowledge = args.knowledge.resolve() if args.knowledge else None
     args.db = args.db or resolve(DATABASE, root, knowledge)
-    args.contract = args.contract or resolve("knowledge/validation_contract.json", root, knowledge)
+    args.contract = args.contract or resolve("dcore/knowledge/data/validation_contract.json", root, knowledge)
 
     release_contract = json.loads(args.contract.read_text(encoding="utf-8"))
     required = release_contract["minimum_counts"]
@@ -143,8 +143,8 @@ def main() -> int:
             failures.append(f"missing_artifact={name}")
             continue
         content = artifact_bytes(path)
-        if name.endswith("DCORE_INSTRUCTIONS.txt") and len(content) > 12000:
-            failures.append(f"instructions_too_large={len(content)}>12000")
+        if name == "gpt/INSTRUCTIONS.txt" and len(content) > 8000:
+            failures.append(f"gpt_instructions_too_large={len(content)}>8000")
         if name.endswith("lint_contract.example.json"):
             try:
                 lint_contract_data = json.loads(path.read_text(encoding="utf-8"))
