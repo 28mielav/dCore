@@ -38,14 +38,8 @@ covered by the same tests that pin down `dcore lint`'s flags:
 | `dcore_versions` | `dcore versions` (read path only) |
 | `dcore_shadow` | `dcore shadow` |
 | `dcore_release_gate` | `dcore run` |
-| `dcore_project_audit` | unified script and visual audit |
-| `dcore_shader_review` | `dcore lint-pack` with shader proof workflow |
-| `dcore_verify` | `dcore verify` |
-| `dcore_build_gpt` | `dcore build-gpt` |
-| `dcore_accept_agent` | `dcore accept-agent` |
-| `dcore_accept_pool4` | `dcore accept-pool4` |
 
-`dcore_lint`, `dcore_project_audit` and `dcore_release_gate` accept either `paths` (files/directories
+`dcore_lint` and `dcore_release_gate` accept either `paths` (files/directories
 on disk) or inline `text`, which is materialised into a per-call temporary
 workspace. Both report findings through `structuredContent.blocking` rather
 than requiring the caller to infer pass/fail from a non-zero exit code, since a
@@ -59,7 +53,7 @@ linter exiting 1 on an error-severity finding did its job.
 - `dcore://architecture`, `dcore://operations` mirror `docs/ARCHITECTURE.md`
   and `docs/OPERATIONS.md`.
 - `dcore://manifest` is the verified release identity.
-- Prompts `dcore_task`, `dcore_review`, `dcore_project_audit`, `dcore_shader_review` and `dcore_release_review` put the execution and review gates
+- Prompts `dcore_task` and `dcore_review` put the execution and review gates
   in front of a request instead of depending on the client having read the
   instructions resource first.
 
