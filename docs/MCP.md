@@ -41,6 +41,7 @@ covered by the same tests that pin down `dcore lint`'s flags:
 | `dcore_project_audit` | unified script and visual audit |
 | `dcore_shader_review` | `dcore lint-pack` with shader proof workflow |
 | `dcore_verify` | `dcore verify` |
+| `dcore_build_gpt` | `dcore build-gpt` |
 | `dcore_accept_agent` | `dcore accept-agent` |
 | `dcore_accept_pool4` | `dcore accept-pool4` |
 
