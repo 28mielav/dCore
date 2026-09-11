@@ -13,4 +13,4 @@ PACKAGE_ROOT = Path(__file__).resolve().parent
 REPOSITORY_ROOT = PACKAGE_ROOT.parent
 KNOWLEDGE_DIRECTORY = PACKAGE_ROOT / "knowledge" / "data"
 DATABASE_PATH = KNOWLEDGE_DIRECTORY / "dcore.sqlite"
-VERIFICATION_DIRECTORY = REPOSITORY_ROOT / "build" / "verification"
+VERIFICATION_DIRECTORY = REPOSITORY_ROOT / ".dcore-work" / "verification"

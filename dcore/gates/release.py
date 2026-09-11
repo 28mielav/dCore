@@ -7,6 +7,7 @@ Runtime is an explicit report with required scenario witnesses.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sqlite3
 import sys
@@ -45,7 +46,14 @@ def runtime_cases(text: str) -> tuple[str, ...]:
     return GENERIC_RUNTIME_CASES
 
 
-def read_runtime_report(path: Path | None, required: tuple[str, ...]) -> dict[str, Any]:
+def project_fingerprint(sources: dict[Path, Any]) -> str:
+    """Hash a deterministic multiset of input bytes, independent of checkout path."""
+    digests = sorted(hashlib.sha256(parsed.text.encode("utf-8")).hexdigest() for parsed in sources.values())
+    return hashlib.sha256("\n".join(digests).encode("ascii")).hexdigest()
+
+
+def read_runtime_report(path: Path | None, required: tuple[str, ...],
+                        source_hash: str | None = None, target: dict | None = None) -> dict[str, Any]:
     if path is None:
         return {"state": "RUNTIME_NOT_RUN", "reason": "No --runtime-report was supplied.", "missing_cases": list(required)}
     try:
@@ -53,13 +61,24 @@ def read_runtime_report(path: Path | None, required: tuple[str, ...]) -> dict[st
     except (OSError, json.JSONDecodeError) as exc:
         return {"state": "RUNTIME_INVALID", "reason": f"Cannot read runtime report: {exc}", "missing_cases": list(required)}
     cases = report.get("cases") if isinstance(report, dict) else None
-    if report.get("status") != "PASS" or not isinstance(cases, dict):
+    if not isinstance(report, dict) or report.get("status") != "PASS" or not isinstance(cases, dict):
         return {"state": "RUNTIME_INVALID", "reason": "Runtime report requires status=PASS and a cases object.", "missing_cases": list(required)}
+    if not source_hash or report.get("project_sha256") != source_hash:
+        return {"state": "RUNTIME_INVALID", "reason": "Report is not bound to the current project_sha256.", "missing_cases": list(required)}
+    environment = report.get("environment")
+    origin = report.get("provenance")
+    if (not target or not isinstance(environment, dict)
+            or any(environment.get(k) != v for k, v in target.items())
+            or not isinstance(origin, dict)
+            or any(not isinstance(origin.get(k), str) or not origin[k].strip() for k in ("runner", "timestamp", "method"))):
+        return {"state": "RUNTIME_INVALID", "reason": "Report needs matching environment and provenance (runner, timestamp, method).", "missing_cases": list(required)}
     missing = [case for case in required if cases.get(case) != "PASS"]
     return {
-        "state": "RUNTIME_PASS" if not missing else "RUNTIME_PARTIAL",
-        "reason": "All required runtime cases passed." if not missing else "Some required runtime cases are not PASS.",
+        "state": "RUNTIME_USER_REPORTED" if not missing else "RUNTIME_PARTIAL",
+        "reason": "Supplied report records all cases as PASS; dCore did not independently execute or authenticate these tests." if not missing else "Some required runtime cases are not PASS.",
         "missing_cases": missing,
+        "project_sha256": source_hash, "environment": environment, "provenance": origin,
+        "independently_verified": False,
     }
 
 
@@ -129,7 +148,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     static_state = "SYNTAX_FAIL" if errors else "SYNTAX_PASS"
     source_labels = " ".join(path.name for path in paths)
     required_runtime = runtime_cases(f"{source_labels}\n{source_text}")
-    runtime = read_runtime_report(args.runtime_report, required_runtime)
+    source_hash = project_fingerprint(scripts)
+    runtime = read_runtime_report(args.runtime_report, required_runtime, source_hash, target)
     simulation = {"state": "SIMULATION_NOT_RUN", "reason": "No --shadow-plan was supplied."}
     if args.shadow_plan:
         try:
@@ -139,13 +159,13 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             simulation = {"state": "SIMULATION_INVALID", "reason": str(exc)}
     blocked = [
         state for state in (target_state, retrieval_state, route_state, addon_state, static_state, runtime["state"], simulation["state"])
-        if state in {"TARGET_PARTIAL", "RETRIEVAL_PARTIAL", "ROUTE_REQUIRED", "ROUTE_INVALID", "ADDON_SIGNATURE_PARTIAL", "SYNTAX_FAIL", "RUNTIME_NOT_RUN", "RUNTIME_INVALID", "RUNTIME_PARTIAL", "SIMULATION_FAIL", "SIMULATION_INVALID"}
+        if state in {"TARGET_PARTIAL", "RETRIEVAL_PARTIAL", "ROUTE_REQUIRED", "ROUTE_INVALID", "ADDON_SIGNATURE_PARTIAL", "SYNTAX_FAIL", "RUNTIME_NOT_RUN", "RUNTIME_INVALID", "RUNTIME_PARTIAL", "RUNTIME_USER_REPORTED", "SIMULATION_FAIL", "SIMULATION_INVALID"}
     ]
     return {
         "tool": "dcore_run", "verdict": "READY" if not blocked else "RELEASE_BLOCKED",
         "proof": {"target": target_state, "retrieval": retrieval_state, "route": route_state, "addon_signature": addon_state, "static": static_state, "simulation": simulation["state"], "runtime": runtime["state"]},
         "blocked_by": blocked, "runtime_checklist": list(required_runtime), "runtime": runtime,
-        "target": target, "routes": {"domains": domains, "cards": cards}, "simulation": simulation,
+        "target": target, "project_sha256": source_hash, "routes": {"domains": domains, "cards": cards}, "simulation": simulation,
         "meta_matches": len(meta_result["matches"]), "findings": findings,
         "summary": dict(Counter(item["severity"] for item in findings)),
     }

@@ -1,0 +1,65 @@
+{
+  "targets": {
+    "swap": {}
+  },
+  "passes": [
+    {
+      "vertex_shader": "lesson:post/quad",
+      "fragment_shader": "lesson:post/blur",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "minecraft:main",
+          "bilinear": true
+        }
+      ],
+      "output": "swap",
+      "uniforms": {
+        "BlurSettings": [
+          {
+            "name": "Direction",
+            "type": "vec2",
+            "value": [
+              3.0,
+              0.0
+            ]
+          },
+          {
+            "name": "Intensity",
+            "type": "float",
+            "value": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "vertex_shader": "lesson:post/quad",
+      "fragment_shader": "lesson:post/blur",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "swap",
+          "bilinear": true
+        }
+      ],
+      "output": "minecraft:main",
+      "uniforms": {
+        "BlurSettings": [
+          {
+            "name": "Direction",
+            "type": "vec2",
+            "value": [
+              0.0,
+              3.0
+            ]
+          },
+          {
+            "name": "Intensity",
+            "type": "float",
+            "value": 1.0
+          }
+        ]
+      }
+    }
+  ]
+}

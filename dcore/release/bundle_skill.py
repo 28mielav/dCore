@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 from dcore import __version__
-from dcore.release.artifacts import DATABASE, package_sources
+from dcore.release.artifacts import DATABASE, package_sources, artifact_bytes
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXED_TIME = (1980, 1, 1, 0, 0, 0)
@@ -19,16 +19,17 @@ def skill_files(root: Path) -> list[Path]:
     skill = root / "skill" / "dcore"
     if not (skill / "SKILL.md").is_file():
         raise FileNotFoundError(skill / "SKILL.md")
-    return sorted(path for path in skill.rglob("*") if path.is_file())
+    return sorted(path for path in skill.rglob("*")
+                  if path.is_file() and "__pycache__" not in path.parts)
 
 
 def runtime_files(root: Path) -> list[tuple[str, bytes]]:
     """Return the executable core required by offline skill hosts."""
     files: list[tuple[str, bytes]] = []
     for name in package_sources(root):
-        files.append((f"runtime/{name}", (root / name).read_bytes()))
-    files.append(("runtime/dcore/knowledge/data/dcore.sqlite", (root / DATABASE).read_bytes()))
-    files.append(("runtime/README.txt", (
+        files.append((f"dcore/runtime/{name}", artifact_bytes(root / name)))
+    files.append(("dcore/runtime/dcore/knowledge/data/dcore.sqlite", (root / DATABASE).read_bytes()))
+    files.append(("dcore/runtime/README.txt", (
         b"Add runtime/ to PYTHONPATH and run: python -m dcore.cli <command>\n"
         b"Use --db runtime/dcore/knowledge/data/dcore.sqlite where the selected command supports it.\n"
         b"Results remain static until runtime proof is supplied.\n"
@@ -38,7 +39,7 @@ def runtime_files(root: Path) -> list[tuple[str, bytes]]:
 
 def build(root: Path, output: Path) -> dict[str, object]:
     root, output = root.resolve(), output.resolve()
-    allowed = {root / "build"}
+    allowed = {root / "build", root / ".dcore-work"}
     if output.parent not in allowed or output.suffix.lower() != ".zip":
         raise ValueError("output must be a .zip directly under build/")
     output.parent.mkdir(parents=True, exist_ok=True)

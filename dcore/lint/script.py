@@ -25,6 +25,8 @@ from dcore.knowledge.meta_resolution import effective_sources, entry_key, visibl
 from dcore.knowledge.version_registry import normalize_product_version
 from dcore.lint.tagtypes import TagTypeIndex, build_index, deprecations_in_text, faults_in_text
 from dcore.semantics.core import analyze_denizen, analyze_project
+from dcore.semantics.ir import parse_denizen_ir
+from dcore.semantics.flow import blocks, cancellation_paths, iteration_outcomes
 from typing import Any, Iterable
 
 
@@ -180,6 +182,7 @@ class MetaIndex:
         self.require_jar_evidence = require_jar_evidence
         self.unverified_provider_addons = self.addons.intersection({"megizen", "denizen_physics"})
         self.version_meta_missing: list[str] = []
+        self.version_meta_notes: list[str] = []
         self.commands: dict[str, list[MetaEntry]] = defaultdict(list)
         self.mechanisms: dict[str, list[MetaEntry]] = defaultdict(list)
         self.command_providers: dict[str, set[str]] = defaultdict(set)
@@ -219,29 +222,13 @@ class MetaIndex:
                         self.command_providers[match.group(0).casefold()].add(provider)
                 else:
                     self.mechanism_providers[raw_name.rsplit(".", 1)[-1].casefold()].add(provider)
-            source_ids = {"denizencore_official_master"}
-            if profile == "denizenm":
-                requested = self.target.get("denizenm")
-                current_source, product = "denizenm_public_master", "DenizenM"
-            else:
-                requested = self.target.get("denizen")
-                current_source, product = "denizen_official_dev", "Denizen"
-            if requested:
-                has_registry = db.execute(
-                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='version_artifacts'"
-                ).fetchone()
-                source_columns = {row[1] for row in db.execute("PRAGMA table_info(meta_sources)")}
-                scoped = db.execute(
-                    "SELECT m.source_id FROM version_artifacts v JOIN meta_sources m ON m.artifact_id=v.artifact_id "
-                    "WHERE lower(v.product)=lower(?) AND lower(v.version)=lower(?) ORDER BY m.source_id",
-                    (product, requested),
-                ).fetchall() if has_registry and "artifact_id" in source_columns else []
-                if scoped:
-                    source_ids.update(row[0] for row in scoped)
-                else:
-                    self.version_meta_missing.append(f"{product} {requested}")
-            else:
-                source_ids.add(current_source)
+            from dcore.knowledge.source_scope import target_sources, source_evidence
+            product = "DenizenM" if profile == "denizenm" else "Denizen"
+            requested = self.target.get("denizenm" if profile == "denizenm" else "denizen")
+            selected, missing = target_sources(db, product, requested)
+            source_ids = set(selected)
+            self.version_meta_missing.extend(item for item in missing if not item.startswith("Denizen-Core dependency"))
+            self.version_meta_notes = [item for item in missing if item.startswith("Denizen-Core dependency")] + [row["compatibility"] for row in source_evidence(db, selected) if "exact binary dependency unverified" in row["compatibility"]]
             if "reflect" in self.addons:
                 source_ids.add("denizen_reflect_public_main")
             if "voxizen" in self.addons:
@@ -298,7 +285,7 @@ class MetaIndex:
         walking, and the index costs an extra pass over the tag corpus.
         """
         if self._tag_types is None:
-            self._tag_types = build_index(self.db_path, self.effective_source_ids or None)
+            self._tag_types = build_index(self.db_path, self.effective_source_ids)
         return self._tag_types
 
     def target_label(self) -> str:
@@ -1130,7 +1117,10 @@ def lint_denizenm_async_boundaries(parsed: ParsedFile, meta: MetaIndex) -> list[
 
 
 def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
+    source_ir = parse_denizen_ir(parsed.text)
     results: list[dict] = []
+    from dcore.lint.visual import lint_visual_carriers
+    results.extend(lint_visual_carriers(source_ir, meta.target.get("minecraft")))
     results.extend(lint_tag_types(parsed, meta))
     results.extend(lint_denizenm_async_boundaries(parsed, meta))
     if meta.unverified_provider_addons:
@@ -1141,6 +1131,10 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
             layer="api", source="dCore addon policy",
             suggestion="Keep calls behind one adapter and verify the exact jar/docs/runtime before treating them as valid.",
         ))
+    if meta.version_meta_notes:
+        results.append(issue("historical_dependency_unverified", "warning", 0,
+            "Historical Core evidence is incomplete: " + "; ".join(dict.fromkeys(meta.version_meta_notes)),
+            layer="evidence", source="dCore historical source provenance"))
     if meta.version_meta_missing:
         results.append(issue(
             "version_meta_unindexed", "error", 0,
@@ -1518,6 +1512,20 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
         # Denizen action syntax, MapTags and comparison operands all use colons,
         # while the exported Meta syntax is not a machine grammar. Validate only
         # high-confidence command-specific regressions until an AST parser exists.
+        if name == "flag":
+            arguments = split_arguments(content)
+            syntaxes = " ".join(entry.syntax for entry in entries).casefold()
+            # The flag's own name:value argument is not an option. Only inspect
+            # trailing arguments after command, object and flag assignment.
+            for argument in arguments[3:]:
+                option = argument.partition(":")[0].casefold()
+                if option in {"duration", "expire"} and f"{option}:" not in syntaxes:
+                    replacement = "expire" if option == "duration" else "duration"
+                    if f"{replacement}:" in syntaxes:
+                        results.append(issue("flag_expiry_version_mismatch", "error", number,
+                            f"Selected Flag Meta uses {replacement}:, not {option}:.",
+                            layer="api", source="selected historical/current Meta syntax",
+                            suggestion=f"Use {replacement}: for this target; retain the other form for its own version."))
         if name == "playeffect" and re.search(r"(?:^|\s)location:", content, re.I):
             results.append(issue(
                 "invalid_playeffect_location_argument", "error", number,
@@ -1629,31 +1637,24 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
                     suggestion="Verify the installed build; context names do not transfer between similar events.",
                 ))
 
-        cancellation_lines = [
-            start + offset + 1
-            for offset, line in enumerate(parsed.lines[start:end])
-            if re.search(r"\bdetermine\b.*\bcancel", line, re.I)
-        ]
+        _, cancellations = cancellation_paths(blocks(source_ir, start, end))
         broad = any(term in matcher.lower() for term in BROAD_CANCEL_EVENTS)
-        if broad and cancellation_lines:
-            first_cancel = min(cancellation_lines)
-            prefix = "\n".join(parsed.lines[start:first_cancel - 1]).lower()
-            guarded = any(marker in prefix for marker in IDENTITY_GUARDS)
-            if not guarded:
-                results.append(issue(
-                    "broad_cancel_without_identity_guard", "error", first_cancel,
-                    "A broad world event cancels vanilla behavior before proving ownership/identity.",
-                    layer="lifecycle",
-                    source="dCore event blast-radius rule",
-                    suggestion="Use a script/entity matcher when available, or stop on a stable ownership marker before any determination or mutation.",
-                ))
-            else:
+        if broad and cancellations:
+            for cancel_line, guarded in cancellations.items():
+                if not guarded:
+                    results.append(issue(
+                        "broad_cancel_without_identity_guard", "warning", cancel_line,
+                        "A reachable cancellation has no recognized filter on the affected context object.",
+                        layer="lifecycle", source="dCore IR control-flow analysis",
+                        confidence="conservative_path_analysis",
+                        suggestion="Check the affected context object's identity before cancellation; a player flag or a marker read does not establish ownership.",
+                    ))
+            if all(cancellations.values()):
                 results.append(issue(
                     "broad_event_guarded", "information", start,
-                    "This global matcher is guarded, but still receives unrelated world events.",
-                    layer="performance",
-                    source="dCore event blast-radius rule",
-                    suggestion="Prefer the narrowest script/entity/location matcher supported by the installed DenizenM Meta.",
+                    "Every recognized cancellation path checks a context-object marker; marker ownership policy still needs review.",
+                    layer="performance", source="dCore IR control-flow analysis",
+                    suggestion="Prefer a narrow event matcher where available and verify who can set the marker.",
                 ))
         elif broad:
             mutation_present = any(
@@ -1678,28 +1679,31 @@ def lint_parsed(parsed: ParsedFile, meta: MetaIndex) -> list[dict]:
 
     results.extend(lint_dog_navigation(parsed, commands, container_regions))
 
-    # Busy/unbounded loops and Reflect dialect handling.
-    for number, raw in enumerate(parsed.lines, 1):
-        if re.match(r"^\s*-\s*while\s+true\s*:", strip_comment(raw), re.I):
-            indent = len(raw) - len(raw.lstrip(" "))
-            block: list[str] = []
-            for following in parsed.lines[number:]:
-                if following.strip() and len(following) - len(following.lstrip(" ")) <= indent:
-                    break
-                block.append(following)
-            joined = "\n".join(block).lower()
-            if "wait " not in joined:
-                results.append(issue(
-                    "busy_while_true", "error", number,
-                    "while true has no wait in its body.", layer="performance",
-                ))
-            elif not any(token in joined for token in (" stop", "timeout", "elapsed", "expire", "session")):
-                results.append(issue(
-                    "unproven_loop_bound", "warning", number,
-                    "The loop yields, but no explicit lifetime/session/timeout exit was recognized.",
-                    layer="lifecycle",
-                    suggestion="State the hard lifetime owner and prove every exit reaches cleanup.",
-                ))
+    # Query existing IR commands and branch paths; comments and text are not exits.
+    for command in source_ir.commands:
+        if command.name != "while" or command.arguments.strip().casefold() != "true:":
+            continue
+        end = len(parsed.lines)
+        for number in range(command.line + 1, len(parsed.lines) + 1):
+            raw = strip_comment(parsed.lines[number - 1])
+            if raw.strip() and len(raw) - len(raw.lstrip(" ")) + 3 <= command.source.column:
+                end = number - 1
+                break
+        outcomes = iteration_outcomes(blocks(source_ir, command.line, end))
+        if outcomes & {"running", "continue"}:
+            results.append(issue(
+                "busy_while_true", "warning", command.line,
+                "A possible loop back-edge has no wait or exit.", layer="performance",
+                source="dCore IR branch analysis", confidence="possible_path",
+                suggestion="Ensure every repeating path yields or exits; check early while next and conditional waits.",
+            ))
+        if outcomes != {"exit"}:
+            results.append(issue(
+                "unproven_loop_bound", "warning", command.line,
+                "A finite lifetime is not proven; a conditional exit may never become true.",
+                layer="lifecycle", source="dCore IR branch analysis", confidence="not_proven",
+                suggestion="Use a finite repeat count or review the condition's progress, lifetime owner and cleanup.",
+            ))
 
     results.extend(lint_reflect_usage(parsed, meta, commands))
     return results

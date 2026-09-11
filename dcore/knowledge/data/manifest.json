@@ -1,18 +1,26 @@
 {
   "name": "dCore",
-  "version": "0.76",
-  "generated_at": "2026-08-29T16:24:16.252087+00:00",
+  "version": "0.82",
+  "generated_at": "2026-09-11T06:02:02.098717+00:00",
   "status": "verified",
-  "sha256": "a6b2bd91bc4706dea0059fd9c682c9a2b81be0d962f05226e793e5cfdcb57c5a",
-  "size": 20537344,
-  "bundle_sha256": "0216b7ae66d0018f04908b7ab978bdfcd3eaae0a22de43a3c7c1ffea529fa795",
+  "sha256": "31c575430d7d06bd2f581d6e6cd889e7c9c023a07179309238119db41602f198",
+  "size": 47001600,
+  "bundle_sha256": "0b30f08fa15d7d64e26bb76bf586a0dae19698b909c489887d1cb9aa5c755df2",
   "artifacts": {
+    "LICENSE": {
+      "sha256": "f400b238350802fa9878b8e802cc189a7d53bec3b44afa0bfa2ae7736757c20e",
+      "size": 1075
+    },
     "README.md": {
-      "sha256": "6091cff32c0211c8be9a482d4db48a42946157ac73aee9b0e5aec62cfd7a4541",
-      "size": 2401
+      "sha256": "32f785627727891b1a2fa9dbe177f0087d6d98b8591d5e02ce64299a778113aa",
+      "size": 6817
+    },
+    "TRADEMARKS.md": {
+      "sha256": "8f4685fe978e16fbfc5b0986cc2a7b733d4acd17843a2ea8755f1a368b08c5ca",
+      "size": 731
     },
     "dcore/__init__.py": {
-      "sha256": "f5ace47eddfebf243b60f8ea8b5ad0b0b2ab516fa71f1e0cda19568870a26aaf",
+      "sha256": "021c50279a4c8ba24e8c9a479e5ac62637398d316596623f97c48cf937b8c507",
       "size": 791
     },
     "dcore/acceptance/__init__.py": {
@@ -24,8 +32,12 @@
       "size": 6728
     },
     "dcore/cli.py": {
-      "sha256": "b3100b249762a0a9c7be236953553f8ccea4cc1c53c1007d71238c21de645bce",
-      "size": 3053
+      "sha256": "0ce6e46484ccd8ac254c97335d72dae93861ec4e8473ebe7d9c7ae5c779e1586",
+      "size": 3280
+    },
+    "dcore/config.py": {
+      "sha256": "92e732fd416ce8b3e5b771d94933373122a410cf3bcc3a29c11ffd24acd6a2b6",
+      "size": 1566
     },
     "dcore/design/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -35,13 +47,81 @@
       "sha256": "bd69a8169f2272692501c0ef93ac7111a8b9ca255a1bf1663d5739803d6bda79",
       "size": 38772
     },
+    "dcore/examples/visual/SOURCE_REVIEW.json": {
+      "sha256": "a07b5a9e58e8bac963bd1ecc243a093ae6482715722bdc274052ce95701e94a2",
+      "size": 1645
+    },
+    "dcore/examples/visual/menu-background-blur/README.md": {
+      "sha256": "dbc204fb75b28cbf2560218ded951ff7b2036b15a1945bc29f782bb57a5487b4",
+      "size": 2471
+    },
+    "dcore/examples/visual/menu-background-blur/assets/lesson/shaders/post/blur.fsh": {
+      "sha256": "b7d45291e6634a3a1f818f63100093deb0dda51857af52de05d69e2a9bc3f9d7",
+      "size": 676
+    },
+    "dcore/examples/visual/menu-background-blur/assets/lesson/shaders/post/quad.vsh": {
+      "sha256": "baf4b874da37ceef4983c19d9946bad6f7da0c8fadb30f2d13718ac65f234e1f",
+      "size": 268
+    },
+    "dcore/examples/visual/menu-background-blur/assets/minecraft/post_effect/blur.json": {
+      "sha256": "c4c2e3eef039034e1d102498ed152ec6cf1bc603e19a7427f18e727526f136cd",
+      "size": 1264
+    },
+    "dcore/examples/visual/menu-background-blur/pack.mcmeta": {
+      "sha256": "c53314be13e7c6acc2b873531e7fe915e7ad09c9b1d055be202bd04eb400c104",
+      "size": 118
+    },
+    "dcore/examples/visual/outline-mask/README.md": {
+      "sha256": "9bbf011ec29a5ab1918868424eec19b4758e5ad882fc2bec2f2f588d030074ae",
+      "size": 2453
+    },
+    "dcore/examples/visual/outline-mask/assets/lesson/shaders/post/copy.fsh": {
+      "sha256": "7cb1a6ef18828e37c0e80fd39a515fe65782f8884eb1922e8d6b7fc14764ea13",
+      "size": 138
+    },
+    "dcore/examples/visual/outline-mask/assets/lesson/shaders/post/mask.fsh": {
+      "sha256": "e19d98828c3d5202f566ee611d0e660164136e7b8fd8edb188cf94e1891d9e8a",
+      "size": 195
+    },
+    "dcore/examples/visual/outline-mask/assets/lesson/shaders/post/quad.vsh": {
+      "sha256": "baf4b874da37ceef4983c19d9946bad6f7da0c8fadb30f2d13718ac65f234e1f",
+      "size": 268
+    },
+    "dcore/examples/visual/outline-mask/assets/minecraft/post_effect/entity_outline.json": {
+      "sha256": "f66e78b314f21c79443fb8a71ddbba164f8f7fcf96d85779973ff2a5c9ae5225",
+      "size": 612
+    },
+    "dcore/examples/visual/outline-mask/pack.mcmeta": {
+      "sha256": "81658be7a6b6379a831081e3445fc00f325190369e91a33d7f35bb7336a03c9b",
+      "size": 110
+    },
+    "dcore/examples/visual/outline-scene-blur/README.md": {
+      "sha256": "d49f524005a7e947f45e718a2b688acab76754df76c4068bde85b00fdf191483",
+      "size": 2523
+    },
+    "dcore/examples/visual/outline-scene-blur/assets/lesson/shaders/post/blur.fsh": {
+      "sha256": "b7d45291e6634a3a1f818f63100093deb0dda51857af52de05d69e2a9bc3f9d7",
+      "size": 676
+    },
+    "dcore/examples/visual/outline-scene-blur/assets/lesson/shaders/post/quad.vsh": {
+      "sha256": "baf4b874da37ceef4983c19d9946bad6f7da0c8fadb30f2d13718ac65f234e1f",
+      "size": 268
+    },
+    "dcore/examples/visual/outline-scene-blur/assets/minecraft/post_effect/entity_outline.json": {
+      "sha256": "56334c532d75cba2d1e66409b6635417039c6331a404a72d0edb99dd950342d2",
+      "size": 1274
+    },
+    "dcore/examples/visual/outline-scene-blur/pack.mcmeta": {
+      "sha256": "25f3bca61cc5a1f5097dbcd432b9b555a67e6430a7cb856d15b66871c3b44ba7",
+      "size": 116
+    },
     "dcore/gates/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size": 0
     },
     "dcore/gates/release.py": {
-      "sha256": "b841dc464c6be2e6da3fb4184c1a477293ede31e1a31883dd87459047e4858ea",
-      "size": 10533
+      "sha256": "caed53cd0833c28cf78f399b4f485b7ef88ff6b55b629eaca825e587eb398bba",
+      "size": 12087
     },
     "dcore/gates/shadow.py": {
       "sha256": "f4cc6b884785e0fdfee1d4fa25b7b8be74ae4f15bb2d5c25ac2c393ce9333c73",
@@ -56,8 +136,8 @@
       "size": 8445
     },
     "dcore/knowledge/data/dcore.sqlite": {
-      "sha256": "a6b2bd91bc4706dea0059fd9c682c9a2b81be0d962f05226e793e5cfdcb57c5a",
-      "size": 20537344
+      "sha256": "31c575430d7d06bd2f581d6e6cd889e7c9c023a07179309238119db41602f198",
+      "size": 47001600
     },
     "dcore/knowledge/data/lint_contract.example.json": {
       "sha256": "4a064e44dc23ac2881a64694c41ff184b677b9337b81605178884cbeb1bbba18",
@@ -68,24 +148,64 @@
       "size": 2883
     },
     "dcore/knowledge/data/validation_contract.json": {
-      "sha256": "4f72bd99056e0353a4c4966a6e58669b5a0d52abec581cfc8443be8831b44618",
-      "size": 1154
+      "sha256": "062dec1f6727c4714ba37e1b24d2e9c2c4a4f3a4cfbfe68e140c821b9d57e097",
+      "size": 1346
     },
     "dcore/knowledge/data/visual_sources.json": {
       "sha256": "d3ea9828be0e0fb3c841c9b8b5368837eded05a2d81b1212a80376575f1e179c",
       "size": 4469
+    },
+    "dcore/knowledge/guides/core-shader-pipeline.md": {
+      "sha256": "2d85966bf95fa31471bef289e99c73bdb4beade224bce57dc5eb8ef22bc22592",
+      "size": 3367
+    },
+    "dcore/knowledge/guides/denizen-engineering.md": {
+      "sha256": "4f39143fd4537687d4e60cc4e1e7543c36c0e6e9345122c555156865a3dc6d2f",
+      "size": 3710
+    },
+    "dcore/knowledge/guides/evidence-and-versions.md": {
+      "sha256": "bdb59fe21290d38fb48c155cedcc54a79fba77843c28eefa2ae13e1aa28a4c38",
+      "size": 2465
+    },
+    "dcore/knowledge/guides/historical-targets.md": {
+      "sha256": "9028670ee5f9bd27022d24c87ceb1d15b636d1a326c812d4ff4bec5e92f8827f",
+      "size": 5080
+    },
+    "dcore/knowledge/guides/minecraft-1.21.md": {
+      "sha256": "e12c4a87cfdf78d37559ebdfb5cbbcb87a477e14c7b07cf324c8d48b3dfa4332",
+      "size": 4259
+    },
+    "dcore/knowledge/guides/post-effects.md": {
+      "sha256": "4533e36abd7619480313917b876f6b0a0d89a6dfa3c9189937b68c18b6d0b5f5",
+      "size": 3837
+    },
+    "dcore/knowledge/guides/sources.md": {
+      "sha256": "bdc2a11613b29d8a8eb1960bd4401b138c9cd0c850fa33c26f6848ed197ebc78",
+      "size": 2153
+    },
+    "dcore/knowledge/guides/verification.md": {
+      "sha256": "040de63c1074d26ecfc787acdede5da53181c54a91baa4acf5a899148c24f1d5",
+      "size": 2078
+    },
+    "dcore/knowledge/guides/visual-workbench.md": {
+      "sha256": "df4befe190bbe3618eb9972677c180d4ef35d577017a110b06586387c612bbaf",
+      "size": 7287
     },
     "dcore/knowledge/meta_resolution.py": {
       "sha256": "1b805a7f0b30852608782c61fd5ce6ce6cc00621d1fc7e77828b1fb448e53090",
       "size": 2584
     },
     "dcore/knowledge/retrieval.py": {
-      "sha256": "98442fe11fda5288b7bb6a613a36cc52e19c8b74d07cc0bb45918963b2c0266c",
-      "size": 37199
+      "sha256": "a94a418471e6502cccac6da9e2ccaf3371f41bb7d810aee04513d28201ea9934",
+      "size": 38836
+    },
+    "dcore/knowledge/source_scope.py": {
+      "sha256": "56cc6867a140ca19b445f1d70c80d190036c07669ab65bb0393569437b3a364f",
+      "size": 1634
     },
     "dcore/knowledge/version_registry.py": {
-      "sha256": "bf1569d100f0323077f4335c14d4a7527ccdcbf721ab57dbf40c804288adeb5c",
-      "size": 9731
+      "sha256": "392525d9cead0cda41944c28a3bdd0d89301c2240c378eb2021ff59807a294ce",
+      "size": 10800
     },
     "dcore/lint/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -100,20 +220,28 @@
       "size": 3580
     },
     "dcore/lint/resourcepack.py": {
-      "sha256": "92dd540e2cb550efa018791649182dc43235ea738e10badb345db1793b980dd0",
-      "size": 26899
+      "sha256": "538c95c3cce137dd2030293f2fa2247b3de0980a0bae4fc5b0a6a32073f53ec3",
+      "size": 40956
     },
     "dcore/lint/script.py": {
-      "sha256": "efe07d3db77bad005eac52bda2758f14a68a96574d536d46fa819a902b6fe405",
-      "size": 103510
+      "sha256": "751d5510453203c0b3521183412909295401e90e1fca394a84ac5c58ae2e3a7f",
+      "size": 104713
+    },
+    "dcore/lint/shader_profiles.py": {
+      "sha256": "a484d8120e2d700a2fc53c04460365e2856b35f0f89d28be3d272b64bbb091ab",
+      "size": 556650
     },
     "dcore/lint/syntax.py": {
       "sha256": "b61e4d15f7756edb8997df09783bdf5ecc54e586bc5ce1d7f4ad4d90f2c10434",
       "size": 5986
     },
     "dcore/lint/tagtypes.py": {
-      "sha256": "909a26ef432bc30751630e9a7a6ee4fede90124deb31d2d3d740e8d765fd871b",
-      "size": 14823
+      "sha256": "90a40431853c1d7f288ea9249ef2b52f9720d985b91544b05d4d502af0481210",
+      "size": 15179
+    },
+    "dcore/lint/visual.py": {
+      "sha256": "0d2a11b140d1221aa8a415bbe46b41e3fb97291547986be46550af2fcceee3d3",
+      "size": 3607
     },
     "dcore/pack/__init__.py": {
       "sha256": "29705d7bb59807faf14885ed0ce5108c057e15d927c7f70d182eec635bb18a09",
@@ -128,48 +256,52 @@
       "size": 8276
     },
     "dcore/pack/keys.py": {
-      "sha256": "eb6510f70935de2807cc143a98ef1e07f1b9a8d32ea07a28eea4d9f8fd4f2b44",
-      "size": 2332
+      "sha256": "fea3a62de9ac67a1c020ac37ee4c9aa8e801e8f394f3c0e1617579055c47a938",
+      "size": 2620
     },
     "dcore/pack/release.py": {
-      "sha256": "b525356716dbb45f5ab659a7bbfe96696243f948ad1a4ca198728781b4955e2a",
-      "size": 6841
+      "sha256": "c6d9be6b4c1e79c8b985f62393f77d354ae0747dfda626b57b938827a4af59e9",
+      "size": 7251
     },
     "dcore/pack/semantic.py": {
       "sha256": "7555349d05e01e4978a29d63666d3d69cd6ea546105992f2c71fc3cd4698d884",
       "size": 4640
     },
     "dcore/paths.py": {
-      "sha256": "66a53f5176757924907df6d8826ea1633730ad14fe7b31d3078f259bc4561537",
-      "size": 608
+      "sha256": "7a9e1cdf55a6706aad96f554c85b7ee8527115088749d5ffa5f7012379892dc3",
+      "size": 614
     },
     "dcore/release/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size": 0
     },
     "dcore/release/artifacts.py": {
-      "sha256": "39784e03f1985f746ffcb69e3c92051f9593a4d486903c98dad56a16f37bb45a",
-      "size": 3824
+      "sha256": "8bfa50c53e98c3e0ca09c4adafc52b0b804250f23c39df7884d49ea02da4e6e2",
+      "size": 4228
     },
     "dcore/release/bundle.py": {
-      "sha256": "579d9974ebf8a3308c8c73ecc733fe3f2521a270c9e894f411cf2de668cbb61f",
-      "size": 2542
+      "sha256": "19641c3b73f2f69a54ea26040b07315b145bc966a53cd378afffd1f713fce330",
+      "size": 2563
     },
     "dcore/release/bundle_cli.py": {
-      "sha256": "86fcf32c04431d2d9f9876c823c64f8d026d8be3b65272353d211bda8bfd654a",
-      "size": 2190
+      "sha256": "533fb082bbe6574985f01e7bb716df0839504d5670c11e68a653845228eb8d12",
+      "size": 2221
     },
     "dcore/release/bundle_gpt.py": {
-      "sha256": "58400c4fad83eb72c799b89b9d5dba6e6c0c68f22aa739073ed4045ed445feca",
-      "size": 3066
+      "sha256": "3f17a534c77b88adecd558b1ada550dd27da243d5190cdf8aeb8da78ea86b420",
+      "size": 2786
     },
     "dcore/release/bundle_skill.py": {
-      "sha256": "6835a229ef8db27691992c96f0a11d46c40b5a9bc0cee62eb81006ffeab343df",
-      "size": 3434
+      "sha256": "40dbdd58a85f3fd0173dc7cf378d694623cc7b6aa45d119ff086f1801c9ce9d9",
+      "size": 3545
     },
     "dcore/release/compact.py": {
       "sha256": "09a75f04af0bacbb8c9a0bea4e96d57a068e3b9ae509de914e6684fddd917c97",
       "size": 5881
+    },
+    "dcore/release/import_history.py": {
+      "sha256": "f53d96f9f27010f12e343a2b74550d91cf2748a00ecf0a7af1daa54a3b42d8f2",
+      "size": 3187
     },
     "dcore/release/import_meta.py": {
       "sha256": "34522cc36c57f2bbd4be88379891339543b5591cd32e37ff974339eb3d8031db",
@@ -359,6 +491,26 @@
       "sha256": "2eb5c549aa8cba977f0390865661c1cb0b2829271161b150d2bd862e3e9e4045",
       "size": 1488
     },
+    "dcore/release/migrations/046_practical_082.py": {
+      "sha256": "1334fdb948006c712b5091d4f64e2bf204f6bdc0a5652e23ffca266fe0458c10",
+      "size": 8821
+    },
+    "dcore/release/migrations/047_versioned_examples.py": {
+      "sha256": "a763d363755008ec199bc805dbcc0102e1ea08fca9453e9932dd4136695c637b",
+      "size": 2997
+    },
+    "dcore/release/migrations/048_visual_route_repairs.py": {
+      "sha256": "1feb67d998b84b5d905da17c118dfe50bd139a13daa8815af7bdfb478d8240cc",
+      "size": 6057
+    },
+    "dcore/release/migrations/049_full_visual_version_range.py": {
+      "sha256": "cd9750adf1e02145b060125448a33b48d2ea98a198c68fba54acbe358067414d",
+      "size": 1866
+    },
+    "dcore/release/shader_inventory.py": {
+      "sha256": "4d39cc7ac1911c8aea56d3495830c257a177263537e0f64f06d566e875c69ad9",
+      "size": 4849
+    },
     "dcore/release/update.py": {
       "sha256": "96e0ec9f6e398a2085b023ac9cb0e8f0223630620da7012c3529f3dae165b868",
       "size": 36024
@@ -368,8 +520,8 @@
       "size": 9215
     },
     "dcore/release/verify_skill.py": {
-      "sha256": "6aad9f4e915f8bfd2fd0f0f02d5224be965dabe65f546b3fcb1e8335908b9c95",
-      "size": 2875
+      "sha256": "8f289d68eaa86220877f1f112a1e7ad692f5e37b280b150c22416c07f8f077c5",
+      "size": 2877
     },
     "dcore/semantics/__init__.py": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -388,16 +540,20 @@
       "size": 405
     },
     "dcore/semantics/core/engine.py": {
-      "sha256": "82900cc494e0ed5d6440e1667be9a711d51d231a3354b066aac41d13f6f12b1d",
-      "size": 34641
+      "sha256": "48c9d83ac2fe1869d7bffc863f5b8251ac7b82116e6cabf80fec94b163fa5f9c",
+      "size": 35130
+    },
+    "dcore/semantics/flow.py": {
+      "sha256": "85a9429f838a40efa166cb459e213369528ae6cc2d5bef01b244fde00e7620d9",
+      "size": 5229
     },
     "dcore/semantics/graph.py": {
       "sha256": "d22e9ba4be8cbf50a012dca36d08098f86b8f171c00600421613ed6f221c217d",
       "size": 11392
     },
     "dcore/semantics/ir.py": {
-      "sha256": "cdb3354f5c95e94d64dd6909359be74f90724ce0aa56fcb8e74b4f03e70ae2bc",
-      "size": 16433
+      "sha256": "a09cae7a8e9fce21e2ee22bf58d35504cf375a5bbe08a13691e761894a80d884",
+      "size": 16434
     },
     "dcore/semantics/proof.py": {
       "sha256": "09a417c8717e7c93ebc6510f3d2436992b1190d89e3848f4b7b814ff0e18d776",
@@ -412,83 +568,63 @@
       "size": 14683
     },
     "docs/ARCHITECTURE.md": {
-      "sha256": "a46e3590e419677ba6904ddb5c974357bf38e106c7d1ab1b837513237772784e",
-      "size": 3256
+      "sha256": "88a6c926a7458dd73ff3411c7fade272ae41a8c76fe91fc38523fa6c30cc707d",
+      "size": 3783
     },
     "docs/OPERATIONS.md": {
-      "sha256": "7c6504c3c422566af14bb19bf821a4d40f727b18f8938d860066a864f6584c2d",
-      "size": 1529
+      "sha256": "9c04de50c5d2eacdbe5e835496788c40286d44c5a74c90e665ec30f7b4807c28",
+      "size": 2907
     },
     "gpt/BUILD.md": {
-      "sha256": "7b8fdd75bcd6bc672e9301869cbd016062de6205a882180f6f068f151b56941d",
-      "size": 687
+      "sha256": "e6eea38563e1e1ba3a378aa911a3a926edd7208d27cf6391abc231c473de3c31",
+      "size": 1560
     },
     "gpt/INSTRUCTIONS.txt": {
-      "sha256": "df26eab2a38e75c036515c7ce6b41676a33109a27469c712ebe600611eca485a",
-      "size": 3660
+      "sha256": "88296da36922df26c342d0e1f2db2544c0bfb0c7b23eb0b349346355c60ca2f9",
+      "size": 4689
+    },
+    "gpt/bootstrap.py": {
+      "sha256": "bfe982c3452bfcd98d57f4c3e6dcac9f019270c1f406dfaa9081a7f228d7eed5",
+      "size": 919
     },
     "skill/dcore/SKILL.md": {
-      "sha256": "aa93ff06a7d9713130cd4379858fd6bbf54e2da6c3dd0d6a5738b437f355698c",
-      "size": 3692
+      "sha256": "c0857cf2da5a1e436fc3d10f861194f898a27bda66a1d848258d083c942dc5bc",
+      "size": 4240
     },
     "skill/dcore/adapters/README.md": {
       "sha256": "15ce04fa78b6cbec8e7e8508fbb5788ed1c83e7d15cc81f52b5e7c2a09302cc8",
       "size": 441
     },
     "skill/dcore/adapters/antigravity.md": {
-      "sha256": "ece12b44da34fb663706d7da0882b2bfd9335e31d1f127ab25c8d6cae6c583dc",
-      "size": 206
+      "sha256": "8d3e58b6c657e9dc588578bcb937397d71268ce2b041107bbe0f3a9074a576c5",
+      "size": 266
     },
     "skill/dcore/adapters/claude.md": {
-      "sha256": "4421d612f76fed1bf9777116ba47b9d5ff3669c42dedc174e7683080fe8c2ef0",
-      "size": 245
+      "sha256": "b13f1b93b8b0648e9424d8752b6c1975f10ea5a52226ffc943b621f056766ce2",
+      "size": 305
     },
     "skill/dcore/adapters/codex.md": {
-      "sha256": "5c148bab0a8e8c300d420e51a8ad39c3d032e648224fe49da2db57228a77c983",
-      "size": 326
+      "sha256": "517b04826bd7092494936e1a0fa6a9343e8d14f832aa96fdb85eaf97e6695bcb",
+      "size": 386
     },
     "skill/dcore/adapters/cursor.mdc": {
-      "sha256": "56b8d37188528a58b57302d7ef5a01d4629d589ba2585b17597570776cc53321",
-      "size": 410
+      "sha256": "69b5113b7d7df9e5086974a6077c0a25e05adae80091ed47bf9f6eb67a25ff7d",
+      "size": 470
     },
-    "skill/dcore/references/0.75/core-shader-pipeline.md": {
-      "sha256": "2d85966bf95fa31471bef289e99c73bdb4beade224bce57dc5eb8ef22bc22592",
-      "size": 3367
-    },
-    "skill/dcore/references/0.75/denizen-engineering.md": {
-      "sha256": "4cc0b31ea754f0140c06a086f5542448627d43408540ccbeec5bf502612b5baa",
-      "size": 3605
-    },
-    "skill/dcore/references/0.75/evidence-and-versions.md": {
-      "sha256": "bdb59fe21290d38fb48c155cedcc54a79fba77843c28eefa2ae13e1aa28a4c38",
-      "size": 2465
-    },
-    "skill/dcore/references/0.75/minecraft-1.21.md": {
-      "sha256": "b4e371a27bf2b7a1d49bd748d06b2c4754f5aaa9825e4216aec3b88138781c91",
-      "size": 2235
-    },
-    "skill/dcore/references/0.75/post-effects.md": {
-      "sha256": "c5b076a670f98c50cebb64808f4ed62ec720770a34e4191e84871e5a6ef09224",
-      "size": 3883
-    },
-    "skill/dcore/references/0.75/sources.md": {
-      "sha256": "bdc2a11613b29d8a8eb1960bd4401b138c9cd0c850fa33c26f6848ed197ebc78",
-      "size": 2153
-    },
-    "skill/dcore/references/0.75/verification.md": {
-      "sha256": "040de63c1074d26ecfc787acdede5da53181c54a91baa4acf5a899148c24f1d5",
-      "size": 2078
+    "skill/dcore/scripts/dcore.py": {
+      "sha256": "5247cc2c561ae365bc5f24b168fc643a546bc1ee6612f37d81f21703c5ad4d03",
+      "size": 445
     }
   },
   "counts": {
     "cards": 176,
-    "meta_entries": 6402,
+    "meta_entries": 14196,
     "ide_diagnostics": 54,
     "retrieval_tests": 193,
     "visual_sources": 5,
     "contrast_examples": 39,
     "route_patterns": 10,
-    "version_artifacts": 42,
+    "version_artifacts": 48,
     "compatibility_rules": 2,
     "card_version_scopes": 176,
     "meta_delta_sources": 40,
@@ -511,9 +647,39 @@
       "source_id": "meta_denizen_branch_release"
     },
     {
+      "product": "Denizen",
+      "commit_sha": "7f9353e83a935b1b48808e54f493c4247dd33bbf",
+      "source_id": "denizen_history_7f9353e83a93"
+    },
+    {
+      "product": "Denizen",
+      "commit_sha": "2354775a8cfe687aa612e8216fd564f7e50c48e2",
+      "source_id": "denizen_history_2354775a8cfe"
+    },
+    {
+      "product": "Denizen",
+      "commit_sha": "a063ef49c9261eb30ad3304359fb93c6fdd0cb3e",
+      "source_id": "denizen_history_a063ef49c926"
+    },
+    {
       "product": "Denizen-Core",
       "commit_sha": "273ad9fc7eaf2e4d63de0332adb062449a9252f0",
       "source_id": "denizencore_official_master"
+    },
+    {
+      "product": "Denizen-Core",
+      "commit_sha": "732068a87c80a822f89b78646ef9e46be2e89818",
+      "source_id": "core_history_732068a87c80"
+    },
+    {
+      "product": "Denizen-Core",
+      "commit_sha": "addc82e8f8919a58dab69c39b5d15542bd7681b3",
+      "source_id": "core_history_addc82e8f891"
+    },
+    {
+      "product": "Denizen-Core",
+      "commit_sha": "9e3ea88b6702ff12e590bb2f668b1a7db8b05f3e",
+      "source_id": "core_history_9e3ea88b6702"
     },
     {
       "product": "DenizenM",

@@ -21,7 +21,7 @@ COMMANDS: dict[str, tuple[str, str]] = {
     "verify": ("dcore.release.verify", "Validate the database and write a release manifest"),
     "build-cli": ("dcore.release.bundle_cli", "Build the self-contained local dCore CLI"),
     "build-skill": ("dcore.release.bundle_skill", "Build the portable dCore skill bundle"),
-    "build-gpt": ("dcore.release.bundle_gpt", "Build the private Custom GPT upload bundle"),
+    "build-gpt": ("dcore.release.bundle_gpt", "Build the standalone Custom GPT upload bundle"),
     "verify-skill": ("dcore.release.verify_skill", "Verify the portable skill and proof inventory"),
     "update": ("dcore.release.update", "Refresh knowledge from pinned upstream sources"),
     "compact": ("dcore.release.compact", "Compact Meta overlays and merge search segments"),
@@ -57,6 +57,12 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     module_name, _ = COMMANDS[command]
+    from dcore.config import apply_target
+    try:
+        rest = apply_target(command, rest)
+    except (ValueError, OSError) as exc:
+        print(f"Invalid project configuration: {exc}", file=sys.stderr)
+        return 2
     module = importlib.import_module(module_name)
     sys.argv = [f"dcore {command}", *rest]
     return int(module.main() or 0)

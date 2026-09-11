@@ -209,7 +209,22 @@ def main() -> int:
     parser.add_argument("--db", type=Path, help="Import catalogue into SQLite")
     parser.add_argument("--catalogue", type=Path, help="Import an existing catalogue JSON instead of discovering")
     parser.add_argument("--local-denizenm-history", type=Path, help="Add untagged DenizenM build bumps from a local Git clone")
+    parser.add_argument("--minecraft-profiles", action="store_true", help="List bundled exact-client visual profiles offline; no discovery or imports")
     args = parser.parse_args()
+    if args.minecraft_profiles:
+        if args.db or args.catalogue or args.local_denizenm_history:
+            parser.error("--minecraft-profiles is a read-only listing; do not combine with catalogue import options")
+        from dcore.lint.shader_profiles import PROFILES
+        payload = {"schema": 1, "status": "source_interfaces_indexed", "runtime": "RUNTIME_UNVERIFIED",
+                   "priority_targets": ["1.21.11", "1.21.8"],
+                   "profiles": {v: {k: value for k, value in p.items() if k != "shader_files"} for v, p in sorted(PROFILES.items(), key=lambda item: tuple(int(n) for n in item[0].split('.')))}}
+        output = json.dumps(payload, ensure_ascii=False, indent=2)
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(output + "\n", encoding="utf-8")
+        else:
+            print(output)
+        return 0
     if args.catalogue:
         payload = json.loads(args.catalogue.read_text(encoding="utf-8"))
         artifacts = [VersionArtifact(**item) for item in payload["artifacts"]]

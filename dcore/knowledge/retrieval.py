@@ -27,6 +27,15 @@ def tokens(text: str) -> list[str]:
     return re.findall(r"[\w]+", text.lower(), flags=re.UNICODE)
 
 
+def normalize_query(query: str) -> str:
+    aliases = {'блюр': 'blur', 'блур': 'blur', 'шейдры': 'shader',
+               'ресурспак': 'resource pack', 'ресурс-пак': 'resource pack',
+               'обводка': 'entity outline', 'вайт': 'wait', 'нарейт': 'narrate'}
+    for word, replacement in aliases.items():
+        query = re.sub(r'(?<!\w)' + re.escape(word) + r'(?!\w)', replacement, query, flags=re.I)
+    return query
+
+
 def matches(text: str, pattern: str) -> bool:
     source = tokens(text)
     wanted = re.findall(r"[\w]+\*?", pattern.lower(), flags=re.UNICODE)
@@ -136,6 +145,7 @@ def fts(db: sqlite3.Connection, query: str, domains: list[str]) -> list[sqlite3.
 
 
 def route(db: sqlite3.Connection, query: str, intent: str = "auto") -> tuple[list[str], list[str]]:
+    query = normalize_query(query)
     db.row_factory = sqlite3.Row
     if intent == "auto":
         intent, _ = classify_intent(db, query)
@@ -532,6 +542,18 @@ def card_payload(
     for card_id, scope in scopes.items():
         if card_id in by_id:
             by_id[card_id]["version_scope_structured"] = scope
+    if table_exists(db, "card_code_examples"):
+        for row in db.execute(f"SELECT * FROM card_code_examples WHERE card_id IN ({marks}) ORDER BY example_id", card_ids):
+            example = dict(row)
+            required = json.loads(example.pop("targets_json"))
+            matches_target = all((target or {}).get(key) in values for key, values in required.items())
+            example["targets"] = required
+            example["status"] = "applicable" if matches_target else "target_required" if any(not (target or {}).get(key) for key in required) else "not_applicable"
+            files = json.loads(example.pop("files_json"))
+            # Never offer incompatible code as a copyable answer; retain its
+            # target label so the user can explicitly select another version.
+            example["files"] = files if matches_target else {}
+            by_id[example["card_id"]].setdefault("code_examples", []).append(example)
     return [by_id[card_id] for card_id in card_ids if card_id in by_id]
 
 
@@ -625,7 +647,7 @@ def resolve_meta(
 ) -> dict:
     """Return target-first Meta evidence without treating fallback as native proof."""
     denizenm_version = normalize_product_version("DenizenM", denizenm_version)
-    words = list(dict.fromkeys(tokens(query)))
+    words = list(dict.fromkeys(tokens(normalize_query(query))))
     if not words:
         return {"resolution_order": [], "matches": []}
     products = ["DenizenM", "Denizen-Core", "Denizen"] if profile == "denizenm" else ["Denizen", "Denizen-Core"]
@@ -634,28 +656,11 @@ def resolve_meta(
     addon_sources = {"reflect": "denizen_reflect_public_main", "voxizen": "voxizen_public_main"}
     products.extend(addon_products[name] for name in normalized_addons if name in addon_products)
     expression = " OR ".join(f'"{word}"' for word in words)
-    source_ids = []
-    missing_version_meta = []
-    for product, version, current_source in (
-        ("DenizenM", denizenm_version, "denizenm_public_master"),
-        ("Denizen", denizen_version, "denizen_official_dev"),
-    ):
-        if product not in products:
-            continue
-        if version:
-            rows = db.execute(
-                "SELECT m.source_id FROM version_artifacts v JOIN meta_sources m ON m.artifact_id=v.artifact_id "
-                "WHERE lower(v.product)=lower(?) AND lower(v.version)=lower(?) ORDER BY m.source_id",
-                (product, version),
-            ).fetchall()
-            if rows:
-                source_ids.extend(row[0] for row in rows)
-            else:
-                missing_version_meta.append({"product": product, "version": version})
-        else:
-            source_ids.append(current_source)
-    if "Denizen-Core" in products:
-        source_ids.append("denizencore_official_master")
+    from dcore.knowledge.source_scope import target_sources, source_evidence
+    product = "DenizenM" if profile == "denizenm" else "Denizen"
+    version = denizenm_version if profile == "denizenm" else denizen_version
+    source_ids, missing = target_sources(db, product, version)
+    missing_version_meta = [{"product": product, "version": version, "detail": detail} for detail in missing]
     source_ids.extend(addon_sources[name] for name in normalized_addons if name in addon_sources)
     source_ids = list(dict.fromkeys(source_ids))
     marks = ",".join("?" for _ in products)
@@ -674,7 +679,11 @@ def resolve_meta(
             ORDER BY {ranking},text_score,p.category,p.name LIMIT ?""",
         (expression, *products, *effective_source_ids, max(limit * 12, 120)),
     ).fetchall()
-    rows = [row for row in rows if visible(row, overlay)][:limit]
+    rows = [row for row in rows if visible(row, overlay)]
+    # Exact command names outrank prose mentioning that command. Stable sort
+    # preserves target/provider ordering among equally exact matches.
+    rows.sort(key=lambda row: 0 if row['name'].casefold() in words else 1)
+    rows = rows[:limit]
     entry_ids = [row["entry_id"] for row in rows]
     fields_by_entry: dict[int, list[dict[str, str]]] = {}
     if entry_ids:
@@ -693,6 +702,7 @@ def resolve_meta(
     return {
         "resolution_order": products,
         "source_scope": source_ids,
+        "source_evidence": source_evidence(db, source_ids),
         "missing_version_meta": missing_version_meta,
         "matches": output,
     }
@@ -795,7 +805,8 @@ def target_context(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="dCore intent classifier and dependency-aware card router")
-    parser.add_argument("--db", type=Path, default=Path("dcore/knowledge/data/dcore.sqlite"))
+    from dcore.paths import DATABASE_PATH
+    parser.add_argument("--db", type=Path, default=DATABASE_PATH)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--query")
     mode.add_argument("--meta-query")
@@ -803,7 +814,7 @@ def main() -> int:
     parser.add_argument("--ids-only", action="store_true")
     parser.add_argument("--contrast-limit", type=int, default=2)
     parser.add_argument("--route-limit", type=int, default=4)
-    parser.add_argument("--profile", choices=("denizenm", "official"), default="denizenm")
+    parser.add_argument("--profile", choices=("denizenm", "official", "denizen"), default="denizenm")
     parser.add_argument("--addon", action="append", default=[], help="Addon name or addon@version; repeatable")
     parser.add_argument("--minecraft")
     parser.add_argument("--paper")
@@ -828,17 +839,23 @@ def main() -> int:
                 denizen_version=args.denizen_version, denizenm_version=args.denizenm,
             )
         else:
+            args.query = normalize_query(args.query)
             intent, scores = classify_intent(db, args.query) if args.intent == "auto" else (args.intent, {})
             domains, cards = route(db, args.query, intent)
+            content_cards = [card for card in cards if db.execute(
+                "SELECT kind FROM cards WHERE id=?", (card,)
+            ).fetchone()[0] != "communication"]
             decision_required = intent in DECISION_INTENTS or (
                 "visual" in domains and len(tokens(args.query)) >= 8
             )
             payload = {
                 "intent": intent,
+                "api": resolve_meta(db, args.query, args.profile, tuple(args.addon), 4,
+                                    args.denizen_version, args.denizenm),
                 "intent_scores": scores,
                 "active_domains": domains,
-                "selected_cards": cards if args.ids_only else card_payload(
-                    db, cards, declared_target, tuple(args.addon)
+                "selected_cards": content_cards if args.ids_only else card_payload(
+                    db, content_cards, declared_target, tuple(args.addon)
                 ),
                 "router_trace": router_trace(
                     db, args.query, intent, declared_target, tuple(args.addon)

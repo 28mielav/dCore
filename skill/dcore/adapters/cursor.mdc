@@ -8,4 +8,4 @@ globs:
 alwaysApply: false
 ---
 
-Read `skill/dcore/SKILL.md` and only its task-relevant versioned references. Pin exact targets and keep static evidence distinct from runtime proof.
+Read the installed `dcore/SKILL.md` (resolve its installation directory in this editor) and only its task-relevant versioned references. Pin exact targets and keep static evidence distinct from runtime proof.

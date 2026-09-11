@@ -31,7 +31,7 @@ class ResourcePackLintTests(unittest.TestCase):
         path.write_text(value, encoding="utf-8")
 
     def clean_pack(self, root: Path) -> None:
-        self.write(root, "pack.mcmeta", json.dumps({"pack": {"pack_format": 34, "description": "test"}}))
+        self.write(root, "pack.mcmeta", json.dumps({"pack": {"pack_format": 46, "description": "test"}}))
         self.write(root, "assets/minecraft/shaders/core/demo.json", json.dumps({
             "vertex": "demo", "fragment": "demo", "attributes": ["Position"],
             "samplers": [{"name": "Sampler0"}], "uniforms": [{"name": "ModelViewMat"}],
@@ -47,7 +47,7 @@ class ResourcePackLintTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self.clean_pack(root)
-            report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=34)
+            report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=46)
         self.assertEqual("STATIC_OK", report["static_verdict"])
         self.assertEqual("RUNTIME_UNVERIFIED", report["runtime_verdict"])
         self.assertIn("route-census", {check["id"] for check in report["proof_checklist"]})
@@ -78,7 +78,7 @@ class ResourcePackLintTests(unittest.TestCase):
     def test_legacy_post_custom_program_must_exist(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            self.write(root, "pack.mcmeta", json.dumps({"pack": {"pack_format": 34, "description": "test"}}))
+            self.write(root, "pack.mcmeta", json.dumps({"pack": {"pack_format": 46, "description": "test"}}))
             self.write(root, "assets/test/shaders/post/demo.json", json.dumps({
                 "targets": ["swap"],
                 "passes": [{"name": "test:copy", "intarget": "swap", "outtarget": "main"}],
@@ -134,7 +134,7 @@ class ResourcePackLintTests(unittest.TestCase):
                     "output": "swap",
                 }],
             }))
-            report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=34)
+            report = lint_pack(Pack.open(root), minecraft="1.21.4", pack_format=46)
         self.assertEqual("STATIC_OK", report["static_verdict"])
         self.assertIn("assets/minecraft/post_effect/demo.json", report["route_census"]["modern_post_json"])
         self.assertNotIn("mixed_post_schema_paths", self.codes(report))

@@ -31,7 +31,13 @@ def install_key(path: Path, force: bool = False) -> None:
     if path.exists() and not force:
         raise SystemExit(f"key already exists: {path} (use --force to replace it)")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(secrets.token_bytes(32))
+    flags = os.O_WRONLY | os.O_CREAT | (os.O_TRUNC if force else os.O_EXCL)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path, flags, 0o600)
+    with os.fdopen(descriptor, "wb") as stream:
+        if os.name == "posix":
+            os.fchmod(stream.fileno(), 0o600)
+        stream.write(secrets.token_bytes(32))
     print(f"installed master key: {path}")
     print("save a copy outside the server; losing it makes recovery impossible")
 

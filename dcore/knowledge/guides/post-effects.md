@@ -2,7 +2,7 @@
 
 ## Render graph
 
-A post effect runs after ordinary scene rendering and reads framebuffer attachments. `minecraft:main` denotes the main rendered color target in the modern profile. A pass reads one or more input targets, runs a fullscreen program, and writes an output target. Multi-pass effects alternate main/swap or named targets; the final pass must return the composed result to the target expected by the profile.
+A post effect runs at its selected render boundary and reads framebuffer attachments. Its position relative to HUD/GUI depends on the client and trigger. A pass reads input targets and writes a different output target; the final result must reach the attachment expected by that route. See [the workbench](visual-workbench.md) for complete 1.21.8 examples.
 
 Never read and write one attachment in the same pass without an explicit API guarantee. A typical two-pass structure is:
 

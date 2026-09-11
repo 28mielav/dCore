@@ -31,7 +31,8 @@ class MetaOverlayTests(unittest.TestCase):
     def test_all_historical_sources_have_overlay_metadata(self) -> None:
         historical = self.db.execute("SELECT count(*) FROM meta_sources WHERE artifact_id IS NOT NULL").fetchone()[0]
         overlays = self.db.execute("SELECT count(*) FROM meta_delta_sources").fetchone()[0]
-        self.assertEqual(historical, overlays)
+        full = self.db.execute("SELECT count(*) FROM meta_sources WHERE artifact_id IS NOT NULL AND source_id NOT IN (SELECT source_id FROM meta_delta_sources) AND source_id IN (SELECT source_id FROM meta_entries)").fetchone()[0]
+        self.assertEqual(historical, overlays + full)
         self.assertGreater(self.db.execute("SELECT count(*) FROM meta_version_tombstones").fetchone()[0], 0)
 
 

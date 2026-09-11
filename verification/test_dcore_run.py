@@ -65,7 +65,7 @@ class DcoreRunTests(unittest.TestCase):
             payload = json.loads(process.stdout.decode("utf-8"))
             self.assertEqual("RELEASE_BLOCKED", payload["verdict"])
 
-    def test_runtime_report_unlocks_simple_project(self) -> None:
+    def test_unbound_runtime_report_cannot_unlock_project(self) -> None:
         root = Path(__file__).resolve().parents[1]
         workspace = root / "build" / "verification"
         workspace.mkdir(parents=True, exist_ok=True)
@@ -73,8 +73,8 @@ class DcoreRunTests(unittest.TestCase):
             report = Path(temporary) / "runtime.json"
             report.write_text(json.dumps({"status": "PASS", "cases": {case: "PASS" for case in ("reload", "quit", "death", "repeat_input", "cleanup")}}), encoding="utf-8")
             result = self.run_project("demo:\n  type: task\n  script:\n  - narrate ok\n", runtime_report=report)
-        self.assertEqual("RUNTIME_PASS", result["proof"]["runtime"])
-        self.assertEqual("READY", result["verdict"])
+        self.assertEqual("RUNTIME_INVALID", result["proof"]["runtime"])
+        self.assertEqual("RELEASE_BLOCKED", result["verdict"])
 
     def test_dog_runtime_matrix_is_required(self) -> None:
         result = self.run_project("dog_search:\n  type: task\n  script:\n  - walk <[wolf]> <player.location>\n")

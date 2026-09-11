@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220" viewBox="0 0 900 220" role="img" aria-labelledby="title desc">
+  <title id="title">dCore — DenizenScript development tools</title>
+  <desc id="desc">DenizenScript and DenizenM development tools. One engine for CLI, Skill and Custom GPT.</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#101b2d"/><stop offset="1" stop-color="#172f40"/></linearGradient></defs>
+  <rect width="900" height="220" rx="20" fill="url(#bg)"/>
+  <path d="M665 30 810 110 665 190 520 110Z" fill="none" stroke="#52dbc5" stroke-width="2" opacity=".4"/>
+  <path d="M710 30 855 110 710 190 565 110Z" fill="none" stroke="#89baff" stroke-width="2" opacity=".5"/>
+  <path d="M615 110h180M705 60v100" stroke="#52dbc5" opacity=".4"/>
+  <g font-family="Segoe UI,Arial,sans-serif">
+    <text x="44" y="96" font-size="64" font-weight="700" fill="#f1f6ff">dCore<tspan font-size="20" fill="#74e4d1" dx="18">0.82</tspan></text>
+    <text x="47" y="139" font-size="22" fill="#c9d8eb">Check scripts. Find the right API.</text>
+    <text x="47" y="178" font-size="15" fill="#89baff">DenizenScript · DenizenM · CLI · Skill · GPT</text>
+  </g>
+</svg>

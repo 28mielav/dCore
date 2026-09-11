@@ -9,10 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED = (
-    "skill/dcore/SKILL.md", "skill/dcore/references/0.75/evidence-and-versions.md",
-    "skill/dcore/references/0.75/denizen-engineering.md", "skill/dcore/references/0.75/core-shader-pipeline.md",
-    "skill/dcore/references/0.75/post-effects.md", "skill/dcore/references/0.75/minecraft-1.21.md",
-    "skill/dcore/references/0.75/verification.md", "skill/dcore/references/0.75/sources.md",
+    "skill/dcore/SKILL.md", "dcore/knowledge/guides/evidence-and-versions.md",
+    "dcore/knowledge/guides/denizen-engineering.md", "dcore/knowledge/guides/core-shader-pipeline.md",
+    "dcore/knowledge/guides/post-effects.md", "dcore/knowledge/guides/minecraft-1.21.md",
+    "dcore/knowledge/guides/verification.md", "dcore/knowledge/guides/sources.md",
     "skill/dcore/adapters/codex.md", "skill/dcore/adapters/claude.md",
     "skill/dcore/adapters/antigravity.md", "skill/dcore/adapters/cursor.mdc",
 )
@@ -32,8 +32,8 @@ def verify(root: Path) -> dict[str, object]:
     text = skill.read_text(encoding="utf-8") if skill.is_file() else ""
     if not re.match(r"^---\s+name:\s*dcore\s+description:\s*.+?\s+---", text, re.S):
         failures.append("invalid:skill-frontmatter")
-    for link in re.findall(r"\]\((references/[^)]+)\)", text):
-        if not (skill.parent / link).is_file():
+    for link in re.findall(r"\]\((runtime/dcore/knowledge/guides/[^)]+)\)", text):
+        if not (root / link.removeprefix("runtime/")).is_file():
             failures.append(f"broken-skill-link:{link}")
     for name in ADAPTERS:
         path = root / name

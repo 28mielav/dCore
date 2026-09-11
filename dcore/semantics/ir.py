@@ -345,7 +345,7 @@ def parse_denizen_ir(text: str, path: str = "") -> DenizenFileIR:
         if event_match and section and section.container_type == "world":
             source_end = line_start + len(body)
             event_headers.append(EventNode(event_match.group(1).strip(), number, _span(text, starts, line_start, source_end), ()))
-        command_match = COMMAND_LINE.match(raw)
+        command_match = COMMAND_LINE.match(body)
         if not command_match or not section or section.container_type is None:
             continue
         path_names = {item.casefold() for item in paths[number - 1]}

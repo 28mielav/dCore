@@ -13,7 +13,7 @@ import io
 import json
 import secrets
 import zipfile
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Iterable
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -134,8 +134,15 @@ def restore_release(release_path: Path, output: Path, master: bytes) -> None:
     source_archive, _, _ = decrypt_release(release_path, master)
     output.mkdir(parents=True, exist_ok=True)
     try:
+        destinations = []
         for name in source_archive.namelist():
-            destination = output / name
+            destination = (output / name).resolve()
+            if (PureWindowsPath(name).drive or "\\" in name
+                    or destination == output.resolve()
+                    or not destination.is_relative_to(output.resolve())):
+                raise ValueError(f"unsafe restored path: {name}")
+            destinations.append((name, destination))
+        for name, destination in destinations:
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(source_archive.read(name))
     finally:

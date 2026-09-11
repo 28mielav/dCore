@@ -440,7 +440,7 @@ session_cleanup:
         self.assertIn("ambiguous_object_type", {item["code"] for item in lint_text(generic)})
         self.assertNotIn("ambiguous_object_type", {item["code"] for item in lint_text(casted)})
 
-    def test_flow_and_bounded_loop_are_not_false_errors(self) -> None:
+    def test_yielding_loop_with_unknown_lifetime_remains_advisory(self) -> None:
         text = """example:
   type: task
   script:
@@ -455,7 +455,7 @@ session_cleanup:
         codes = {item["code"] for item in lint_text(text, self.meta)}
         self.assertNotIn("unknown_command", codes)
         self.assertNotIn("busy_while_true", codes)
-        self.assertNotIn("unproven_loop_bound", codes)
+        self.assertIn("unproven_loop_bound", codes)
 
     def test_maintainability_budget_flags_oversized_event(self) -> None:
         commands = "\n".join("    - narrate x" for _ in range(61))

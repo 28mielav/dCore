@@ -191,7 +191,10 @@ class ScriptQueue:
         self.tags = TagManager(self.definitions, self.context, self.diagnostics)
 
     def run(self, entries: Iterable[ScriptEntry]) -> SemanticResult:
-        self._run_block(list(entries))
+        try:
+            self._run_block(list(entries))
+        except LoopControl:
+            self.diagnostics.append(SemanticDiagnostic("loop_control_outside_loop", "error", 0, "Loop control has no enclosing modeled loop.", "Place loop control inside its matching loop."))
         return SemanticResult(self.diagnostics, self.trace, dict(self.definitions), self.platform_commands, self.stopped, self.determinations, self.waits)
 
     def _step(self, entry: ScriptEntry) -> bool:
@@ -564,12 +567,18 @@ class ScriptQueue:
             self.definitions[name] = original
 
     def _while(self, entry: ScriptEntry) -> None:
+        if entry.arguments.casefold() in {"stop", "next"}:
+            raise LoopControl(entry.arguments.casefold())
         original = self.definitions.get("loop_index")
         loop = 0
         while not self.stopped and self._condition(entry.arguments, entry.line):
             loop += 1
             self.definitions["loop_index"] = str(loop)
-            self._run_block(entry.children)
+            try:
+                self._run_block(entry.children)
+            except LoopControl as control:
+                if control.action == "stop":
+                    break
             if loop >= self.max_steps:
                 self.diagnostics.append(SemanticDiagnostic(
                     "while_semantic_limit", "error", entry.line,

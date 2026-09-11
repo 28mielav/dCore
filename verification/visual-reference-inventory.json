@@ -1,0 +1,262 @@
+{
+  "review_date": "2026-09-09",
+  "sources": [
+    {
+      "source": "common-shaders",
+      "files": 132,
+      "licenses": [],
+      "packs": [
+        {
+          "path": "examples/pack.mcmeta",
+          "pack": {
+            "description": "Contains examples for demonstration and testing.",
+            "pack_format": 9
+          }
+        },
+        {
+          "path": "resourcepack/pack.mcmeta",
+          "pack": {
+            "description": "Adds various shader effects",
+            "pack_format": 9
+          }
+        }
+      ],
+      "inventory_sha256": "802b6cf47259744314d28f01d497172a718fbee998d1aed795184cc6e5a4c3e0"
+    },
+    {
+      "source": "mc-Charcoal",
+      "files": 41,
+      "licenses": [
+        {
+          "path": "LICENSE",
+          "sha256": "db6b5c00133757741a1af7d06149b8480f9a594accadcbf34af2af5e0504edcb"
+        }
+      ],
+      "packs": [
+        {
+          "path": "pack.mcmeta",
+          "pack": {
+            "pack_format": 31,
+            "description": "Custom Particles by PuckiSilver\nentity_effect .XY .36 .15 0.98"
+          }
+        }
+      ],
+      "inventory_sha256": "85e3a36afbc803c942decb29ba7a649ce28431c7a7a4875240ddb29a5a4c2f5a"
+    },
+    {
+      "source": "ShaderSelectorV2",
+      "files": 162,
+      "licenses": [
+        {
+          "path": "LICENSE",
+          "sha256": "f4e7f373b9b996950337e8d41a4a2939c2d90b7725e9baf3d5084a22717ad328"
+        }
+      ],
+      "packs": [
+        {
+          "path": "ShaderSelector (Core)/pack.mcmeta",
+          "pack": {
+            "description": "Lets you toggle shaders by DerDiscoHund & Cloud Wolf",
+            "pack_format": 18
+          }
+        },
+        {
+          "path": "Examples/Flashlight/Shader Selector (EXP) (Flashlight)/pack.mcmeta",
+          "pack": {
+            "description": "Adds various shader effects",
+            "pack_format": 8
+          }
+        },
+        {
+          "path": "Examples/Flashlight/Shader Selector (Flashlight Datapack)/pack.mcmeta",
+          "pack": {
+            "pack_format": 8,
+            "description": "Test"
+          }
+        },
+        {
+          "path": "Examples/Phosphor/Shader.Selector.Phosphor/pack.mcmeta",
+          "pack": {
+            "description": "Lets you toggle shaders by DerDiscoHund & Cloud Wolf",
+            "pack_format": 18
+          }
+        },
+        {
+          "path": "Examples/Screen Shake/Screen Shake (Datapack)/pack.mcmeta",
+          "pack": {
+            "pack_format": 8,
+            "description": "Test"
+          }
+        },
+        {
+          "path": "Examples/Screen Shake/Shader Selector (Advanced Screen Shake)/pack.mcmeta",
+          "pack": {
+            "description": "Lets you toggle shaders by DerDiscoHund & Cloud Wolf",
+            "pack_format": 18
+          }
+        },
+        {
+          "path": "Examples/Screen Shake/Shader Selector (Screen Shake)/pack.mcmeta",
+          "pack": {
+            "description": "Lets you toggle shaders by DerDiscoHund & Cloud Wolf",
+            "pack_format": 18
+          }
+        }
+      ],
+      "inventory_sha256": "d3bfaf53ce53dc353035eeecf7774eb84f1fb7f00e0729e671cf57d8a2928f23"
+    },
+    {
+      "source": "vanilla-shaders",
+      "files": 2504,
+      "licenses": [
+        {
+          "path": "LICENSE",
+          "sha256": "7c57163b10d5717844a1846b14aa98b96a33f4f1f420d667b2946b56330311a2"
+        }
+      ],
+      "packs": [
+        {
+          "path": "animated_unicodes/pack.mcmeta",
+          "pack": {
+            "pack_format": 46,
+            "description": "Animated Unicodes by JNNGL"
+          }
+        },
+        {
+          "path": "bloom/pack.mcmeta",
+          "pack": {
+            "pack_format": 46,
+            "description": "Bloom shader by JNNGL"
+          }
+        },
+        {
+          "path": "colored_lights/pack.mcmeta",
+          "pack": {
+            "pack_format": 42,
+            "description": "Colored Lights by JNNGL"
+          }
+        },
+        {
+          "path": "custom_blur/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Custom Blur by JNNGL"
+          }
+        },
+        {
+          "path": "dynamic_fov/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Dynamic FOV by JNNGL"
+          }
+        },
+        {
+          "path": "fancy_player_models/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Fancy Player Models by JNNGL"
+          }
+        },
+        {
+          "path": "first_person_hand_models/pack.mcmeta",
+          "pack": {
+            "pack_format": 46,
+            "description": "First Person Hand Models"
+          }
+        },
+        {
+          "path": "fixed_fov/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Fixed FOV by JNNGL"
+          }
+        },
+        {
+          "path": "gui_avatars/pack.mcmeta",
+          "pack": {
+            "pack_format": 46,
+            "description": "GUI Avatars by JNNGL"
+          }
+        },
+        {
+          "path": "gui_player_models_base/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "GUI Player Models by JNNGL"
+          }
+        },
+        {
+          "path": "lightmap_uniforms/pack.mcmeta",
+          "pack": {
+            "pack_format": 45,
+            "description": ""
+          }
+        },
+        {
+          "path": "minimap/pack.mcmeta",
+          "pack": {
+            "pack_format": 22,
+            "description": "Minimap by JNNGL"
+          }
+        },
+        {
+          "path": "motion_blur/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Motion Blur by JNNGL"
+          }
+        },
+        {
+          "path": "rgb_maps/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "RGB Maps by JNNGL"
+          }
+        },
+        {
+          "path": "simple_ao/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "Simple AO by JNNGL"
+          }
+        },
+        {
+          "path": "slightly_controllable_camera/pack.mcmeta",
+          "pack": {
+            "pack_format": 22,
+            "description": "SCC by JNNGL"
+          }
+        }
+      ],
+      "inventory_sha256": "2a807b13f187859cd7bd8e421960244f43bdc786fb41b74dab0f3321acb6f009"
+    },
+    {
+      "source": "VariablesViewer",
+      "files": 81,
+      "licenses": [
+        {
+          "path": "LICENSE",
+          "sha256": "4b26ef73c30001e3f73bfc854f610337260c7335f778fb8862dc6f07005b592f"
+        }
+      ],
+      "packs": [
+        {
+          "path": "VariablesViewerRP/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "by midorikuma"
+          }
+        },
+        {
+          "path": "VertexViewerRP/pack.mcmeta",
+          "pack": {
+            "pack_format": 34,
+            "description": "by midorikuma"
+          }
+        }
+      ],
+      "inventory_sha256": "3605c5347a88ec8b2a0e9bd40d967adce66bd853b7c3efb6039b9082bf8351fa"
+    }
+  ],
+  "scope": "Inventory and selected mechanism inspection, not compatibility or complete upstream license-lineage proof"
+}

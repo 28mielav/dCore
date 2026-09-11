@@ -35,7 +35,8 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, 
 import sys
 sys.path.insert(0, str(Path(__file__).with_name('runtime')))
 from dcore.cli import main
-raise SystemExit(main())
+if __name__ == '__main__':
+    raise SystemExit(main())
 """, encoding="utf-8")
     (output / "README.txt").write_text(
         """Run: python dcore.py <command>

@@ -15,7 +15,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 requires-python = ">=3.12"
-dependencies = ["cryptography>=42"]
+dependencies = []
 
 [project.optional-dependencies]
 obfuscation = ["cryptography>=42"]
@@ -32,6 +32,7 @@ include = ["dcore*"]
 
 [tool.setuptools.package-data]
 "dcore.semantics.core" = ["NOTICE.md", "LICENSE.md"]
+"dcore" = ["knowledge/data/*.sqlite", "knowledge/data/*.json", "knowledge/data/*.md", "knowledge/guides/*.md", "examples/visual/*", "examples/visual/*/*", "examples/visual/*/assets/*/post_effect/*.json", "examples/visual/*/assets/*/shaders/post/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["verification"]

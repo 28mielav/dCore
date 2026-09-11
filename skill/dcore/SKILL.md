@@ -1,42 +1,38 @@
 ---
 name: dcore
-description: Evidence-first DenizenScript and DenizenM engineering across exact targets; use for design, implementation, lint, compatibility, and runtime proof planning. Load the optional visual route only for resource-pack or shader work.
+description: Implement, teach, or review DenizenScript and DenizenM projects; analyze resource packs, core shaders and post effects against exact client versions.
 ---
 
 # dCore
 
-Engineer DenizenScript and DenizenM systems from evidence rather than plausible syntax. Resource packs and shaders are an optional route, not the default identity of this skill. Preserve the user's architecture unless the target makes it impossible.
+Use the installed Skill directory as the anchor. Run `python <skill-directory>/scripts/dcore.py <command>` from any working directory. Its `runtime/` contains the shared engine, database, guides and examples. Python 3.12+ is required. Basic analysis uses the standard library; encrypted packing additionally needs cryptography.
 
-## Start with the target and claim
+## Match the requested work
 
-Record Minecraft client, server/Paper, Java, Denizen, DenizenM, addons, resource-pack format, graphics backend/mode, and the artifact actually inspected. Mark unknown fields explicitly. Do not borrow current Meta or shader behavior for another build.
+dCore is multiversion: the intended range is Minecraft 1.16.5 through the latest Minecraft version supported by Denizen. 1.21.8 and 1.21.11 are priority targets, not an allowlist or upper bound. Select evidence for the actual target; gaps in indexed schemas remain explicit.
 
-Classify each conclusion as `SOURCE_EVIDENCE`, `STATIC_OK`, `COMPILE_OK`, `CLIENT_LOG_OK`, `RUNTIME_OK`, or `RUNTIME_UNVERIFIED`. A clean linter is never runtime proof. A server command succeeding does not prove that a client resource exists or rendered.
+- Implementation: deliver the requested complete patch or files, including the setup needed to use them. A small fix needs a short explanation and focused checks.
+- Teaching: explain one mechanism with a runnable example, give a manageable next step, and check understanding before adding complexity.
+- Review: report concrete findings with locations, consequences and repairs. Distinguish proven errors from suspicions and unknown APIs.
 
-## Route the work
+Inspect supplied files and determine versions relevant to the task. Use `retrieve --query "..."` for recipes and `retrieve --meta-query "..."` for exact API; pass `--denizenm BUILD` or `--profile official --denizen-version BUILD` where known. A project `dcore.toml` can retain the target. Missing versions limit version-sensitive claims, not unrelated progress.
 
-- Denizen syntax, tags, mechanisms, events, queues, flags, addons, reloads, or lifecycles: read [Denizen engineering](references/0.75/denizen-engineering.md).
-- Version or evidence questions: read [Evidence and versions](references/0.75/evidence-and-versions.md).
-- Core shaders, stages, inputs, uniforms, blend/depth/cull, NDC, framebuffers, post effects, or pack composition: read [Core shader pipeline](references/0.75/core-shader-pipeline.md), [Post-effect engineering](references/0.75/post-effects.md), and [1.21.x compatibility](references/0.75/minecraft-1.21.md).
-- Minecraft 1.21.x visual work: read [1.21.x compatibility](references/0.75/minecraft-1.21.md). Do not describe overlays or entity-outline routing as native arbitrary post-effect activation.
-- Verification or build work: read [Verification](references/0.75/verification.md).
-- Source attribution or a changing shader claim: read [Sources](references/0.75/sources.md) and verify the pinned primary source.
+Run `lint <project>` or `lint-pack <pack> --minecraft VERSION --pack-format FORMAT --graphics-mode MODE`. Use `--json` for automation. Read the diagnostic reason and evidence; do not rewrite working code merely to silence an advisory.
 
-## Engineering loop
+Prefer a verified native DenizenM capability when it meets the task. For a complex mechanism compare feasible routes briefly, then implement the selected route with ownership, interruption and cleanup. Loops need bounded work and a credible lifetime; `while true` and if/else are not bugs by themselves. Replacing a loop with infinitely rescheduled queues is not a universal fix.
 
-1. Retrieve target-scoped evidence with `dcore retrieve` before inventing API.
-2. Compare routes when ownership, lifecycle, or client capability differs materially.
-3. Define state owner and complete lifecycle: start, update, stop, interruption, death, quit, reconnect, reload, and cleanup.
-4. Implement the smallest proof. For shaders, prove a constant fullscreen tint before animation, levels, distortion, blur, or server bridges.
-5. Run deterministic static checks. Use `dcore lint` for `.dsc` and `dcore validate-shader` for packs.
-6. Record compile/client log and manual gameplay results separately, including failures and unrun matrix cells.
-7. Build with the relevant `dcore build-*` command only after the static gate passes. Runtime status remains separate from build integrity.
+Use natural speech and meaningful container names. Do not insert dcore into user flags, permissions or scripts. Do not infer AI authorship from code style. Preserve public names unless the requested change needs a migration.
 
-## Non-negotiable boundaries
+## Read only relevant shared material
 
-- Treat every shader profile as target-pinned. Pin client version and pack format; shader syntax and render behavior change between versions.
-- Resource packs contain client resources. The server cannot infer that a named post effect exists or rendered on a client.
-- `entity_outline` is a useful mask target when the render graph supplies it. It is not a magic per-player fullscreen trigger.
-- Resource-pack-only code cannot read arbitrary server state. Choose an explicit bridge and a neutral missing-state decode.
-- Every shader example must state target, pack format, all file paths, activation command, expected result, actual evidence, and limitations.
-- Never fabricate `RUNTIME_OK`. If a client log and manual run are absent, finish at `RUNTIME_UNVERIFIED` with the exact next test.
+- [Denizen engineering](runtime/dcore/knowledge/guides/denizen-engineering.md): queues, scope and API boundaries.
+- [Visual workbench](runtime/dcore/knowledge/guides/visual-workbench.md): complete teaching packs, activation, buffers, cost and verification.
+- [Core shader pipeline](runtime/dcore/knowledge/guides/core-shader-pipeline.md) and [post effects](runtime/dcore/knowledge/guides/post-effects.md): interfaces and version boundaries.
+- [1.21 compatibility](runtime/dcore/knowledge/guides/minecraft-1.21.md): distinguish outline, menu and arbitrary post-effect routes.
+- [Evidence and versions](runtime/dcore/knowledge/guides/evidence-and-versions.md), [verification](runtime/dcore/knowledge/guides/verification.md), [sources](runtime/dcore/knowledge/guides/sources.md).
+
+For visuals, pin client, pack format, renderer and graphics mode. First validate a small visible effect on the actual route; then add controls or blur. World, HUD and GUI are different draw boundaries. A route's limitation does not apply to every implementation. No subsystem called Vision is defined here: resolve that ambiguous name from the user's files or description.
+
+For visual work, primary tested schema targets are 1.21.11 and 1.21.8; select the user's actual version and retain historical support. Read the compatibility guide before diagnosing attachment. Mount, a visible diagnostic band and clean reload logs prove different things; none alone proves a working fullscreen effect.
+
+Report what was actually run. Static checks do not execute Paper or a GPU. A supplied runtime report remains user-reported even when its project hash and versions match. Give exact next client/server checks for remaining gaps without claiming they passed.

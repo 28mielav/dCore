@@ -29,9 +29,9 @@ class PortableSkillTests(unittest.TestCase):
             with zipfile.ZipFile(first) as bundle:
                 names = bundle.namelist()
             self.assertIn("dcore/SKILL.md", names)
-            self.assertTrue(any(name.startswith("dcore/references/0.75/") for name in names))
-            self.assertIn("runtime/dcore/cli.py", names)
-            self.assertIn("runtime/dcore/knowledge/data/dcore.sqlite", names)
+            self.assertTrue(any(name.startswith("dcore/runtime/dcore/knowledge/guides/") for name in names))
+            self.assertIn("dcore/runtime/dcore/cli.py", names)
+            self.assertIn("dcore/runtime/dcore/knowledge/data/dcore.sqlite", names)
         finally:
             first.unlink(missing_ok=True)
             second.unlink(missing_ok=True)

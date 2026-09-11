@@ -11,5 +11,5 @@ You may accurately describe a fork as based on dCore. Do not use the dCore name
 or logo in a way that suggests endorsement, official status, or compatibility
 that has not been verified by this project.
 
-Private Custom GPT configuration, private instructions, evaluation prompts,
-icons, and uploaded private GPT builds are not distributed in this repository.
+The public GPT instructions and bootstrap in this repository use the same MIT
+License. A separately supplied private file retains its own stated terms.

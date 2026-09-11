@@ -293,20 +293,24 @@ def build_index(db_path: Path | None, source_ids: set[str] | None = None) -> Tag
         return index
     with sqlite3.connect(db_path) as db:
         db.row_factory = sqlite3.Row
+        from dcore.knowledge.meta_resolution import overlay_state, visible
+        overlay = overlay_state(db, source_ids or ())
         scope = ""
         parameters: tuple[str, ...] = ()
-        if source_ids:
+        if source_ids is not None:
             marks = ",".join("?" for _ in source_ids)
             scope = f" AND e.source_id IN ({marks})"
             parameters = tuple(sorted(source_ids))
 
         for row in db.execute(
-            "SELECT a.value AS attribute, r.value AS returns, e.deprecated AS deprecated FROM meta_entries e"
+            "SELECT e.source_id,e.category,e.name,e.object_type,a.value AS attribute, r.value AS returns, e.deprecated AS deprecated FROM meta_entries e"
             " JOIN meta_fields a ON a.entry_id=e.entry_id AND a.field_name='attribute'"
             " JOIN meta_fields r ON r.entry_id=e.entry_id AND r.field_name='returns'"
             f" WHERE e.category='tag'{scope}",
             parameters,
         ):
+            if not visible(row, overlay):
+                continue
             match = ATTRIBUTE_PATTERN.match(str(row["attribute"] or ""))
             if not match:
                 continue
@@ -319,10 +323,12 @@ def build_index(db_path: Path | None, source_ids: set[str] | None = None) -> Tag
                 index.deprecations.setdefault((owner, attribute), notice)
 
         for row in db.execute(
-            "SELECT e.name AS name, e.entry_id AS entry_id FROM meta_entries e"
+            "SELECT e.source_id,e.category,e.object_type,e.name AS name, e.entry_id AS entry_id FROM meta_entries e"
             f" WHERE e.category='objecttype'{scope}",
             parameters,
         ):
+            if not visible(row, overlay):
+                continue
             name = str(row["name"] or "")
             if not name:
                 continue

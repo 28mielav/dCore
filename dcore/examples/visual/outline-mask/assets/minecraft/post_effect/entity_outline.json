@@ -1,0 +1,31 @@
+{
+  "targets": {
+    "swap": {}
+  },
+  "passes": [
+    {
+      "vertex_shader": "lesson:post/quad",
+      "fragment_shader": "lesson:post/mask",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "minecraft:entity_outline",
+          "bilinear": true
+        }
+      ],
+      "output": "swap"
+    },
+    {
+      "vertex_shader": "lesson:post/quad",
+      "fragment_shader": "lesson:post/copy",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "swap",
+          "bilinear": true
+        }
+      ],
+      "output": "minecraft:entity_outline"
+    }
+  ]
+}

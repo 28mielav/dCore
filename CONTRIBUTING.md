@@ -2,7 +2,7 @@
 
 ## Before opening a change
 
-1. Keep `skill/dcore/SKILL.md` canonical and adapters thin.
+1. Keep analysis and knowledge in `dcore/`; keep Skill, GPT and editor adapters thin.
 2. Pin target claims to exact Minecraft, resource-pack, Denizen, DenizenM, and addon versions.
 3. Preserve the proof boundary: static output, compile/client logs, and gameplay observations are separate.
 4. Add a focused regression test for behavior changes.

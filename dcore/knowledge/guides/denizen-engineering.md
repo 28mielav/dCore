@@ -41,7 +41,7 @@ For every long-lived feature, define:
 | reload | cancel old queues/tasks, re-register once, reconcile persisted sessions |
 | failure | run idempotent cleanup; leave neutral client behavior |
 
-A loop must have a bounded condition, wait, owner, and cleanup. A flag that outlives its queue needs an expiry or explicit delete path.
+Repeated work needs a credible lifetime and cost bound. A finite non-yielding loop can be valid; long-lived work needs an appropriate yielding model, owner and cleanup. A flag that outlives its queue needs an expiry or explicit delete path.
 
 ## DenizenM-to-client bridge
 

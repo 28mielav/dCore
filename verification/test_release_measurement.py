@@ -41,6 +41,14 @@ class ArtifactMeasurementTests(unittest.TestCase):
             path.write_bytes(payload)
             self.assertEqual(artifact_bytes(path), payload)
 
+    def test_license_and_pack_metadata_are_platform_independent(self) -> None:
+        with TemporaryDirectory() as temporary:
+            for name in ("LICENSE", "pack.mcmeta"):
+                with self.subTest(name=name):
+                    path = Path(temporary) / name
+                    path.write_bytes(b"line one\r\nline two\r\n")
+                    self.assertEqual(artifact_bytes(path), b"line one\nline two\n")
+
     def test_every_shipped_text_kind_is_normalised(self) -> None:
         from dcore.release.artifacts import KNOWLEDGE_DATA, PROJECT_DATA
 

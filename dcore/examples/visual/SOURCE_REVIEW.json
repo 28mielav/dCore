@@ -1,0 +1,38 @@
+{
+  "client": "1.21.8",
+  "pack_format": 64,
+  "review_date": "2026-09-09",
+  "downloads": {
+    "client": {
+      "sha1": "a19d9badbea944a4369fd0059e53bf7286597576",
+      "size": 29525242,
+      "url": "https://piston-data.mojang.com/v1/objects/a19d9badbea944a4369fd0059e53bf7286597576/client.jar"
+    },
+    "client_mappings": {
+      "sha1": "bdeb624c3aefba11d9d40f34bc96176350b549b6",
+      "size": 10989738,
+      "url": "https://piston-data.mojang.com/v1/objects/bdeb624c3aefba11d9d40f34bc96176350b549b6/client.txt"
+    },
+    "server": {
+      "sha1": "6bce4ef400e4efaa63a13d5e6f6b500be969ef81",
+      "size": 57555044,
+      "url": "https://piston-data.mojang.com/v1/objects/6bce4ef400e4efaa63a13d5e6f6b500be969ef81/server.jar"
+    },
+    "server_mappings": {
+      "sha1": "eb1e1eb47cb740012fc82eacc394859463684132",
+      "size": 8186232,
+      "url": "https://piston-data.mojang.com/v1/objects/eb1e1eb47cb740012fc82eacc394859463684132/server.txt"
+    }
+  },
+  "method": "Official archive SHA-1 verification, mapped javap inspection and resource interface inspection; no game execution",
+  "evidence": [
+    "LevelTargetBundle.OUTLINE_TARGETS includes main and entity_outline",
+    "Minecraft.shouldEntityAppearGlowing: glowing OR spectator player outline shortcut",
+    "LevelRenderer.shouldShowEntityOutlines: non-panorama, outline target, player exists",
+    "LevelRenderer.renderEntities sends selected entities through OutlineBufferSource",
+    "LevelRenderer.doEntityOutline composites entityOutlineTarget",
+    "GameRenderer.processBlurEffect uses the blur post chain"
+  ],
+  "runtime": "NOT_RUN",
+  "gpu_compile": "NOT_RUN"
+}

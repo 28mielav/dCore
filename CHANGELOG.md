@@ -2,6 +2,22 @@
 
 All notable changes to dCore are documented here.
 
+## 0.82
+
+- Publish standalone CLI, Skill and GPT release archives with SHA-256 checksums. Simplify installation documentation and repair CI test dependencies.
+- Validate archive restore destinations before writing files, restrict POSIX master-key permissions and omit Python caches from Skill bundles.
+
+- Index all 34 stable Minecraft shader interfaces from 1.16.5 through 26.2. Resolve pack overlays by target before lint, detect removed built-in paths and pre-1.19.4 display entity usage, and expose offline version coverage.
+
+- Repair visual carrier advice and add focused diagnostics for server-tick camera following and mount/projection ambiguity. Check 1.21.11 post interfaces, official stage availability and actual pack.mcmeta ranges alongside 1.21.8. No new shader packs are added by these repairs.
+
+- Follow cancellation paths and loop backedges using the shared IR; comments and unrelated flag reads no longer prove identity or lifetime.
+- Keep historical Meta sources isolated from current Core, add three Denizen source profiles with date-associated Core evidence, and return version-selected code directly in cards.
+- Check legacy 1.16.5 and modern shader interfaces; ship three original 1.21.8 lesson packs with explicit runtime limits.
+- Load project targets from dcore.toml, bind supplied runtime reports to input hashes and provenance, and preserve user-reported proof status.
+- Package the same runtime, database, guides and examples inside independent CLI, Skill and GPT deliveries. Add execution parity tests outside the checkout.
+- Refresh README, installation instructions, practical guidance and licensing boundaries. Full frontend consolidation and GPU/server validation remain unfinished; see the 0.82 audit.
+
 ## 0.76
 
 ### Added

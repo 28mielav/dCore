@@ -1,4 +1,4 @@
-"""Build a private Custom GPT upload bundle without Actions or hosted services."""
+"""Build a Custom GPT upload bundle without Actions or hosted services."""
 
 from __future__ import annotations
 
@@ -15,17 +15,7 @@ from dcore.release.artifacts import release_sources
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ARCHIVE = "dcore_runtime.zip"
 
-BOOTSTRAP = """# dCore Code Interpreter bootstrap
-import sys
-from pathlib import Path
 
-ROOT = Path('/mnt/data')
-sys.path.insert(0, str(ROOT / 'dcore_runtime.zip'))
-from dcore.cli import main as dcore_main
-
-# Supply '--db', str(ROOT / 'dcore.sqlite') to commands that accept a database path.
-# Example: dcore_main(['retrieve', '--db', str(ROOT / 'dcore.sqlite'), '--help'])
-"""
 
 
 def write_runtime(root: Path, destination: Path) -> None:
@@ -49,13 +39,15 @@ def build(root: Path, output: Path, knowledge: Path | None = None) -> dict[str, 
                  "dcore/knowledge/data/AGENT_INSTRUCTIONS.md"):
         shutil.copy2(root / name if name != DATABASE else knowledge / "dcore.sqlite", upload / Path(name).name)
     shutil.copy2(root / "gpt/INSTRUCTIONS.txt", output / "INSTRUCTIONS.txt")
-    (upload / "dcore_bootstrap.py").write_text(BOOTSTRAP, encoding="utf-8")
+    shutil.copy2(root / "gpt/bootstrap.py", upload / "dcore_bootstrap.py")
     (output / "START_HERE.txt").write_text(
         """dCore Custom GPT build
 
-Keep this directory private. In the GPT editor enable Code Interpreter & Data Analysis,
+In the GPT editor enable Code Interpreter & Data Analysis,
 upload every file from Knowledge, paste INSTRUCTIONS.txt into the GPT instruction field,
-and enable Code Interpreter & Data Analysis. dCore analyses uploaded files with the same Python core used by the CLI.
+dCore analyses uploaded files with the same Python core used by the CLI.
+If Knowledge files are unavailable to Python, attach dcore_runtime.zip, dcore.sqlite
+and dcore_bootstrap.py directly in the conversation. Never report a run without executing it.
 It has no Action, hosted bridge, API key, or network dependency.
 """, encoding="utf-8")
     return {"name": "dcore-gpt", "output": str(output), "files": len(list(upload.iterdir()))}

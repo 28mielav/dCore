@@ -36,6 +36,7 @@ PROJECT_DATA = (
     "docs/OPERATIONS.md",
     "gpt/INSTRUCTIONS.txt",
     "gpt/BUILD.md",
+    "gpt/bootstrap.py",
 )
 
 DATABASE = "dcore/knowledge/data/dcore.sqlite"
@@ -51,7 +52,7 @@ MANIFEST = "dcore/knowledge/data/manifest.json"
 #: Measurement lives here because both halves of the release need the identical
 #: answer: the verifier writes these hashes into the manifest and the bundlers
 #: check artifacts against it. When the two disagreed, every bundle build failed.
-TEXT_SUFFIXES = frozenset({".txt", ".md", ".mdc", ".json", ".yaml", ".yml", ".py", ".vsh", ".fsh", ".dsc"})
+TEXT_SUFFIXES = frozenset({".txt", ".md", ".mdc", ".json", ".mcmeta", ".yaml", ".yml", ".py", ".vsh", ".fsh", ".dsc"})
 
 
 def artifact_bytes(path: Path) -> bytes:
@@ -61,7 +62,7 @@ def artifact_bytes(path: Path) -> bytes:
     contain the CRLF byte pair, so normalising it would corrupt the digest.
     """
     raw = path.read_bytes()
-    if path.suffix.casefold() in TEXT_SUFFIXES:
+    if path.suffix.casefold() in TEXT_SUFFIXES or path.name == "LICENSE":
         return raw.replace(b"\r\n", b"\n")
     return raw
 
@@ -74,7 +75,10 @@ def package_sources(root: Path) -> tuple[str, ...]:
         for path in package.rglob("*.py")
         if "__pycache__" not in path.parts
     )
-    return tuple(modules) + PACKAGE_DATA
+    assets = tuple(sorted(path.relative_to(root).as_posix()
+                          for base in (root / "dcore/knowledge/guides", root / "dcore/examples")
+                          for path in base.rglob("*") if path.is_file() and "__pycache__" not in path.parts))
+    return tuple(modules) + PACKAGE_DATA + assets + ("LICENSE", "TRADEMARKS.md")
 
 
 def release_names(root: Path) -> tuple[str, ...]:
@@ -82,7 +86,7 @@ def release_names(root: Path) -> tuple[str, ...]:
     portable = tuple(
         path.relative_to(root).as_posix()
         for base in (root / "skill" / "dcore",)
-        for path in base.rglob("*") if path.is_file()
+        for path in base.rglob("*") if path.is_file() and "__pycache__" not in path.parts
     )
     return tuple(sorted({*package_sources(root), *KNOWLEDGE_DATA, *PROJECT_DATA, *portable}))
 
